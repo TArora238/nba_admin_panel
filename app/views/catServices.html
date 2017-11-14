@@ -3,6 +3,10 @@
         <!--<h3 class="page-header-divpage-header">Sales</h3>-->
         <div class="row p-15">
             <h3 class="col-lg-4 col-md-4 col-xs-12 col-sm-4 p-0 m-0">Manage Services</h3>
+            <button type="button" ng-click="catServ.addEditService('Add')" class="btn btnDefault pull-right"
+                    style="text-transform:capitalize">Add</button>
+            <button type="button" class="btn btnDefault pull-right m-r-15" ui-sref="app.categories"
+                    style="text-transform:capitalize">Back</button>
         </div>
         <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
             <div class="col-md-12 col-lg-12 text-center m-t-30" ng-if="catServ.services.length==0">
@@ -41,9 +45,9 @@
                                     <a class="btn btn-sm btn-actions" title="Deactivate" ng-click="catServ.viewAddServices(data)">
                                     View Additional Services
                                     </a>
-                                    <!--<a class="btn btn-sm btn-actions" title="Deactivate" ng-click="catServ.deleteCategory(data)">-->
-                                        <!--Delete-->
-                                    <!--</a>-->
+                                    <a class="btn btn-sm btn-actions" title="Deactivate" ng-click="catServ.addEditService('Edit',data)">
+                                        Edit
+                                    </a>
                                 </td>
                             </tr>
                             </tbody>
@@ -53,5 +57,76 @@
             </div>
         </div>
     </div>
+    <script type="text/ng-template" id="addEditServModal">
+        <div class="ngdialog-message logoutpopo m-0">
 
+            <div class="ngdialog-header">
+                <p>{{catServ.mode}} Service</p>
+            </div>
+            <div class="ngdialog-body" style="padding: 0!important;">
+                <div class="col-lg-12 p-0 col-md-12 col-sm-12 col-xs-12">
+                    <form name="catServ.servForm" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p-15" ng-submit="catServ.servForm.$submitted&&catServ.addEditServiceFn(catServ.mode)">
+                        <div class="form-group">
+                            <label>Service Name</label>
+                            <input type="text" maxlength=25 minlength="2"
+                                   ng-model="catServ.serv.service_name" class="form-control" required/>
+                        </div>
+                        <div class="form-group">
+                            <label>Service Description</label>
+                            <textarea type="text" maxlength=100 minlength="2" style="max-width: 100%"
+                                      ng-model="catServ.serv.service_description" class="form-control" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Service Price</label>
+                            <input type="text" maxlength=25 minlength="2"
+                                   ng-model="catServ.serv.service_price" class="form-control" required/>
+                        </div>
+                        <div class="form-group">
+                            <label>Service Time</label>
+                            <input type="text" maxlength=25 minlength="2"
+                                   ng-model="catServ.serv.service_time" class="form-control" required/>
+                        </div>
+                        <div class="form-group">
+                            <label>Service Commission</label>
+                            <input type="text" maxlength=25 minlength="2"
+                                   ng-model="catServ.serv.service_commission" class="form-control" required/>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-12 col-xs-12 p-0">Skills Required</label>
+                            <div class="checkbox c-checkbox col-lg-6 col-xs-12" ng-repeat="area in mCtrl.serving_area_list" >
+                                <label class="needsclick">
+                                    <input class="needsclick" type="checkbox" name="checkbox" ng-click="catServ.toggleMultiple(area.area_id)"  ng-model="checkbox" ng-checked="catServ.exists(area.area_id)" />
+                                    <span class="fa fa-check"></span>{{area.area_name}}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group">
+                            <label class="col-lg-12 p-0">Service Image</label>
+                            <a class="btn whiteBtn" ng-click="catServ.uploadFile()">Upload File</a>
+                            <div class="clearfix"></div>
+                            {{catServ.serv.fileName}}
+                            <input type="file" style="visibility: hidden;" class="upload fileUpload" name="profilePic" onchange="angular.element(this).scope().fileUpload(this.files)" id="fileInput"
+                                   data-button-text="Single" uploader="uploader" accept="image/*" />
+                        </div>
+                        <div class="form-group">
+                            <label>Service Order</label>
+
+                        </div>
+                        <hr class="popHR">
+
+                        <button type="button"
+                                class="btn pull-left btn-cancel m-r-15" ng-click="closeThisDialog('button')">Cancel
+                        </button>
+                        <button type="submit"
+                                class="m-l-15 btn btnDefault pull-right btn-pop" ng-if="catServ.mode=='Add'">Add
+                        </button>
+                        <button type="submit"
+                                class="m-l-15 btn btnDefault pull-right btn-pop" ng-if="catServ.mode=='Edit'">Save
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </script>
 </div>

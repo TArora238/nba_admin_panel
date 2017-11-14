@@ -49,7 +49,8 @@
           .success(function(data, status) {
               if (typeof data === 'string')
                   var data = JSON.parse(data);
-              $scope.mCtrl.flagPopUps(data.flag,data.is_error);
+              if(data.flag!=9)$scope.mCtrl.flagPopUps(data.flag,data.is_error);
+              else toaster.pop("error","Email and Password don't match","");
               if (data.is_error == 0) {
                       $scope.mCtrl.setLoginData(data, 1);
                   }
@@ -905,7 +906,15 @@
         function activate() {
             $scope.mCtrl.checkToken();
             $scope.mCtrl.checkDoctorToken();
+            $scope.mCtrl.serving_areas();
+            vm.ngDialogPop = function(template, className) {
+                ngDialog.openConfirm({
+                    template: template,
+                    className: 'ngdialog-theme-default ' + className,
+                    scope: $scope
+                }).then(function(value) {}, function(reason) {});
 
+            };
 
             vm.dtOptions = {
                 "scrollX": true
@@ -930,9 +939,108 @@
                     });
             };
             vm.initTable();
+
             vm.viewServices = function (data) {
                 localStorage.setItem("cat_id",data.category_id);
                 $state.go("app.services");
+            };
+            vm.selected = [];
+            vm.toggleMultiple = function (item) {
+                var idx = vm.selected.indexOf(item);
+                if (idx > -1) {
+                    vm.selected.splice(idx, 1);
+                } else {
+                    vm.selected.push(item);
+                }
+                console.log(vm.selected);
+            };
+            vm.exists = function (item) {
+                return vm.selected.indexOf(item) > -1;
+            };
+            vm.addEditCategory = function (mode,d) {
+                vm.selected = [];
+                vm.cat = d||{};
+                if(vm.cat.area_id)vm.selected.push(vm.cat.area_id);
+                vm.mode = mode;
+                vm.ngDialogPop("addEditCatModal",'biggerPop');
+            };
+            vm.uploadFile = function() {
+                vm.manualEnter = 0;
+                $('.fileUpload').trigger('click');
+            };
+            $scope.fileUpload = function(files) {
+                if (files.length > 0) {
+                    console.log(files);
+                    vm.cat.file = $scope.mCtrl.processfile(files[0]);
+                    vm.cat.fileName = files[0].name;
+                    $timeout(function () {
+                        console.log(vm.cat.file);
+                        if(!vm.cat.file){
+                            vm.cat.file = $scope.mCtrl.file;
+                            console.log(vm.cat.file);
+                        }
+                    }, 1000);
+                }
+                else {
+                    toaster.pop('error', 'Please choose a file', '');
+
+                }
+            };
+            vm.addEditCategoryFn = function (mode) {
+                if (!vm.cat.category_name) {
+                    toaster.pop("error", "Enter the category name", "");
+                    return false;
+                }
+                if (!vm.cat.category_description) {
+                    toaster.pop("error", "Enter the category description", "");
+                    return false;
+                }
+                if (vm.selected.length == 0) {
+                    toaster.pop("error", "Select an area", "");
+                    return false;
+                }
+                if (mode == 'Add'&&!vm.cat.file) {
+                    toaster.pop("error", "Choose a category image", "");
+                    return false;
+                }
+                var modeUrl = '';
+                if (mode == 'Add') modeUrl = 'add_category';
+                else modeUrl = 'edit_category';
+                var form = new FormData();
+                var selected_area = '';
+                for(var i=0;i<vm.selected.length;i++){
+                    selected_area+=vm.selected[i];
+                    if(i<vm.selected.length-1)selected_area+=','
+                }
+                form.append("access_token", localStorage.getItem('adminToken'));
+                form.append("area_id", selected_area);
+                form.append("category_name", vm.cat.category_name);
+                form.append("category_description", vm.cat.category_description);
+                form.append("order_id", vm.cat.order_id || 1);
+                if(mode == 'Add')form.append("category_image", vm.cat.file);
+                if(mode == 'Edit')form.append("category_id", vm.cat.category_id);
+                cfpLoadingBar.start();
+                $http({
+                    url: api.url + modeUrl,
+                    method: 'POST',
+                    data: form,
+                    transformRequest: false,
+                    headers: {
+                        'Content-Type': undefined
+                    }
+                })
+                .then(function (data, status) {
+                    if (typeof data === 'string') data = JSON.parse(data.data);
+                    else var data = data.data;
+                    $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                    if (data.is_error == 0) {
+                        ngDialog.close();
+                        $state.reload();
+
+                    } else {
+
+                    }
+                });
             }
         }
     }
@@ -963,8 +1071,16 @@
         function activate() {
             $scope.mCtrl.checkToken();
             $scope.mCtrl.checkDoctorToken();
+            $scope.mCtrl.skills_required();
 
+            vm.ngDialogPop = function(template, className) {
+                ngDialog.openConfirm({
+                    template: template,
+                    className: 'ngdialog-theme-default ' + className,
+                    scope: $scope
+                }).then(function(value) {}, function(reason) {});
 
+            };
             vm.dtOptions = {
                 "scrollX": true
             };
@@ -991,6 +1107,120 @@
             vm.viewAddServices = function (data) {
                 localStorage.setItem("catServ_id",data.service_id);
                 $state.go("app.additionalServices");
+            };
+            vm.selected = [];
+            vm.toggleMultiple = function (item) {
+                var idx = vm.selected.indexOf(item);
+                if (idx > -1) {
+                    vm.selected.splice(idx, 1);
+                } else {
+                    vm.selected.push(item);
+                }
+                console.log(vm.selected);
+            };
+            vm.exists = function (item) {
+                return vm.selected.indexOf(item) > -1;
+            };
+            vm.addEditService = function (mode,d) {
+                vm.selected = [];
+                vm.serv = d||{};
+                if(vm.serv.skills_required){
+                    for(var i=0;i<vm.serv.skills_required.length;i++)
+                        vm.selected.push(vm.serv[i].skills_required);
+                }
+                vm.mode = mode;
+                vm.ngDialogPop("addEditServModal",'biggerPop');
+            };
+            vm.uploadFile = function() {
+                vm.manualEnter = 0;
+                $('.fileUpload').trigger('click');
+            };
+            $scope.fileUpload = function(files) {
+                if (files.length > 0) {
+                    console.log(files);
+                    vm.serv.file = $scope.mCtrl.processfile(files[0]);
+                    vm.serv.fileName = files[0].name;
+                    $timeout(function () {
+                        console.log(vm.serv.file);
+                        if(!vm.serv.file){
+                            vm.serv.file = $scope.mCtrl.file;
+                            console.log(vm.serv.file);
+                        }
+                    }, 1000);
+                }
+                else {
+                    toaster.pop('error', 'Please choose a file', '');
+
+                }
+            };
+            vm.addEditServiceFn = function (mode) {
+                if (!vm.serv.service_name) {
+                    toaster.pop("error", "Enter the service name", "");
+                    return false;
+                }
+                if (!vm.serv.service_description) {
+                    toaster.pop("error", "Enter the service description", "");
+                    return false;
+                }
+
+                if (mode == 'Add'&&!vm.serv.file) {
+                    toaster.pop("error", "Choose a category image", "");
+                    return false;
+                }
+                if (!vm.serv.service_price) {
+                    toaster.pop("error", "Enter the service price", "");
+                    return false;
+                }
+                if (!vm.serv.service_time) {
+                    toaster.pop("error", "Enter the service time", "");
+                    return false;
+                }
+                if (!vm.serv.service_commission) {
+                    toaster.pop("error", "Enter the service commission", "");
+                    return false;
+                }
+                var modeUrl = '';
+                if (mode == 'Add') modeUrl = 'add_service';
+                else modeUrl = 'edit_service';
+                var form = new FormData();
+                var skills = '';
+                for(var i=0;i<vm.selected.length;i++){
+                    skills+=vm.selected[i];
+                    if(i<vm.selected.length-1)skills+=','
+                }
+                form.append("access_token", localStorage.getItem('adminToken'));
+                form.append("category_id", localStorage.getItem("cat_id"));
+                form.append("service_name", vm.serv.service_name);
+                form.append("service_description", vm.serv.service_description);
+                form.append("order_id", vm.serv.order_id || 1);
+                form.append("skills_required", skills||'1');
+                form.append("service_price", vm.serv.service_price);
+                form.append("service_time", vm.serv.service_time);
+                form.append("service_commission", vm.serv.service_commission);
+                if(mode == 'Add')form.append("service_image", vm.serv.file);
+                if(mode == 'Edit')form.append("service_id", vm.serv.service_id);
+                cfpLoadingBar.start();
+                $http({
+                    url: api.url + modeUrl,
+                    method: 'POST',
+                    data: form,
+                    transformRequest: false,
+                    headers: {
+                        'Content-Type': undefined
+                    }
+                })
+                    .then(function (data, status) {
+                        if (typeof data === 'string') data = JSON.parse(data.data);
+                        else var data = data.data;
+                        $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                        if (data.is_error == 0) {
+                            ngDialog.close();
+                            $state.reload();
+
+                        } else {
+
+                        }
+                    });
             }
         }
     }
@@ -1020,7 +1250,16 @@
         function activate() {
             $scope.mCtrl.checkToken();
             $scope.mCtrl.checkDoctorToken();
+            $scope.mCtrl.skills_required();
 
+            vm.ngDialogPop = function(template, className) {
+                ngDialog.openConfirm({
+                    template: template,
+                    className: 'ngdialog-theme-default ' + className,
+                    scope: $scope
+                }).then(function(value) {}, function(reason) {});
+
+            };
 
             vm.dtOptions = {
                 "scrollX": true
@@ -1045,6 +1284,84 @@
                     });
             };
             vm.initTable();
+            vm.selected = [];
+            vm.toggleMultiple = function (item) {
+                var idx = vm.selected.indexOf(item);
+                if (idx > -1) {
+                    vm.selected.splice(idx, 1);
+                } else {
+                    vm.selected.push(item);
+                }
+                console.log(vm.selected);
+            };
+            vm.exists = function (item) {
+                return vm.selected.indexOf(item) > -1;
+            };
+            vm.addEditAddService = function (mode,d) {
+                vm.selected = [];
+                vm.addServ = d||{};
+                vm.mode = mode;
+                vm.ngDialogPop("addEditAddServModal",'biggerPop');
+            };
+            vm.addEditAddServiceFn = function (mode) {
+                if (!vm.addServ.as_name) {
+                    toaster.pop("error", "Enter the additional service name", "");
+                    return false;
+                }
+                if (!vm.addServ.as_description) {
+                    toaster.pop("error", "Enter the additional service description", "");
+                    return false;
+                }
+                if (!vm.addServ.as_price) {
+                    toaster.pop("error", "Enter the additional service price", "");
+                    return false;
+                }
+                if (!vm.addServ.as_time) {
+                    toaster.pop("error", "Enter the additional service time", "");
+                    return false;
+                }
+                if (!vm.addServ.as_commission) {
+                    toaster.pop("error", "Enter the additional service commission", "");
+                    return false;
+                }
+
+
+                var modeUrl = '';
+                if (mode == 'Add') modeUrl = 'add_additional_service';
+                else modeUrl = 'edit_additional_service';
+                var form = new FormData();
+                var skills = '';
+                for(var i=0;i<vm.selected.length;i++){
+                    skills+=vm.selected[i];
+                    if(i<vm.selected.length-1)skills+=','
+                }
+                cfpLoadingBar.start();
+                var data ={
+                  access_token : localStorage.getItem("adminToken"),
+                  service_id : localStorage.getItem("catServ_id"),
+                  as_name:vm.addServ.as_name,
+                  as_description:vm.addServ.as_description,
+                  order_id:vm.addServ.order_id||1,
+                  skills_required:vm.addServ.skills||1,
+                  as_price:vm.addServ.as_price,
+                  as_time:vm.addServ.as_time,
+                  as_commission:vm.addServ.as_commission
+                };
+                if(mode=='Edit')data.as_id=vm.addServ.as_id;
+                $.post(api.url + modeUrl,data)
+                    .success(function (data, status) {
+                        if (typeof data === 'string') data = JSON.parse(data.data);
+                        else var data = data.data;
+                        $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                        if (data.is_error == 0) {
+                            ngDialog.close();
+                            $state.reload();
+
+                        } else {
+
+                        }
+                    });
+            }
         }
     }
 })();

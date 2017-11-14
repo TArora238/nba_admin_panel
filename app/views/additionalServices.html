@@ -3,6 +3,10 @@
         <!--<h3 class="page-header-divpage-header">Sales</h3>-->
         <div class="row p-15">
             <h3 class="col-lg-4 col-md-4 col-xs-12 col-sm-4 p-0 m-0">Additional Services</h3>
+            <button type="button" ng-click="addServ.addEditAddService('Add')" class="btn btnDefault pull-right"
+                    style="text-transform:capitalize">Add</button>
+            <button type="button" class="btn btnDefault pull-right m-r-15" ui-sref="app.services"
+                    style="text-transform:capitalize">Back</button>
         </div>
         <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
             <div class="col-md-12 col-lg-12 text-center m-t-30" ng-if="addServ.additionalServices.length==0">
@@ -16,12 +20,13 @@
                             <thead>
                             <tr>
                                  <th class="smallTD">S.No.</th>
-                                 <th class="normalTD">Service Name</th>
-                                 <th class="largeTD">Service Description</th>
-                                 <th class="normalTD">Service Image</th>
-                                 <th class="normalTD">Service Price</th>
-                                 <th class="normalTD">Service Time</th>
-                                <!--<th class="largeTD">Action</th>-->
+                                 <th class="normalTD">Name</th>
+                                 <th class="largeTD">Description</th>
+                                 <th class="normalTD">Price</th>
+                                 <th class="normalTD">Time</th>
+                                 <th class="normalTD">Commission</th>
+                                 <th class="normalTD">Action</th>
+
                             </tr>
                             </thead>
                             <tbody>
@@ -29,20 +34,15 @@
                                 <td class="smallTD">{{$index+1}}</td>
                                 <td class="normalTD">{{data.as_name}}</td>
                                 <td class="largeTD">{{data.as_description}}</td>
-                                <td class="normalTD">
-                                    <img ng-if="data.as_image" ng-src="{{data.as_image}}" class="w-100 img--circle"/>
-                                    <label ng-if="!data.as_image">Not Uploaded Yet</label>
-                                </td>
                                 <td class="normalTD">{{data.as_price}}</td>
                                 <td class="normalTD">{{data.as_time}} mins</td>
-                                <td class="largeTD hide">
-                                    <a class="btn btn-sm btn-actions" title="Deactivate" ng-click="addServ.viewAddServices(data)">
-                                    View Additional Services
+                                <td class="normalTD">{{data.as_commission||'N/A'}}</td>
+                                <td class="largeTD">
+                                    <a class="btn btn-sm btn-actions" title="Deactivate" ng-click="addServ.addEditAddService('Edit',data)">
+                                        Edit
                                     </a>
-                                    <!--<a class="btn btn-sm btn-actions" title="Deactivate" ng-click="addServ.deleteCategory(data)">-->
-                                        <!--Delete-->
-                                    <!--</a>-->
                                 </td>
+
                             </tr>
                             </tbody>
                         </table>
@@ -51,5 +51,68 @@
             </div>
         </div>
     </div>
+    <script type="text/ng-template" id="addEditAddServModal">
+        <div class="ngdialog-message logoutpopo m-0">
 
+            <div class="ngdialog-header">
+                <p>{{addServ.mode}} Service</p>
+            </div>
+            <div class="ngdialog-body" style="padding: 0!important;">
+                <div class="col-lg-12 p-0 col-md-12 col-sm-12 col-xs-12">
+                    <form name="addServ.addServForm" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p-15" ng-submit="addServ.addServForm.$submitted&&addServ.addEditAddServiceFn(addServ.mode)">
+                        <div class="form-group">
+                            <label>Additional Service Name</label>
+                            <input type="text" maxlength=25 minlength="2"
+                                   ng-model="addServ.addServ.as_name" class="form-control" required/>
+                        </div>
+                        <div class="form-group">
+                            <label>Additional Service Description</label>
+                            <textarea type="text" maxlength=100 minlength="2" style="max-width: 100%"
+                                      ng-model="addServ.addServ.as_description" class="form-control" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Additional Service Price</label>
+                            <input type="text" maxlength=25 minlength="2"
+                                   ng-model="addServ.addServ.as_price" class="form-control" required/>
+                        </div>
+                        <div class="form-group">
+                            <label>Additional Service Time</label>
+                            <input type="text" maxlength=25 minlength="2"
+                                   ng-model="addServ.addServ.as_time" class="form-control" required/>
+                        </div>
+                        <div class="form-group">
+                            <label>Additional Service Commission</label>
+                            <input type="text" maxlength=25 minlength="2"
+                                   ng-model="addServ.addServ.as_commission" class="form-control" required/>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-12 col-xs-12 p-0">Skills Required</label>
+                            <div class="checkbox c-checkbox col-lg-6 col-xs-12" ng-repeat="area in mCtrl.serving_area_list" >
+                                <label class="needsclick">
+                                    <input class="needsclick" type="checkbox" name="checkbox" ng-click="addServ.toggleMultiple(area.area_id)"  ng-model="checkbox" ng-checked="addServ.exists(area.area_id)" />
+                                    <span class="fa fa-check"></span>{{area.area_name}}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group">
+                            <label>Service Order</label>
+
+                        </div>
+                        <hr class="popHR">
+
+                        <button type="button"
+                                class="btn pull-left btn-cancel m-r-15" ng-click="closeThisDialog('button')">Cancel
+                        </button>
+                        <button type="submit"
+                                class="m-l-15 btn btnDefault pull-right btn-pop" ng-if="addServ.mode=='Add'">Add
+                        </button>
+                        <button type="submit"
+                                class="m-l-15 btn btnDefault pull-right btn-pop" ng-if="addServ.mode=='Edit'">Save
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </script>
 </div>

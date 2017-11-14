@@ -473,6 +473,21 @@
                     // console.log(vm.serving_area_list);
                 });
         };
+        vm.skills_required = function () {
+            console.log("sd");
+            $.post(api.url + "skills_list", {
+                access_token: localStorage.getItem('adminToken')
+            })
+                .success(function (data, status) {
+                    if (typeof data === 'string')
+                        var data = JSON.parse(data);
+                    // console.log(data);
+                    vm.skills_required = data.skills_list;
+                    // console.log(vm.serving_area_list);
+                });
+        };
+
+
       vm.admin_name = localStorage.getItem('admin_name');
       vm.profilePicThumb = localStorage.getItem('profilePicThumb');
 
@@ -538,8 +553,7 @@
             console.log(vm.file);
           }
         };
-
-      }
+      };
 
       vm.resizeMe = function(img) {
 

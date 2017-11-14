@@ -3,6 +3,8 @@
         <!--<h3 class="page-header-divpage-header">Sales</h3>-->
         <div class="row p-15">
             <h3 class="col-lg-4 col-md-4 col-xs-12 col-sm-4 p-0 m-0">Manage Categories</h3>
+            <button type="button" ng-click="category.addEditCategory('Add')" class="btn btnDefault pull-right"
+                    style="text-transform:capitalize">Add</button>
         </div>
         <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
             <div class="col-md-12 col-lg-12 text-center m-t-30" ng-if="category.categories.length==0">
@@ -35,9 +37,9 @@
                                     <a class="btn btn-sm btn-actions" title="Deactivate" ng-click="category.viewServices(data)">
                                     View Services
                                     </a>
-                                    <!--<a class="btn btn-sm btn-actions" title="Deactivate" ng-click="category.deleteCategory(data)">-->
-                                        <!--Delete-->
-                                    <!--</a>-->
+                                    <a class="btn btn-sm btn-actions" title="Deactivate" ng-click="category.addEditCategory('Edit',data)">
+                                        Edit
+                                    </a>
                                 </td>
                             </tr>
                             </tbody>
@@ -47,5 +49,61 @@
             </div>
         </div>
     </div>
+    <script type="text/ng-template" id="addEditCatModal">
+        <div class="ngdialog-message logoutpopo m-0">
 
+            <div class="ngdialog-header">
+                <p>{{category.mode}} Category</p>
+            </div>
+            <div class="ngdialog-body" style="padding: 0!important;">
+                <div class="col-lg-12 p-0 col-md-12 col-sm-12 col-xs-12">
+                    <form name="category.catForm" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p-15" ng-submit="category.catForm.$submitted&&category.addEditCategoryFn(category.mode)">
+                        <div class="form-group">
+                            <label>Category Name</label>
+                            <input type="text" maxlength=25 minlength="2"
+                                   ng-model="category.cat.category_name" class="form-control" required/>
+                        </div>
+                        <div class="form-group">
+                            <label>Category Description</label>
+                            <textarea type="text" maxlength=100 minlength="2" style="max-width: 100%"
+                                      ng-model="category.cat.category_description" class="form-control" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-12 col-xs-12 p-0">Serving Area</label>
+                            <div class="checkbox c-checkbox col-lg-6 col-xs-12" ng-repeat="area in mCtrl.serving_area_list" >
+                                <label class="needsclick">
+                                    <input class="needsclick" type="checkbox" name="checkbox" ng-click="category.toggleMultiple(area.area_id)"  ng-model="checkbox" ng-checked="category.exists(area.area_id)" />
+                                    <span class="fa fa-check"></span>{{area.area_name}}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group">
+                            <label class="col-lg-12 p-0">Category Image</label>
+                            <a class="btn whiteBtn" ng-click="category.uploadFile()">Upload File</a>
+                            <div class="clearfix"></div>
+                            {{category.cat.fileName}}
+                            <input type="file" style="visibility: hidden;" class="upload fileUpload" name="profilePic" onchange="angular.element(this).scope().fileUpload(this.files)" id="fileInput"
+                                   data-button-text="Single" uploader="uploader" accept="image/*" />
+                        </div>
+                        <div class="form-group">
+                            <label>Category Order</label>
+
+                        </div>
+                        <hr class="popHR">
+
+                        <button type="button"
+                                class="btn pull-left btn-cancel m-r-15" ng-click="closeThisDialog('button')">Cancel
+                        </button>
+                        <button type="submit"
+                                class="m-l-15 btn btnDefault pull-right btn-pop" ng-if="category.mode=='Add'">Add
+                        </button>
+                        <button type="submit"
+                                class="m-l-15 btn btnDefault pull-right btn-pop" ng-if="category.mode=='Edit'">Save
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </script>
 </div>
