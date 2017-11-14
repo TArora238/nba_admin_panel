@@ -421,18 +421,7 @@
                             console.log(vm.customers)
                         })
                     });
-                $.get(api.url + "get_artist_lists")
-                    .success(function(data, status) {
-                        cfpLoadingBar.complete();
-                        if (typeof data === 'string') data = JSON.parse(data);
-                        console.log(data);
-                        $timeout(function () {
-                            vm.document_types = data.document_types;
-                            vm.experience_types = data.experience_types;
-                            vm.skills = data.skills;
-                            console.log(data)
-                        })
-                    });
+
                 $.post(api.url + "serving_areas",{
                     access_token: localStorage.getItem('adminToken')
                 })
@@ -945,12 +934,12 @@
                 $state.go("app.services");
             };
             vm.selected = [];
-            vm.toggleMultiple = function (item) {
+            vm.toggleSingle = function (item) {
                 var idx = vm.selected.indexOf(item);
                 if (idx > -1) {
                     vm.selected.splice(idx, 1);
                 } else {
-                    vm.selected.push(item);
+                    vm.selected[0]=item;
                 }
                 console.log(vm.selected);
             };
@@ -961,8 +950,10 @@
                 vm.selected = [];
                 vm.cat = d||{};
                 if(vm.cat.area_id)vm.selected.push(vm.cat.area_id);
+                if(vm.cat.order_id)vm.cat.order=vm.cat.order_id;
+                else vm.cat.order='Order ID';
                 vm.mode = mode;
-                vm.ngDialogPop("addEditCatModal",'biggerPop');
+                vm.ngDialogPop("addEditCatModal",'biggerPop orderPop');
             };
             vm.uploadFile = function() {
                 vm.manualEnter = 0;
@@ -986,6 +977,9 @@
 
                 }
             };
+            vm.orderSelect = function (o) {
+              vm.cat.order=o;
+            };
             vm.addEditCategoryFn = function (mode) {
                 if (!vm.cat.category_name) {
                     toaster.pop("error", "Enter the category name", "");
@@ -1003,6 +997,10 @@
                     toaster.pop("error", "Choose a category image", "");
                     return false;
                 }
+                if(vm.cat.order=='Order ID'){
+                    toaster.pop("error", "Choose a category order", "");
+                    return false;
+                }
                 var modeUrl = '';
                 if (mode == 'Add') modeUrl = 'add_category';
                 else modeUrl = 'edit_category';
@@ -1012,13 +1010,17 @@
                     selected_area+=vm.selected[i];
                     if(i<vm.selected.length-1)selected_area+=','
                 }
+                vm.cat.order_id = vm.cat.order;
                 form.append("access_token", localStorage.getItem('adminToken'));
                 form.append("area_id", selected_area);
                 form.append("category_name", vm.cat.category_name);
                 form.append("category_description", vm.cat.category_description);
-                form.append("order_id", vm.cat.order_id || 1);
+                form.append("order_id", vm.cat.order_id);
                 if(mode == 'Add')form.append("category_image", vm.cat.file);
-                if(mode == 'Edit')form.append("category_id", vm.cat.category_id);
+                if(mode == 'Edit'){
+                    if(vm.cat.file)form.append("category_image", vm.cat.file);
+                    form.append("category_id", vm.cat.category_id);
+                }
                 cfpLoadingBar.start();
                 $http({
                     url: api.url + modeUrl,
@@ -1071,7 +1073,7 @@
         function activate() {
             $scope.mCtrl.checkToken();
             $scope.mCtrl.checkDoctorToken();
-            $scope.mCtrl.skills_required();
+
 
             vm.ngDialogPop = function(template, className) {
                 ngDialog.openConfirm({
@@ -1124,12 +1126,20 @@
             vm.addEditService = function (mode,d) {
                 vm.selected = [];
                 vm.serv = d||{};
+                if(vm.serv.order_id)vm.serv.order=vm.serv.order_id;
+                else vm.serv.order='Order ID';
                 if(vm.serv.skills_required){
-                    for(var i=0;i<vm.serv.skills_required.length;i++)
-                        vm.selected.push(vm.serv[i].skills_required);
+                    vm.serv.skills = vm.serv.skills_required.split(', ');
+                    console.log(vm.serv.skills);
+                    for(var i=0;i<vm.serv.skills.length;i++)
+                    for(var j=0;j<$scope.mCtrl.skills.length;j++)
+                    {
+                        if(vm.serv.skills[i]==$scope.mCtrl.skills[j].skill)
+                        vm.selected.push($scope.mCtrl.skills[j].skill_id);
+                    }
                 }
                 vm.mode = mode;
-                vm.ngDialogPop("addEditServModal",'biggerPop');
+                vm.ngDialogPop("addEditServModal",'biggerPop orderPop');
             };
             vm.uploadFile = function() {
                 vm.manualEnter = 0;
@@ -1179,6 +1189,10 @@
                     toaster.pop("error", "Enter the service commission", "");
                     return false;
                 }
+                if(vm.serv.order=='Order ID'){
+                    toaster.pop("error", "Choose a category order", "");
+                    return false;
+                }
                 var modeUrl = '';
                 if (mode == 'Add') modeUrl = 'add_service';
                 else modeUrl = 'edit_service';
@@ -1188,17 +1202,21 @@
                     skills+=vm.selected[i];
                     if(i<vm.selected.length-1)skills+=','
                 }
+                vm.serv.order_id = vm.serv.order;
                 form.append("access_token", localStorage.getItem('adminToken'));
                 form.append("category_id", localStorage.getItem("cat_id"));
                 form.append("service_name", vm.serv.service_name);
                 form.append("service_description", vm.serv.service_description);
-                form.append("order_id", vm.serv.order_id || 1);
+                form.append("order_id", vm.serv.order_id);
                 form.append("skills_required", skills||'1');
                 form.append("service_price", vm.serv.service_price);
                 form.append("service_time", vm.serv.service_time);
                 form.append("service_commission", vm.serv.service_commission);
                 if(mode == 'Add')form.append("service_image", vm.serv.file);
-                if(mode == 'Edit')form.append("service_id", vm.serv.service_id);
+                if(mode == 'Edit'){
+                    if(vm.serv.file)form.append("service_image", vm.serv.file);
+                    form.append("service_id", vm.serv.service_id);
+                }
                 cfpLoadingBar.start();
                 $http({
                     url: api.url + modeUrl,
@@ -1250,7 +1268,6 @@
         function activate() {
             $scope.mCtrl.checkToken();
             $scope.mCtrl.checkDoctorToken();
-            $scope.mCtrl.skills_required();
 
             vm.ngDialogPop = function(template, className) {
                 ngDialog.openConfirm({
@@ -1301,7 +1318,7 @@
                 vm.selected = [];
                 vm.addServ = d||{};
                 vm.mode = mode;
-                vm.ngDialogPop("addEditAddServModal",'biggerPop');
+                vm.ngDialogPop("addEditAddServModal",'biggerPop orderPop');
             };
             vm.addEditAddServiceFn = function (mode) {
                 if (!vm.addServ.as_name) {
@@ -1342,10 +1359,10 @@
                   as_name:vm.addServ.as_name,
                   as_description:vm.addServ.as_description,
                   order_id:vm.addServ.order_id||1,
-                  skills_required:vm.addServ.skills||1,
+                  // skills_required:vm.addServ.skills||1,
                   as_price:vm.addServ.as_price,
-                  as_time:vm.addServ.as_time,
-                  as_commission:vm.addServ.as_commission
+                  as_time:vm.addServ.as_time
+                  // as_commission:vm.addServ.as_commission
                 };
                 if(mode=='Edit')data.as_id=vm.addServ.as_id;
                 $.post(api.url + modeUrl,data)

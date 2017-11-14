@@ -72,7 +72,7 @@
                             <label class="col-lg-12 col-xs-12 p-0">Serving Area</label>
                             <div class="checkbox c-checkbox col-lg-6 col-xs-12" ng-repeat="area in mCtrl.serving_area_list" >
                                 <label class="needsclick">
-                                    <input class="needsclick" type="checkbox" name="checkbox" ng-click="category.toggleMultiple(area.area_id)"  ng-model="checkbox" ng-checked="category.exists(area.area_id)" />
+                                    <input class="needsclick" type="checkbox" name="checkbox" ng-click="category.toggleSingle(area.area_id)"  ng-model="checkbox" ng-checked="category.exists(area.area_id)" />
                                     <span class="fa fa-check"></span>{{area.area_name}}
                                 </label>
                             </div>
@@ -88,7 +88,17 @@
                         </div>
                         <div class="form-group">
                             <label>Category Order</label>
-
+                            <div class="btn-group mb-sm" uib-dropdown="dropdown">
+                                <button class="btn dropdown-toggle btn-primary" type="button" uib-dropdown-toggle="">{{category.cat.order}}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li ng-repeat="data in category.categories"><a ng-click="category.orderSelect($index+1)">{{$index+1}}</a>
+                                    </li>
+                                    <li ng-if="category.mode=='Add'"><a ng-click="category.orderSelect(category.categories.length+1)">{{category.categories.length+1}}</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                         <hr class="popHR">
 

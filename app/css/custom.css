@@ -1425,6 +1425,9 @@ md-checkbox.md-default-theme.md-checked .md-icon{
 .biggerPop.ngdialog.ngdialog-theme-default .ngdialog-content,.biggerPop .modal-dialog {
     width: 800px!important;
 }
+.orderPop.ngdialog.ngdialog-theme-default .ngdialog-content,.orderPop .modal-dialog {
+    overflow-y:unset!important;
+}
 .signUpPop.ngdialog.ngdialog-theme-default .ngdialog-content,.signUpPop .modal-dialog {
     width: 400px!important;
 }

@@ -441,10 +441,10 @@
           vm.profilePicThumb = localStorage.getItem('profilePicThumb');
           if (login == 1) {
             vm.serving_areas();
-            $state.go('app.dashboard');
+            $state.go('app.customers');
           } else if (login == 2) {
               vm.serving_areas();
-              $state.go('app.dashboard');
+              $state.go('app.customers');
           }
         });
       };
@@ -473,19 +473,18 @@
                     // console.log(vm.serving_area_list);
                 });
         };
-        vm.skills_required = function () {
-            console.log("sd");
-            $.post(api.url + "skills_list", {
-                access_token: localStorage.getItem('adminToken')
-            })
-                .success(function (data, status) {
-                    if (typeof data === 'string')
-                        var data = JSON.parse(data);
-                    // console.log(data);
-                    vm.skills_required = data.skills_list;
-                    // console.log(vm.serving_area_list);
-                });
-        };
+        $.get(api.url + "get_artist_lists")
+            .success(function(data, status) {
+                cfpLoadingBar.complete();
+                if (typeof data === 'string') data = JSON.parse(data);
+                console.log(data);
+                $timeout(function () {
+                    vm.document_types = data.document_types;
+                    vm.experience_types = data.experience_types;
+                    vm.skills = data.skills;
+                    console.log(data)
+                })
+            });
 
 
       vm.admin_name = localStorage.getItem('admin_name');
