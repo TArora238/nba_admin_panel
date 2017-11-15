@@ -207,6 +207,16 @@
               templateUrl:  helper.basepath('additionalServices.html'),
               resolve: helper.resolveFor('datatables')
             })
+          .state('app.skills', {
+              url: '/skills',
+              templateUrl:  helper.basepath('skills.html'),
+              resolve: helper.resolveFor('datatables')
+            })
+          .state('app.feedback', {
+              url: '/feedback',
+              templateUrl:  helper.basepath('feedback.html'),
+              resolve: helper.resolveFor('datatables')
+            })
 
     }
 })();

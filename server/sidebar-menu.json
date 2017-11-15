@@ -17,6 +17,10 @@
       }]
   },
   {
+    "text": "Skills",
+    "sref":"app.skills"
+  },
+  {
     "text": "Categories",
     "sref":"app.categories"
   },
@@ -47,5 +51,9 @@
         "sref": "app.cancelledBookings"
       }
     ]
+  },
+  {
+    "text": "Feedback",
+    "sref":"app.feedback"
   }
 ]

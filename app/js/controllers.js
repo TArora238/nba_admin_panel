@@ -1038,7 +1038,6 @@
                     if (data.is_error == 0) {
                         ngDialog.close();
                         $state.reload();
-
                     } else {
 
                     }
@@ -1379,6 +1378,151 @@
                         }
                     });
             }
+        }
+    }
+})();
+
+
+
+/**=========================================================
+ * Module: Additional Service List
+ =========================================================*/
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.category')
+        .controller('SkillsController', SkillsController);
+
+    SkillsController.$inject = ['$http', '$state', '$rootScope', 'toaster', '$scope', 'cfpLoadingBar', 'api', '$timeout', 'ngDialog'];
+
+    function SkillsController($http, $state, $rootScope, toaster, $scope, cfpLoadingBar, api, $timeout, ngDialog) {
+        var vm = this;
+
+        activate();
+
+        ////////////////
+
+        function activate() {
+            $scope.mCtrl.checkToken();
+            $scope.mCtrl.checkDoctorToken();
+
+            vm.ngDialogPop = function(template, className) {
+                ngDialog.openConfirm({
+                    template: template,
+                    className: 'ngdialog-theme-default ' + className,
+                    scope: $scope
+                }).then(function(value) {}, function(reason) {});
+
+            };
+
+            vm.dtOptions = {
+                "scrollX": true
+            };
+            vm.initTable = function() {
+                cfpLoadingBar.start();
+
+                $.get(api.url + "get_artist_lists")
+                    .success(function(data, status) {
+                        cfpLoadingBar.complete();
+                        if (typeof data === 'string') data = JSON.parse(data);
+                        console.log(data);
+                        $timeout(function () {
+                            vm.document_types = data.document_types;
+                            vm.experience_types = data.experience_types;
+                            vm.skills = data.skills;
+                            console.log(vm.skills)
+                        })
+                    });
+            };
+            vm.initTable();
+
+            vm.addEditSkill = function (mode,d) {
+                vm.skill = d||{};
+                vm.mode = mode;
+                vm.ngDialogPop("addEditSkillModal",'bigPop');
+            };
+            vm.addEditSkillFn = function (mode) {
+                if (!vm.skill.skill) {
+                    toaster.pop("error", "Enter the a valid skill name", "");
+                    return false;
+                }
+
+                var modeUrl = '';
+                if (mode == 'Add') modeUrl = 'add_skill';
+                else modeUrl = 'edit_skill';
+
+                cfpLoadingBar.start();
+                var data ={
+                    access_token : localStorage.getItem("adminToken"),
+                    skill: vm.skill.skill
+                };
+                if(mode=='Edit')data.skill_id=vm.skill.skill_id;
+                $.post(api.url + modeUrl,data)
+                    .success(function (data, status) {
+                        if (typeof data === 'string') data = JSON.parse(data);
+                        else var data = data;
+                        console.log(data);
+                        $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                        if (data.is_error == 0) {
+                            ngDialog.close();
+                            $state.reload();
+
+                        } else {
+
+                        }
+                    });
+            }
+        }
+    }
+})();
+
+/**=========================================================
+ * Module: access-login.js
+ * Demo for login api
+ =========================================================*/
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.pages')
+        .controller('FeedbackController', FeedbackController);
+
+    FeedbackController.$inject = ['$http', '$state', '$rootScope', 'toaster', '$scope', 'cfpLoadingBar', 'api', '$timeout', 'ngDialog'];
+
+    function FeedbackController($http, $state, $rootScope, toaster, $scope, cfpLoadingBar, api, $timeout, ngDialog) {
+        var vm = this;
+
+        activate();
+
+        ////////////////
+
+        function activate() {
+            $scope.mCtrl.checkToken();
+            $scope.mCtrl.checkDoctorToken();
+
+            vm.dtOptions = {
+                "scrollX": true
+            };
+            vm.initTable = function() {
+                cfpLoadingBar.start();
+
+                $.post(api.url + "feedback_list",{
+                    access_token: localStorage.getItem('adminToken')
+                })
+                    .success(function(data, status) {
+                        cfpLoadingBar.complete();
+                        if (typeof data === 'string') data = JSON.parse(data);
+                        console.log(data);
+                        $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                        $timeout(function () {
+                            vm.feedbackList = data.all_feedback;
+                        })
+                    });
+            };
+            vm.initTable();
         }
     }
 })();
