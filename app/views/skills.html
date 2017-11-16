@@ -28,8 +28,14 @@
                                 <td class="smallTD">{{$index+1}}</td>
                                 <td class="normalTD">{{data.skill}}</td>
                                 <td class="largeTD">
-                                    <a class="btn btn-sm btn-actions" title="Deactivate" ng-click="skill.addEditSkill('Edit',data)">
+                                    <a class="btn btn-sm btn-actions" title="Edit" ng-click="skill.addEditSkill('Edit',data)">
                                         Edit
+                                    </a>
+                                    <a ng-if="data.is_active==1" class="btn btn-sm btn-actions" title="Block" ng-click="skill.enableDisableSkill(0,data.skill_id)">
+                                        Block
+                                    </a>
+                                    <a ng-if="data.is_active==0" class="btn btn-sm btn-actions" title="Unblock" ng-click="skill.enableDisableSkill(1,data.skill_id)">
+                                        Unblock
                                     </a>
                                 </td>
 
@@ -69,6 +75,22 @@
                         </button>
                     </form>
                 </div>
+            </div>
+        </div>
+    </script>
+    <script type="text/ng-template" id="enableDisableConfirmFirst">
+        <div class="ngdialog-message logoutpopo">
+            <div class="ngdialog-header">
+                <p>{{skill.block}} Confirmation</p>
+            </div>
+            <div class="ngdialog-body">
+                <p>Are you sure you want to <strong>{{skill.block}}</strong> this skill? </p>
+                <button type="button" ng-click="closeThisDialog('button')"
+                        class="btn btn-default pull-left btn-cancel">Cancel
+                </button>
+                <button type="button" ng-click="skill.enableDisableYes()"
+                        class="btn btn-primary pull-right btn-pop">Confirm
+                </button>
             </div>
         </div>
     </script>

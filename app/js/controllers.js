@@ -1423,14 +1423,14 @@
             vm.initTable = function() {
                 cfpLoadingBar.start();
 
-                $.get(api.url + "get_artist_lists")
+                $.post(api.url + "getAdminSkills",{
+                    access_token : localStorage.getItem("adminToken")
+                })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
                         if (typeof data === 'string') data = JSON.parse(data);
                         console.log(data);
                         $timeout(function () {
-                            vm.document_types = data.document_types;
-                            vm.experience_types = data.experience_types;
                             vm.skills = data.skills;
                             console.log(vm.skills)
                         })
@@ -1460,6 +1460,35 @@
                 };
                 if(mode=='Edit')data.skill_id=vm.skill.skill_id;
                 $.post(api.url + modeUrl,data)
+                    .success(function (data, status) {
+                        if (typeof data === 'string') data = JSON.parse(data);
+                        else var data = data;
+                        console.log(data);
+                        $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                        if (data.is_error == 0) {
+                            ngDialog.close();
+                            $state.reload();
+
+                        } else {
+
+                        }
+                    });
+            };
+            vm.enableDisableSkill = function(i,id){
+                vm.block_id=id;
+                vm.blockMode=i;
+                if(i==0){
+                    vm.block="Block";
+                }
+                else vm.block="Unblock";
+                vm.ngDialogPop("enableDisableConfirmFirst",'smallPop');
+            };
+            vm.enableDisableYes = function () {
+                $.post(api.url + 'enableDisableSkill',{
+                    access_token:localStorage.getItem("adminToken"),
+                    skill_id:vm.block_id,
+                    is_active:vm.blockMode
+                })
                     .success(function (data, status) {
                         if (typeof data === 'string') data = JSON.parse(data);
                         else var data = data;
