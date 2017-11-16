@@ -1042,7 +1042,37 @@
 
                     }
                 });
+            };
+            vm.enableDisableCat = function(i,id){
+                vm.block_id=id;
+                vm.blockMode=i;
+                if(i==1){
+                    vm.block="Block";
+                }
+                else vm.block="Unblock";
+                vm.ngDialogPop("enableDisableConfirmFirst",'smallPop');
+            };
+            vm.enableDisableYes = function () {
+                $.post(api.url + 'blockUnblockCategory',{
+                    access_token:localStorage.getItem("adminToken"),
+                    category_id:vm.block_id,
+                    is_blocked:vm.blockMode
+                })
+                    .success(function (data, status) {
+                        if (typeof data === 'string') data = JSON.parse(data);
+                        else var data = data;
+                        console.log(data);
+                        $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                        if (data.is_error == 0) {
+                            ngDialog.close();
+                            $state.reload();
+
+                        } else {
+
+                        }
+                    });
             }
+
         }
     }
 })();
@@ -1073,7 +1103,7 @@
             $scope.mCtrl.checkToken();
             $scope.mCtrl.checkDoctorToken();
 
-
+            vm.artistLists();
             vm.ngDialogPop = function(template, className) {
                 ngDialog.openConfirm({
                     template: template,

@@ -473,19 +473,22 @@
                     // console.log(vm.serving_area_list);
                 });
         };
-        $.get(api.url + "get_artist_lists")
-            .success(function(data, status) {
-                cfpLoadingBar.complete();
-                if (typeof data === 'string') data = JSON.parse(data);
-                console.log(data);
-                $timeout(function () {
-                    vm.document_types = data.document_types;
-                    vm.experience_types = data.experience_types;
-                    vm.skills = data.skills;
-                    console.log(data)
-                })
-            });
+        vm.artistLists = function () {
+            $.get(api.url + "get_artist_lists")
+                .success(function(data, status) {
+                    cfpLoadingBar.complete();
+                    if (typeof data === 'string') data = JSON.parse(data);
+                    console.log(data);
+                    $timeout(function () {
+                        vm.document_types = data.document_types;
+                        vm.experience_types = data.experience_types;
+                        vm.skills = data.skills;
+                        console.log(data)
+                    })
+                });
 
+        };
+        vm.artistLists();
 
       vm.admin_name = localStorage.getItem('admin_name');
       vm.profilePicThumb = localStorage.getItem('profilePicThumb');
