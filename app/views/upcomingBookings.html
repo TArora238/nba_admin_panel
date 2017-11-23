@@ -36,7 +36,7 @@
                                 <th class="largeTD">Overtime Minutes</th>
                                 <th class="largeTD">Rating</th>
                                 <th class="largeTD">Rated At</th>
-                                <th class="normalTD hide">Actions</th>
+                                <th class="normalTD">Actions</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -62,9 +62,15 @@
                                 <td class="normalTD">{{data.overtime_minutes||'-'}}</td>
                                 <td class="normalTD">{{data.rating||'-'}}</td>
                                 <td class="normalTD">{{data.local_rated_at|date:'MM-dd-yyyy hh:mm a'}}</td>
-                                <td class="normalTD hide">
-                                    <a class="btn btn-sm btn-actions" title="Edit" ng-click="addEditProspectFn(0,data)">
-                                        <img src='img/SVG/edit.svg'>
+                                <td class="normalTD">
+                                    <a class="btn btn-sm btn-actions" title="Edit" ng-click="upcoming.addEditProspectFn(0,data)">
+                                        Edit
+                                    </a>
+                                    <a class="btn btn-sm btn-actions" title="Cancel" ng-click="upcoming.cancelBooking(data,0)">
+                                        Customer Cancel
+                                    </a>
+                                    <a class="btn btn-sm btn-actions" title="Cancel" ng-click="upcoming.cancelBooking(data,1)">
+                                        Admin Cancel
                                     </a>
                                 </td>
                             </tr>
@@ -75,4 +81,20 @@
             </div>
         </div>
     </div>
+    <script type="text/ng-template" id="cancelBookingConfirmFirst">
+        <div class="ngdialog-message logoutpopo">
+            <div class="ngdialog-header">
+                <p>Cancel Confirmation</p>
+            </div>
+            <div class="ngdialog-body">
+                <p>Are you sure you want to <strong>cancel</strong> this booking? </p>
+                <button type="button" ng-click="closeThisDialog('button')"
+                        class="btn btn-default pull-left btn-cancel">Cancel
+                </button>
+                <button type="button" ng-click="upcoming.cancelBookingYes()"
+                        class="btn btn-primary pull-right btn-pop">Confirm
+                </button>
+            </div>
+        </div>
+    </script>
 </div>

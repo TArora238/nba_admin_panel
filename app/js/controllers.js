@@ -679,7 +679,14 @@
         function activate() {
             $scope.mCtrl.checkToken();
             $scope.mCtrl.checkDoctorToken();
+            vm.ngDialogPop = function(template, className) {
+                ngDialog.openConfirm({
+                    template: template,
+                    className: 'ngdialog-theme-default ' + className,
+                    scope: $scope
+                }).then(function(value) {}, function(reason) {});
 
+            };
 
             vm.dtOptions = {
                 "scrollX": true
@@ -704,7 +711,34 @@
                     });
             };
             vm.initTable();
+            vm.cancelBooking = function(b,c){
+                console.log("sdf");
+                vm.booking = b;
+                vm.booking_id = b.booking_id;
+                vm.cancelled_type = c;
+                vm.ngDialogPop("cancelBookingConfirmFirst",'smallPop');
+            };
+            vm.cancelBookingYes = function () {
+                console.log("sdfsdf");
+                $.post(api.url + 'cancelBookingAdmin',{
+                    access_token:localStorage.getItem("adminToken"),
+                    booking_id:vm.booking_id,
+                    cancelled_type:vm.cancelled_type
+                })
+                    .success(function (data, status) {
+                        if (typeof data === 'string') data = JSON.parse(data);
+                        else var data = data;
+                        console.log(data);
+                        $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                        if (data.is_error == 0) {
+                            ngDialog.close();
+                            $state.reload();
 
+                        } else {
+
+                        }
+                    });
+            }
         }
     }
 })();
@@ -787,7 +821,14 @@
         function activate() {
             $scope.mCtrl.checkToken();
             $scope.mCtrl.checkDoctorToken();
+            vm.ngDialogPop = function(template, className) {
+                ngDialog.openConfirm({
+                    template: template,
+                    className: 'ngdialog-theme-default ' + className,
+                    scope: $scope
+                }).then(function(value) {}, function(reason) {});
 
+            };
 
             vm.dtOptions = {
                 "scrollX": true
@@ -812,6 +853,35 @@
                     });
             };
             vm.initTable();
+
+            vm.cancelBooking = function(b,c){
+                console.log("sdf");
+                vm.booking = b;
+                vm.booking_id = b.booking_id;
+                vm.cancelled_type = c;
+                vm.ngDialogPop("cancelBookingConfirmFirst",'smallPop');
+            };
+            vm.cancelBookingYes = function () {
+                console.log("sdfsdf");
+                $.post(api.url + 'cancelBookingAdmin',{
+                    access_token:localStorage.getItem("adminToken"),
+                    booking_id:vm.booking_id,
+                    cancelled_type:vm.cancelled_type
+                })
+                    .success(function (data, status) {
+                        if (typeof data === 'string') data = JSON.parse(data);
+                        else var data = data;
+                        console.log(data);
+                        $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                        if (data.is_error == 0) {
+                            ngDialog.close();
+                            $state.reload();
+
+                        } else {
+
+                        }
+                    });
+            }
 
         }
     }
@@ -841,7 +911,14 @@
         function activate() {
             $scope.mCtrl.checkToken();
             $scope.mCtrl.checkDoctorToken();
+            vm.ngDialogPop = function(template, className) {
+                ngDialog.openConfirm({
+                    template: template,
+                    className: 'ngdialog-theme-default ' + className,
+                    scope: $scope
+                }).then(function(value) {}, function(reason) {});
 
+            };
 
             vm.dtOptions = {
                 "scrollX": true
@@ -866,7 +943,34 @@
                     });
             };
             vm.initTable();
+            vm.cancelBooking = function(b,c){
+                console.log("sdf");
+                vm.booking = b;
+                vm.booking_id = b.booking_id;
+                vm.cancelled_type = c;
+                vm.ngDialogPop("cancelBookingConfirmFirst",'smallPop');
+            };
+            vm.cancelBookingYes = function () {
+                console.log("sdfsdf");
+                $.post(api.url + 'cancelBookingAdmin',{
+                    access_token:localStorage.getItem("adminToken"),
+                    booking_id:vm.booking_id,
+                    cancelled_type:vm.cancelled_type
+                })
+                    .success(function (data, status) {
+                        if (typeof data === 'string') data = JSON.parse(data);
+                        else var data = data;
+                        console.log(data);
+                        $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                        if (data.is_error == 0) {
+                            ngDialog.close();
+                            $state.reload();
 
+                        } else {
+
+                        }
+                    });
+            }
         }
     }
 })();
@@ -1585,4 +1689,200 @@
         }
     }
 })();
+
+
+
+/**=========================================================
+ * Module: Promo Code
+ =========================================================*/
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.category')
+        .controller('PromoController', PromoController);
+
+    PromoController.$inject = ['$http', '$state', '$rootScope', 'toaster', '$scope', 'cfpLoadingBar', 'api', '$timeout', 'ngDialog'];
+
+    function PromoController($http, $state, $rootScope, toaster, $scope, cfpLoadingBar, api, $timeout, ngDialog) {
+        var vm = this;
+
+        activate();
+
+        ////////////////
+
+        function activate() {
+            $scope.mCtrl.checkToken();
+            $scope.mCtrl.checkDoctorToken();
+
+            vm.ngDialogPop = function(template, className) {
+                ngDialog.openConfirm({
+                    template: template,
+                    className: 'ngdialog-theme-default ' + className,
+                    scope: $scope
+                }).then(function(value) {}, function(reason) {});
+            };
+
+            vm.dtOptions = {
+                "scrollX": true
+            };
+            vm.initTable = function() {
+                cfpLoadingBar.start();
+                $.post(api.url + "getPromoTypes",{
+                    access_token : localStorage.getItem("adminToken")
+                })
+                    .success(function(data, status) {
+                        cfpLoadingBar.complete();
+                        if (typeof data === 'string') data = JSON.parse(data);
+                        console.log(data);
+                        $timeout(function () {
+                            vm.promoTypes = data.promo_types;
+                            $.post(api.url + "getPromoCodes",{
+                                access_token : localStorage.getItem("adminToken")
+                            })
+                                .success(function(data, status) {
+                                    cfpLoadingBar.complete();
+                                    if (typeof data === 'string') data = JSON.parse(data);
+                                    console.log(data);
+                                    $timeout(function () {
+                                        vm.promos = data.data;
+                                        console.log(vm.promos)
+                                    })
+                                });
+
+                        })
+                    });
+            };
+            vm.initTable();
+
+            vm.addEditPromo = function (mode,d) {
+                vm.promo = d||{};
+                if(d){
+                    vm.promo.promo_type_name = d.promo_type;
+                    for(var i=0;i<vm.promoTypes.length;i++){
+                        if(d.promo_type==vm.promoTypes[i].pt_name){
+                            vm.promo.promo_type = vm.promoTypes[i].pt_id;
+                        }
+                    }
+                }
+                else{
+                    vm.promo.promo_type_name = "Select promo type";
+                    vm.promo.promo_type = "";
+                    vm.promo.no_end_date = true;
+                    vm.promo.infinite = false;
+                }
+                vm.mode = mode;
+                vm.ngDialogPop("addEditPromoModal",'bigPop');
+            };
+            vm.choosePromoType = function (pT) {
+              vm.promo.promo_type = pT.pt_id;
+              vm.promo.promo_type_name = pT.pt_name;
+            };
+            vm.addEditPromoFn = function (mode) {
+                if(!vm.promo.promo_code){
+                    toaster.pop("error","Enter a promo name");
+                    return false;
+                }
+                if(!vm.promo.description){
+                    toaster.pop("error","Enter a promo description");
+                    return false;
+                }
+                if(!vm.promo.promo_type){
+                    toaster.pop("error","Choose a promo type");
+                    return false;
+                }
+                if(!vm.promo.start_date){
+                    toaster.pop("error","Choose a promo start date");
+                    return false;
+                }
+                if(!vm.promo.no_end_date&&!vm.promo.end_date){
+                    toaster.pop("error","Choose a promo end date");
+                    return false;
+                }
+                if(!vm.promo.infinite&&!vm.promo.number_issued){
+                    toaster.pop("error","Choose a promo use limit");
+                    return false;
+                }
+
+                var modeUrl = '';
+                if (mode == 'Add') modeUrl = 'addPromoCode';
+                else modeUrl = 'editPromoCode';
+
+                cfpLoadingBar.start();
+                var data ={
+                    access_token : localStorage.getItem("adminToken"),
+                    promo_code: vm.promo.promo_code,
+                    description: vm.promo.description,
+                    promo_value: vm.promo.promo_value,
+                    promo_type: vm.promo.promo_type,
+                    start_date: moment(vm.promo.start_date).format("YYYY-MM-DD HH:MM:SS"),
+                    area_id: 1
+
+
+
+                };
+                if(vm.promo.infinite){
+                    data.infinite = 1;
+                    data.number_issued = 1;
+                }
+                else{
+                    data.infinite = 0;
+                    data.number_issued = vm.promo.number_issued;
+                }
+                if(vm.promo.no_end_date){
+                    data.no_end_date = 1;
+                    data.end_date = moment(vm.promo.start_date).format("YYYY-MM-DD HH:MM:SS");
+                }
+                else {
+                    data.no_end_date = 0;
+                    data.end_date = moment(vm.promo.end_date).format("YYYY-MM-DD HH:MM:SS");
+                }
+
+                if(mode=='Edit')data.promo_id=vm.promo.promo_id;
+                $.post(api.url + modeUrl,data)
+                    .success(function (data, status) {
+                        if (typeof data === 'string') data = JSON.parse(data);
+                        else var data = data;
+                        console.log(data);
+                        $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                        if (data.is_error == 0) {
+                            ngDialog.close();
+                            $state.reload();
+                        } else {
+
+                        }
+                    });
+            };
+            vm.deletePromo = function(i,id){
+                vm.pc_id=id;
+                vm.blockMode=i;
+                if(i==0){
+                    vm.block="Delete";
+                }
+                else vm.block="";
+                vm.ngDialogPop("deleteConfirmFirst",'smallPop');
+            };
+            vm.deletePromoYes = function () {
+                $.post(api.url + 'deletePromoCode',{
+                    access_token:localStorage.getItem("adminToken"),
+                    pc_id:vm.pc_id
+                })
+                    .success(function (data, status) {
+                        if (typeof data === 'string') data = JSON.parse(data);
+                        else var data = data;
+                        console.log(data);
+                        $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                        if (data.is_error == 0) {
+                            ngDialog.close();
+                            $state.reload();
+                        } else {
+
+                        }
+                    });
+            }
+        }
+    }
+})();
+
 

@@ -581,8 +581,37 @@
         var ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, width, height);
         return canvas.toDataURL("image/jpeg", 0.7);
-      }
+      };
+      vm.clear = function () {
+            vm.dt = null;
+        };
 
+        // Disable weekend selection
+      vm.disabled = function(date, mode) {
+            return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+        };
+      vm.toggleMin = function() {
+            vm.minDate = vm.minDate ? null : new Date();
+        };
+      vm.toggleMin();
+
+      vm.open = function($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+
+            vm.opened = true;
+        };
+        vm.open1 = function($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+
+            vm.opened1 = true;
+        };
+      vm.format="dd MMM, yyyy";
+        vm.dateOptions = {
+            formatYear: 'yy',
+            startingDay: 1
+        };
 
 
     }

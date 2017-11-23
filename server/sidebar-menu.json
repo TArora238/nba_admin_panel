@@ -53,6 +53,10 @@
     ]
   },
   {
+    "text": "Promo",
+    "sref":"app.promo"
+  },
+  {
     "text": "Feedback",
     "sref":"app.feedback"
   }

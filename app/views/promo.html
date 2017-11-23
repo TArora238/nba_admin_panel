@@ -1,0 +1,172 @@
+<div class="row p-b-30" ng-controller="PromoController as promo">
+    <div class="animated fadeIn">
+        <!--<h3 class="page-header-divpage-header">Sales</h3>-->
+        <div class="row p-15">
+            <h3 class="col-lg-4 col-md-4 col-xs-12 col-sm-4 p-0 m-0">Promo Codes</h3>
+            <button type="button" ng-click="promo.addEditPromo('Add')" class="btn btnDefault pull-right"
+                    style="text-transform:capitalize">Add</button>
+        </div>
+        <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
+            <div class="col-md-12 col-lg-12 text-center m-t-30" ng-if="promo.promos.length==0">
+                <img src="app/img/SVG/empty/patients.svg" />
+                <h4 style="color:#8592a5">No Promos added yet</h4>
+            </div>
+            <div class="panel panel-default row p-15" ng-if="promo.promos.length>0">
+                <div class="tableDiv">
+                    <div class="table-responsive">
+                        <table id="dtCuisines"  datatable="ng" dt-options="mCtrl.dtOptions"  class="table table-striped table-hover table-vmiddle" style="table-layout:fixed;">
+                            <thead>
+                            <tr>
+                                 <th class="smallTD">S.No.</th>
+                                 <th class="normalTD">Promo Name</th>
+                                 <th class="normalTD">Description</th>
+                                 <th class="normalTD">Added On</th>
+                                 <th class="normalTD">Value</th>
+                                 <th class="normalTD">Start Date</th>
+                                 <th class="normalTD">End Date</th>
+                                 <th class="normalTD">Number of Uses</th>
+                                 <th class="normalTD">Action</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="data in promo.promos">
+                                <td class="smallTD">{{$index+1}}</td>
+                                <td class="normalTD">{{data.promo_code}}</td>
+                                <td class="normalTD">{{data.description}}</td>
+                                <td class="normalTD">{{data.added_on|date:'MMM dd yyyy, hh:mm a'}}</td>
+                                <td class="normalTD">{{data.promo_value}} {{data.promo_type}}</td>
+                                <td class="normalTD">{{data.start_date|date:'MMM dd yyyy, hh:mm a'}}</td>
+                                <td class="normalTD" ng-if="!data.no_end_date">{{data.end_date|date:'MMM dd yyyy, hh:mm a'}}</td>
+                                <td class="normalTD" ng-if="data.no_end_date">No End Date</td>
+                                <td class="normalTD" ng-if="!data.infinite">{{data.number_issued}}</td>
+                                <td class="normalTD" ng-if="data.infinite">Infinite</td>
+                                <td class="largeTD">
+                                    <a ng-if="data.is_deleted==0" class="btn btn-sm btn-actions" title="Block" ng-click="promo.deletePromo(0,data.pc_id)">
+                                        Delete
+                                    </a>
+                                </td>
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/ng-template" id="addEditPromoModal">
+        <div class="ngdialog-message logoutpopo m-0">
+
+            <div class="ngdialog-header">
+                <p>{{promo.mode}} Promo</p>
+            </div>
+            <div class="ngdialog-body" style="padding: 0!important;">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <form name="promo.addPromoForm" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p-15" ng-submit="promo.addPromoForm.$submitted&&promo.addEditPromoFn(promo.mode)">
+                        <div class="form-group">
+                            <label>Promo Name</label>
+                            <input type="text" 
+                                   ng-model="promo.promo.promo_code" class="form-control" required/>
+                        </div>
+                        <div class="form-group">
+                            <label>Promo Description</label>
+                            <input type="text" 
+                                   ng-model="promo.promo.description" class="form-control" required/>
+                        </div>
+                        <div class="form-group">
+                            <label>Promo Types</label>
+                            <div class="clearfix"></div>
+                            <div class="btn-group mb-sm" uib-dropdown="dropdown">
+                                <button class="btn dropdown-toggle btn-primary" type="button" uib-dropdown-toggle="">{{promo.promo.promo_type_name}}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li ng-repeat="data in promo.promoTypes"><a ng-click="promo.choosePromoType(data)">{{data.pt_name}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Promo Value</label>
+                            <input type="text" 
+                                   ng-model="promo.promo.promo_value" class="form-control" required/>
+                        </div>
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <p class="input-group">
+                                <input class="form-control" type="text" name="date" required="" uib-datepicker-popup="{{mCtrl.format}}"
+                                       ng-model="promo.promo.start_date" is-open="mCtrl.opened" min-date="mCtrl.minDate" max-date="'2019-12-22'"
+                                       uib-datepicker-options="mCtrl.dateOptions" date-disabled="mCtrl.disabled(date, mode)" close-text="Close" ng-focus="mCtrl.open($event)" />
+                                <span class="input-group-btn">
+                                 <button class="btn btn-default m-0" style="padding: 7px 15px;" type="button" ng-click="mCtrl.open($event)">
+                                    <em class="fa fa-calendar"></em>
+                                 </button>
+                              </span>
+                            </p>
+                        </div>
+                        <div class="form-group" >
+                            <label>End Date</label>
+                            <div class="checkbox c-checkbox">
+                                <label>
+                                    <input type="checkbox" name="no_end_date" ng-model="promo.promo.no_end_date" />
+                                    <span class="fa fa-check"></span>No End Date
+                                </label>
+                            </div>
+                            <p class="input-group" ng-if="!promo.promo.no_end_date">
+                                <input class="form-control" type="text" name="date" required="" uib-datepicker-popup="{{mCtrl.format}}"
+                                       ng-model="promo.promo.end_date" is-open="mCtrl.opened1" min-date="promo.promo.start_date" max-date="'2019-12-22'"
+                                       uib-datepicker-options="mCtrl.dateOptions" date-disabled="mCtrl.disabled(date, mode)" close-text="Close" ng-focus="mCtrl.open1($event)" />
+                                <span class="input-group-btn">
+                                 <button class="btn btn-default m-0" style="padding: 7px 15px;" type="button" ng-click="mCtrl.open1($event)">
+                                    <em class="fa fa-calendar"></em>
+                                 </button>
+                              </span>
+                            </p>
+                        </div>
+                        <div class="form-group">
+                            <label>Number of Uses permitted per user</label>
+                            <div class="checkbox c-checkbox">
+                                <label>
+                                    <input type="checkbox" name="infinite" ng-model="promo.promo.infinite" />
+                                    <span class="fa fa-check"></span>Infinite
+                                </label>
+                            </div>
+                            <input type="text" ng-if="!promo.promo.infinite"
+                                   ng-model="promo.promo.number_issued" class="form-control" required/>
+                        </div>
+
+
+                        <hr class="popHR">
+
+                        <button type="button"
+                                class="btn pull-left btn-cancel m-r-15" ng-click="closeThisDialog('button')">Cancel
+                        </button>
+                        <button type="submit"
+                                class="m-l-15 btn btnDefault pull-right btn-pop" ng-if="promo.mode=='Add'">Add
+                        </button>
+                        <button type="submit"
+                                class="m-l-15 btn btnDefault pull-right btn-pop" ng-if="promo.mode=='Edit'">Save
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </script>
+    <script type="text/ng-template" id="deleteConfirmFirst">
+        <div class="ngdialog-message logoutpopo">
+            <div class="ngdialog-header">
+                <p>{{promo.block}} Confirmation</p>
+            </div>
+            <div class="ngdialog-body">
+                <p>Are you sure you want to <strong>{{promo.block}}</strong> this promo? </p>
+                <button type="button" ng-click="closeThisDialog('button')"
+                        class="btn btn-default pull-left btn-cancel">Cancel
+                </button>
+                <button type="button" ng-click="promo.deletePromoYes()"
+                        class="btn btn-primary pull-right btn-pop">Confirm
+                </button>
+            </div>
+        </div>
+    </script>
+</div>
