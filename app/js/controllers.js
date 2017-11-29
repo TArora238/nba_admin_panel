@@ -404,23 +404,47 @@
             };
             vm.initTable = function() {
                 cfpLoadingBar.start();
-
-                $.post(api.url + "unverified_artist_list",{
-                    access_token: localStorage.getItem('adminToken'),
-                    limit: 10,
-                    offset: vm.skip
+                $.post(api.url + "getAdminSkills",{
+                    access_token : localStorage.getItem("adminToken")
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
                         if (typeof data === 'string') data = JSON.parse(data);
                         console.log(data);
-                        $scope.mCtrl.flagPopUps(data.flag, data.is_error);
                         $timeout(function () {
-                            vm.artists = data.all_artists;
-                            vm.totalItems = data.all_artists.length;
-                            console.log(vm.customers)
+                            vm.skills = data.skills;
+                            console.log(vm.skills)
+                            $.post(api.url + "unverified_artist_list",{
+                                access_token: localStorage.getItem('adminToken'),
+                                limit: 10,
+                                offset: vm.skip
+                            })
+                                .success(function(data, status) {
+                                    cfpLoadingBar.complete();
+                                    if (typeof data === 'string') data = JSON.parse(data);
+                                    console.log(data);
+                                    $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                                    $timeout(function () {
+                                        vm.artists = data.all_artists;
+                                        for(var i=0;i<vm.artists.length;i++){
+                                          vm.artists[i].skills = '';
+                                          vm.artistSkills = vm.artists[i].artist_skills.split(",");
+                                          for(var j=0;j<vm.artistSkills.length;j++){
+                                              for(var k=0;k<vm.skills.length;k++)
+                                              if(vm.artistSkills[j]==vm.skills[k].skill_id){
+                                                  vm.artists[i].skills += vm.skills[k].skill + ' , ' ;
+                                              }
+                                          }
+                                            vm.artists[i].skills = vm.artists[i].skills.slice(0,-2);
+                                            console.log(vm.artists[i].skills);
+                                        }
+                                        vm.totalItems = data.all_artists.length;
+                                        console.log(vm.customers)
+                                    })
+                                });
                         })
                     });
+
 
                 $.post(api.url + "serving_areas",{
                     access_token: localStorage.getItem('adminToken')
@@ -1207,7 +1231,7 @@
             $scope.mCtrl.checkToken();
             $scope.mCtrl.checkDoctorToken();
 
-            vm.artistLists();
+            $scope.mCtrl.artistLists();
             vm.ngDialogPop = function(template, className) {
                 ngDialog.openConfirm({
                     template: template,
