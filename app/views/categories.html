@@ -74,15 +74,15 @@
                             <textarea type="text" maxlength=100 minlength="2" style="max-width: 100%"
                                       ng-model="category.cat.category_description" class="form-control" required></textarea>
                         </div>
-                        <div class="form-group">
-                            <label class="col-lg-12 col-xs-12 p-0">Serving Area</label>
-                            <div class="checkbox c-checkbox col-lg-6 col-xs-12" ng-repeat="area in mCtrl.serving_area_list" >
-                                <label class="needsclick">
-                                    <input class="needsclick" type="checkbox" name="checkbox" ng-click="category.toggleSingle(area.area_id)"  ng-model="checkbox" ng-checked="category.exists(area.area_id)" />
-                                    <span class="fa fa-check"></span>{{area.area_name}}
-                                </label>
-                            </div>
-                        </div>
+                        <!--<div class="form-group">-->
+                            <!--<label class="col-lg-12 col-xs-12 p-0">Serving Area</label>-->
+                            <!--<div class="checkbox c-checkbox col-lg-6 col-xs-12" ng-repeat="area in mCtrl.serving_area_list" >-->
+                                <!--<label class="needsclick">-->
+                                    <!--<input class="needsclick" type="checkbox" name="checkbox" ng-click="category.toggleSingle(area.area_id)"  ng-model="checkbox" ng-checked="category.exists(area.area_id)" />-->
+                                    <!--<span class="fa fa-check"></span>{{area.area_name}}-->
+                                <!--</label>-->
+                            <!--</div>-->
+                        <!--</div>-->
                         <div class="clearfix"></div>
                         <div class="form-group">
                             <label class="col-lg-12 p-0">Category Image</label>

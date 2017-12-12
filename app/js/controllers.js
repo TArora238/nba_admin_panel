@@ -484,22 +484,22 @@
             };
             vm.verifyArtist = function (data) {
                 vm.artist=data;
-                vm.ngDialogPop('verify_artist_modal','bigPop');
-            };
-            vm.verifyFn = function () {
-              if(vm.selectedArea.length==0){
-                  toaster.pop("warning","Choose at least one area for the artist to serve in.","");
-                  return false;
-              }
+            //     vm.ngDialogPop('verify_artist_modal','bigPop');
+            // };
+            // vm.verifyFn = function () {
+            //   if(vm.selectedArea.length==0){
+            //       toaster.pop("warning","Choose at least one area for the artist to serve in.","");
+            //       return false;
+            //   }
               vm.areas='';
-              for (var i=0;i<vm.selectedArea.length;i++){
-                  vm.areas+=vm.selectedArea[i];
-                  if(i!=vm.selectedArea.length-1)vm.areas+=',';
-              }
+            //   for (var i=0;i<vm.selectedArea.length;i++){
+            //       vm.areas+=vm.selectedArea[i];
+            //       if(i!=vm.selectedArea.length-1)vm.areas+=',';
+            //   }
                 $.post(api.url + "verify_artist",{
                     access_token: localStorage.getItem('adminToken'),
                     artist_id: vm.artist.artist_id,
-                    serving_areas:vm.areas
+                    serving_areas:vm.areas||'2'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1117,10 +1117,10 @@
                     toaster.pop("error", "Enter the category description", "");
                     return false;
                 }
-                if (vm.selected.length == 0) {
-                    toaster.pop("error", "Select an area", "");
-                    return false;
-                }
+                // if (vm.selected.length == 0) {
+                //     toaster.pop("error", "Select an area", "");
+                //     return false;
+                // }
                 if (mode == 'Add'&&!vm.cat.file) {
                     toaster.pop("error", "Choose a category image", "");
                     return false;
@@ -1134,13 +1134,13 @@
                 else modeUrl = 'edit_category';
                 var form = new FormData();
                 var selected_area = '';
-                for(var i=0;i<vm.selected.length;i++){
-                    selected_area+=vm.selected[i];
-                    if(i<vm.selected.length-1)selected_area+=','
-                }
+                // for(var i=0;i<vm.selected.length;i++){
+                //     selected_area+=vm.selected[i];
+                //     if(i<vm.selected.length-1)selected_area+=','
+                // }
                 vm.cat.order_id = vm.cat.order;
                 form.append("access_token", localStorage.getItem('adminToken'));
-                form.append("area_id", selected_area);
+                form.append("area_id", selected_area||'2');
                 form.append("category_name", vm.cat.category_name);
                 form.append("category_description", vm.cat.category_description);
                 form.append("order_id", vm.cat.order_id);
