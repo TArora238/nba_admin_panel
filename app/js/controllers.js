@@ -1794,7 +1794,7 @@
                         console.log(data);
                         $timeout(function () {
                             vm.promoTypes = data.promo_types;
-                            $.post(api.url + "get_promo_codes",{
+                            $.post(api.url + "get_promo_code",{
                                 access_token : localStorage.getItem("adminToken")
                             })
                                 .success(function(data, status) {
