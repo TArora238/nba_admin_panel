@@ -1526,10 +1526,10 @@
                     toaster.pop("error", "Enter the additional service time", "");
                     return false;
                 }
-                if (!vm.addServ.as_commission) {
-                    toaster.pop("error", "Enter the additional service commission", "");
-                    return false;
-                }
+                // if (!vm.addServ.as_commission) {
+                //     toaster.pop("error", "Enter the additional service commission", "");
+                //     return false;
+                // }
 
 
                 var modeUrl = '';
