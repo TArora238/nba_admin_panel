@@ -1556,8 +1556,10 @@
                 if(mode=='Edit')data.as_id=vm.addServ.as_id;
                 $.post(api.url + modeUrl,data)
                     .success(function (data, status) {
-                        if (typeof data === 'string') data = JSON.parse(data.data);
-                        else var data = data.data;
+                        console.log(data);
+                        // return false;
+                        if (typeof data === 'string') data = JSON.parse(data);
+                        else var data = data;
                         $scope.mCtrl.flagPopUps(data.flag, data.is_error);
                         if (data.is_error == 0) {
                             ngDialog.close();
