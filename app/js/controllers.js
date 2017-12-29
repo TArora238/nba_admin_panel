@@ -404,7 +404,7 @@
             };
             vm.initTable = function() {
                 cfpLoadingBar.start();
-                $.post(api.url + "getAdminSkills",{
+                $.post(api.url + "get_admin_skills",{
                     access_token : localStorage.getItem("adminToken")
                 })
                     .success(function(data, status) {
@@ -903,6 +903,38 @@
 
                         } else {
 
+                        }
+                    });
+            };
+            vm.editBooking = function (b) {
+                vm.booking = b;
+                vm.booking_id = b.booking_id;
+                vm.booking.mobile = vm.booking.booking_user_mobile.split("-");
+                vm.booking.countryCode = vm.booking.mobile[0];
+                vm.booking.user_mobile = vm.booking.mobile[1];
+                vm.ngDialogPop("editBookingPop",'bigPop');
+            };
+            vm.editBookingFn = function () {
+
+
+                var data = {
+                    access_token:localStorage.getItem("adminToken"),
+                    booking_id:vm.booking_id,
+                    booking_user_name: vm.booking.booking_user_name,
+                    booking_user_mobile: vm.booking.countryCode+"-"+vm.booking.user_mobile.replace(/[^0-9]/g, ""),
+                    user_email:vm.booking.user_email
+
+                };
+                $.post(api.url + 'edit_booking',data)
+                    .success(function (data, status) {
+                        if (typeof data === 'string') data = JSON.parse(data);
+                        else var data = data;
+                        console.log(data);
+                        $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                        if (data.is_error == 0) {
+                            ngDialog.close();
+                            $state.reload();
+                        } else {
                         }
                     });
             }
@@ -1581,7 +1613,7 @@
             vm.initTable = function() {
                 cfpLoadingBar.start();
 
-                $.post(api.url + "getAdminSkills",{
+                $.post(api.url + "get_admin_skills",{
                     access_token : localStorage.getItem("adminToken")
                 })
                     .success(function(data, status) {
@@ -1642,7 +1674,7 @@
                 vm.ngDialogPop("enableDisableConfirmFirst",'smallPop');
             };
             vm.enableDisableYes = function () {
-                $.post(api.url + 'enableDisableSkill',{
+                $.post(api.url + 'enable_disable_skill',{
                     access_token:localStorage.getItem("adminToken"),
                     skill_id:vm.block_id,
                     is_active:vm.blockMode
@@ -1753,7 +1785,7 @@
             };
             vm.initTable = function() {
                 cfpLoadingBar.start();
-                $.post(api.url + "getPromoTypes",{
+                $.post(api.url + "get_promo_types",{
                     access_token : localStorage.getItem("adminToken")
                 })
                     .success(function(data, status) {
@@ -1762,7 +1794,7 @@
                         console.log(data);
                         $timeout(function () {
                             vm.promoTypes = data.promo_types;
-                            $.post(api.url + "getPromoCodes",{
+                            $.post(api.url + "get_promo_codes",{
                                 access_token : localStorage.getItem("adminToken")
                             })
                                 .success(function(data, status) {
@@ -1830,8 +1862,8 @@
                 }
 
                 var modeUrl = '';
-                if (mode == 'Add') modeUrl = 'addPromoCode';
-                else modeUrl = 'editPromoCode';
+                if (mode == 'Add') modeUrl = 'add_promo_code';
+                else modeUrl = 'edit_promo_code';
 
                 cfpLoadingBar.start();
                 var data ={
@@ -1888,7 +1920,7 @@
                 vm.ngDialogPop("deleteConfirmFirst",'smallPop');
             };
             vm.deletePromoYes = function () {
-                $.post(api.url + 'deletePromoCode',{
+                $.post(api.url + 'delete_promo_code',{
                     access_token:localStorage.getItem("adminToken"),
                     pc_id:vm.pc_id
                 })

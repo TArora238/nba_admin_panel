@@ -7,7 +7,7 @@
         <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
             <div class="col-md-12 col-lg-12 text-center m-t-30" ng-if="tba.tobeAcceptedList.length==0">
                 <img src="app/img/SVG/empty/patients.svg" />
-                <h4 style="color:#8592a5">No bookings cancelled yet</h4>
+                <h4 style="color:#8592a5">No bookings yet to be accepted</h4>
             </div>
             <div class="panel panel-default row p-15" ng-if="tba.tobeAcceptedList.length>0">
                 <div class="tableDiv">
@@ -24,7 +24,7 @@
                                 <th class="normalTD">User Email</th>
                                 <th class="normalTD">User Address</th>
                                 <th class="normalTD">User City</th>
-                                <th class="normalTD">Area</th>
+                                <!--<th class="normalTD">Area</th>-->
                                 <th class="normalTD">Artist Name..</th>
                                 <th class="normalTD">Artist Mobile</th>
                                 <th class="normalTD">Artist Email</th>
@@ -50,7 +50,7 @@
                                 <td class="normalTD">{{data.user_email}}</td>
                                 <td class="normalTD">({{data.address_title}}):&nbsp;{{data.apt_address}}&nbsp;{{data.street_route}}&nbsp;{{dat.city}}{{data.state}}&nbsp;&nbsp;{{data.post_code}}</td>
                                 <td class="normalTD">{{data.city}}</td>
-                                <td class="normalTD">{{data.area_name}}</td>
+                                <!--<td class="normalTD">{{data.area_name}}</td>-->
                                 <td class="normalTD">{{data.artist_name||'-'}}</td>
                                 <td class="normalTD">{{data.artist_mobile||'-'|phoneNumber}}</td>
                                 <td class="normalTD">{{data.artist_email||'-'}}</td>
@@ -64,7 +64,7 @@
                                 <td class="normalTD" ng-if="data.rating<0">Not Rated Yet</td>
                                 <!--<td class="normalTD">{{ data.local_rated_at|date:'MM-dd-yyyy hh:mm a'}}</td>-->
                                 <td class="normalTD">
-                                    <a class="btn btn-sm btn-actions" title="Edit" ng-click="tba.addEditProspectFn(0,data)">
+                                    <a class="btn btn-sm btn-actions" title="Edit" ng-click="tba.editBooking(data)">
                                         Edit
                                     </a>
                                     <a class="btn btn-sm btn-actions" title="Cancel" ng-click="tba.cancelBooking(data,0)">
@@ -95,6 +95,44 @@
                 <button type="button" ng-click="tba.cancelBookingYes()"
                         class="btn btn-primary pull-right btn-pop">Confirm
                 </button>
+            </div>
+        </div>
+    </script>
+    <script type="text/ng-template" id="editBookingPop">
+        <div class="ngdialog-message logoutpopo">
+            <div class="ngdialog-header">
+                <p>Edit Booking</p>
+            </div>
+            <div class="ngdialog-body">
+                <form name="tba.editBookingForm" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p-15"
+                      ng-submit="tba.editBookingForm.$submitted&&tba.editBookingFn()">
+                    <div class="form-group">
+                        <label>User Name</label>
+                        <input type="text" maxlength=25 minlength="2"
+                               ng-model="tba.booking.booking_user_name" class="form-control" required/>
+                    </div>
+                    <div class="form-group">
+                        <label>User Phone Number</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">{{tba.booking.countryCode}}</span>
+                            <input type="text" maxlength=15 minlength=9 onkeypress="return isNumberKey(event)" masked="" data-inputmask="'mask': '(999) 999-9999'"
+                                   ng-model="tba.booking.user_mobile" class="form-control" required  />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>User Address</label>
+                        <input type="text" ng-model="tba.booking.apt_address" class="form-control" required/>
+                    </div>
+
+                    <hr class="popHR">
+
+                    <button type="button"
+                            class="btn pull-left btn-cancel m-r-15" ng-click="closeThisDialog('button')">Cancel
+                    </button>
+                    <button type="submit"
+                            class="m-l-15 btn btnDefault pull-right btn-pop" >Save
+                    </button>
+                </form>
             </div>
         </div>
     </script>
