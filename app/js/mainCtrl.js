@@ -178,11 +178,18 @@
           scope: $scope
         }).then(function(value) {}, function(reason) {});
 
-      }
+      };
+      vm.utc_to_local = function (a,b) {
+            if(a==null) return '';
+            vm.local = '';
+            vm.local = new Date(a);
+            vm.local = new Date(vm.local.getTime() - parseInt(b)*60*1000);
+            return vm.local;
+      };
       vm.loginRedirect = function() {
         localStorage.removeItem('adminToken');
         $state.go('login');
-      }
+      };
       vm.continueToDashboard = function(a) {
         // ngDialog.close();
         // $rootScope.get_settings();

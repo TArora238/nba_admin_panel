@@ -17,24 +17,24 @@
                             <tr>
                                 <th class="smallTD">S No.</th>
                                 <th class="normalTD">Booking ID</th>
-                                <th class="normalTD">Time Booked</th>
-                                <th class="normalTD">Time Accepted</th>
+                                <th class="normalTD">Local Booking Time</th>
+                                <!--<th class="normalTD">Time Accepted</th>-->
                                 <th class="normalTD">User Name</th>
                                 <th class="normalTD">User Mobile</th>
                                 <th class="normalTD">User Email</th>
                                 <th class="normalTD">User Address</th>
                                 <th class="normalTD">User City</th>
                                 <!--<th class="normalTD">Area</th>-->
-                                <th class="normalTD">Artist Name..</th>
-                                <th class="normalTD">Artist Mobile</th>
-                                <th class="normalTD">Artist Email</th>
-                                <th class="largeTD">Start Time</th>
-                                <th class="largeTD">End Time</th>
-                                <th class="largeTD">Actual Start Time</th>
-                                <th class="largeTD">Actual End Time</th>
+                                <!--<th class="normalTD">Artist Name..</th>-->
+                                <!--<th class="normalTD">Artist Mobile</th>-->
+                                <!--<th class="normalTD">Artist Email</th>-->
+                                <th class="largeTD">Local Start Time</th>
+                                <th class="largeTD">Local End Time</th>
+                                <!--<th class="largeTD">Actual Start Time</th>-->
+                                <!--<th class="largeTD">Actual End Time</th>-->
                                 <th class="largeTD">Additional Comments</th>
                                 <!--<th class="largeTD">Overtime Minutes</th>-->
-                                <th class="largeTD">Rating</th>
+                                <!--<th class="largeTD">Rating</th>-->
                                 <!--<th class="largeTD">Rated At</th>-->
                                 <th class="normalTD">Actions</th>
                             </tr>
@@ -44,24 +44,24 @@
                                 <td class="smallTD">{{$index+1}}</td>
                                 <td class="normalTD">{{data.booking_id}}</td>
                                 <td class="largeTD">{{data.local_date_booked|date:'MM-dd-yyyy hh:mm a'}}</td>
-                                <td class="largeTD">{{data.local_accepted_at|date:'MM-dd-yyyy hh:mm a'}}</td>
+                                <!--<td class="largeTD">{{data.local_accepted_at|date:'MM-dd-yyyy hh:mm a'}}</td>-->
                                 <td class="normalTD">{{data.booking_user_name}}</td>
                                 <td class="normalTD">{{data.booking_user_mobile|phoneNumber}}</td>
                                 <td class="normalTD">{{data.user_email}}</td>
                                 <td class="normalTD">({{data.address_title}}):&nbsp;{{data.apt_address}}&nbsp;{{data.street_route}}&nbsp;{{dat.city}}{{data.state}}&nbsp;&nbsp;{{data.post_code}}</td>
                                 <td class="normalTD">{{data.city}}</td>
                                 <!--<td class="normalTD">{{data.area_name}}</td>-->
-                                <td class="normalTD">{{data.artist_name||'-'}}</td>
-                                <td class="normalTD">{{data.artist_mobile||'-'|phoneNumber}}</td>
-                                <td class="normalTD">{{data.artist_email||'-'}}</td>
+                                <!--<td class="normalTD">{{data.artist_name||'-'}}</td>-->
+                                <!--<td class="normalTD">{{data.artist_mobile||'-'|phoneNumber}}</td>-->
+                                <!--<td class="normalTD">{{data.artist_email||'-'}}</td>-->
                                 <td class="largeTD">{{data.local_start_time|date:'MM-dd-yyyy hh:mm a'}}</td>
                                 <td class="largeTD">{{data.local_end_time|date:'MM-dd-yyyy hh:mm a'}}</td>
-                                <td class="largeTD">{{data.local_actual_start_time|date:'MM-dd-yyyy hh:mm a'}}</td>
-                                <td class="largeTD">{{data.local_actual_end_time|date:'MM-dd-yyyy hh:mm a'}}</td>
+                                <!--<td class="largeTD">{{data.local_actual_start_time|date:'MM-dd-yyyy hh:mm a'}}</td>-->
+                                <!--<td class="largeTD">{{data.local_actual_end_time|date:'MM-dd-yyyy hh:mm a'}}</td>-->
                                 <td class="normalTD">{{data.additional_comment||'-'}}</td>
                                 <!--<td class="normalTD">{{ data.overtime_minutes||'-'}}</td>-->
-                                <td class="normalTD" ng-if="data.rating>=0">{{data.rating||'-'}}</td>
-                                <td class="normalTD" ng-if="data.rating<0">Not Rated Yet</td>
+                                <!--<td class="normalTD" ng-if="data.rating>=0">{{data.rating||'-'}}</td>-->
+                                <!--<td class="normalTD" ng-if="data.rating<0">Not Rated Yet</td>-->
                                 <!--<td class="normalTD">{{ data.local_rated_at|date:'MM-dd-yyyy hh:mm a'}}</td>-->
                                 <td class="normalTD">
                                     <a class="btn btn-sm btn-actions" title="Edit" ng-click="tba.editBooking(data)">

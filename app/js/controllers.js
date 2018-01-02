@@ -499,7 +499,7 @@
                 $.post(api.url + "verify_artist",{
                     access_token: localStorage.getItem('adminToken'),
                     artist_id: vm.artist.artist_id,
-                    serving_areas:vm.areas||'2'
+                    serving_areas:vm.areas||'1'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -604,7 +604,7 @@
 
                 $.post(api.url + "cancelled_bookings",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||1
+                    area_id: localStorage.getItem('area_id')||'1'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -613,6 +613,15 @@
                         $scope.mCtrl.flagPopUps(data.flag, data.is_error);
                         $timeout(function () {
                             vm.cancelledList = data.all_bookings;
+                            for(var i=0;i<vm.cancelledList.length;i++){
+                                vm.cancelledList[i].local_start_time = $scope.mCtrl.utc_to_local(vm.cancelledList[i].local_start_time,vm.cancelledList[i].offset);
+                                vm.cancelledList[i].local_date_booked = $scope.mCtrl.utc_to_local(vm.cancelledList[i].local_date_booked,vm.cancelledList[i].offset);
+                                vm.cancelledList[i].local_end_time = $scope.mCtrl.utc_to_local(vm.cancelledList[i].local_end_time,vm.cancelledList[i].offset);
+                                vm.cancelledList[i].local_accepted_at = $scope.mCtrl.utc_to_local(vm.cancelledList[i].local_accepted_at,vm.cancelledList[i].offset);
+                                vm.cancelledList[i].local_started_at = $scope.mCtrl.utc_to_local(vm.cancelledList[i].local_started_at,vm.cancelledList[i].offset);
+                                vm.cancelledList[i].local_ended_at = $scope.mCtrl.utc_to_local(vm.cancelledList[i].local_ended_at,vm.cancelledList[i].offset);
+                                vm.cancelledList[i].local_rated_at = $scope.mCtrl.utc_to_local(vm.cancelledList[i].local_rated_at,vm.cancelledList[i].offset);
+                            }
                             vm.totalItems = data.all_bookings.length;
                             console.log(vm.cancelledList)
                         })
@@ -659,7 +668,7 @@
 
                 $.post(api.url + "finished_bookings",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||1
+                    area_id: localStorage.getItem('area_id')||'1'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -668,6 +677,15 @@
                         $scope.mCtrl.flagPopUps(data.flag, data.is_error);
                         $timeout(function () {
                             vm.finishedList = data.all_bookings;
+                            for(var i=0;i<vm.finishedList.length;i++){
+                                vm.finishedList[i].local_start_time = $scope.mCtrl.utc_to_local(vm.finishedList[i].local_start_time,vm.finishedList[i].offset);
+                                vm.finishedList[i].local_date_booked = $scope.mCtrl.utc_to_local(vm.finishedList[i].local_date_booked,vm.finishedList[i].offset);
+                                vm.finishedList[i].local_end_time = $scope.mCtrl.utc_to_local(vm.finishedList[i].local_end_time,vm.finishedList[i].offset);
+                                vm.finishedList[i].local_accepted_at = $scope.mCtrl.utc_to_local(vm.finishedList[i].local_accepted_at,vm.finishedList[i].offset);
+                                vm.finishedList[i].local_started_at = $scope.mCtrl.utc_to_local(vm.finishedList[i].local_started_at,vm.finishedList[i].offset);
+                                vm.finishedList[i].local_ended_at = $scope.mCtrl.utc_to_local(vm.finishedList[i].local_ended_at,vm.finishedList[i].offset);
+                                vm.finishedList[i].local_rated_at = $scope.mCtrl.utc_to_local(vm.finishedList[i].local_rated_at,vm.finishedList[i].offset);
+                            }
                             vm.totalItems = data.all_bookings.length;
                             console.log(vm.finishedList)
                         })
@@ -720,7 +738,7 @@
 
                 $.post(api.url + "ongoing_bookings",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||1
+                    area_id: localStorage.getItem('area_id')||'1'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -729,6 +747,13 @@
                         $scope.mCtrl.flagPopUps(data.flag, data.is_error);
                         $timeout(function () {
                             vm.ongoingList = data.all_bookings;
+                            for(var i=0;i<vm.ongoingList.length;i++){
+                                vm.ongoingList[i].local_start_time = $scope.mCtrl.utc_to_local(vm.ongoingList[i].local_start_time,vm.ongoingList[i].offset);
+                                vm.ongoingList[i].local_date_booked = $scope.mCtrl.utc_to_local(vm.ongoingList[i].local_date_booked,vm.ongoingList[i].offset);
+                                vm.ongoingList[i].local_end_time = $scope.mCtrl.utc_to_local(vm.ongoingList[i].local_end_time,vm.ongoingList[i].offset);
+                                vm.ongoingList[i].local_accepted_at = $scope.mCtrl.utc_to_local(vm.ongoingList[i].local_accepted_at,vm.ongoingList[i].offset);
+                                vm.ongoingList[i].local_started_at = $scope.mCtrl.utc_to_local(vm.ongoingList[i].local_started_at,vm.ongoingList[i].offset);
+                            }
                             vm.totalItems = data.all_bookings.length;
                             console.log(vm.ongoingList)
                         })
@@ -801,7 +826,7 @@
 
                 $.post(api.url + "paid_bookings",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||1
+                    area_id: localStorage.getItem('area_id')||'1'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -810,6 +835,14 @@
                         $scope.mCtrl.flagPopUps(data.flag, data.is_error);
                         $timeout(function () {
                             vm.paidList = data.all_bookings;
+                            for(var i=0;i<vm.paidList.length;i++){
+                                vm.paidList[i].local_start_time = $scope.mCtrl.utc_to_local(vm.paidList[i].local_start_time,vm.paidList[i].offset);
+                                vm.paidList[i].local_date_booked = $scope.mCtrl.utc_to_local(vm.paidList[i].local_date_booked,vm.paidList[i].offset);
+                                vm.paidList[i].local_end_time = $scope.mCtrl.utc_to_local(vm.paidList[i].local_end_time,vm.paidList[i].offset);
+                                vm.paidList[i].local_accepted_at = $scope.mCtrl.utc_to_local(vm.paidList[i].local_accepted_at,vm.paidList[i].offset);
+                                vm.paidList[i].local_started_at = $scope.mCtrl.utc_to_local(vm.paidList[i].local_started_at,vm.paidList[i].offset);
+                                vm.paidList[i].local_ended_at = $scope.mCtrl.utc_to_local(vm.paidList[i].local_ended_at,vm.paidList[i].offset);
+                            }
                             vm.totalItems = data.all_bookings.length;
                             console.log(vm.paidList)
                         })
@@ -862,7 +895,7 @@
 
                 $.post(api.url + "tobeaccepted_bookings",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||1
+                    area_id: localStorage.getItem('area_id')||'1'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -871,8 +904,14 @@
                         $scope.mCtrl.flagPopUps(data.flag, data.is_error);
                         $timeout(function () {
                             vm.tobeAcceptedList = data.all_bookings;
+                            for(var i=0;i<vm.tobeAcceptedList.length;i++){
+                                vm.tobeAcceptedList[i].local_start_time = $scope.mCtrl.utc_to_local(vm.tobeAcceptedList[i].local_start_time,vm.tobeAcceptedList[i].offset);
+                                vm.tobeAcceptedList[i].local_date_booked = $scope.mCtrl.utc_to_local(vm.tobeAcceptedList[i].local_date_booked,vm.tobeAcceptedList[i].offset);
+                                vm.tobeAcceptedList[i].local_end_time = $scope.mCtrl.utc_to_local(vm.tobeAcceptedList[i].local_end_time,vm.tobeAcceptedList[i].offset);
+                            }
                             vm.totalItems = data.all_bookings.length;
                             console.log(vm.tobeAcceptedList)
+
                         })
                     });
             };
@@ -984,7 +1023,7 @@
 
                 $.post(api.url + "upcoming_bookings",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||1
+                    area_id: localStorage.getItem('area_id')||'1'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -993,6 +1032,12 @@
                         $scope.mCtrl.flagPopUps(data.flag, data.is_error);
                         $timeout(function () {
                             vm.upcomingList = data.all_bookings;
+                            for(var i=0;i<vm.upcomingList.length;i++){
+                                vm.upcomingList[i].local_start_time = $scope.mCtrl.utc_to_local(vm.upcomingList[i].local_start_time,vm.upcomingList[i].offset);
+                                vm.upcomingList[i].local_date_booked = $scope.mCtrl.utc_to_local(vm.upcomingList[i].local_date_booked,vm.upcomingList[i].offset);
+                                vm.upcomingList[i].local_end_time = $scope.mCtrl.utc_to_local(vm.upcomingList[i].local_end_time,vm.upcomingList[i].offset);
+                                vm.upcomingList[i].local_accepted_at = $scope.mCtrl.utc_to_local(vm.upcomingList[i].local_accepted_at,vm.upcomingList[i].offset);
+                            }
                             vm.totalItems = data.all_bookings.length;
                             console.log(vm.upcomingList)
                         })
@@ -1073,7 +1118,7 @@
 
                 $.post(api.url + "categories_list",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||'2'
+                    area_id: localStorage.getItem('area_id')||'1'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1176,7 +1221,7 @@
                     vm.cat.order_id = 1;
                 }
                 form.append("access_token", localStorage.getItem('adminToken'));
-                form.append("area_id", selected_area||'2');
+                form.append("area_id", selected_area||'1');
                 form.append("category_name", vm.cat.category_name);
                 form.append("category_description", vm.cat.category_description);
                 form.append("order_id", vm.cat.order_id);
@@ -1421,7 +1466,7 @@
                 form.append("service_name", vm.serv.service_name);
                 form.append("service_description", vm.serv.service_description);
                 form.append("order_id", vm.serv.order_id);
-                form.append("skills_required", skills||'1');
+                form.append("skills_required", skills||1);
                 form.append("service_price", vm.serv.service_price);
                 form.append("service_time", vm.serv.service_time);
                 form.append("service_commission", vm.serv.service_commission);

@@ -56,8 +56,8 @@
                                 <td class="normalTD">{{data.artist_email||'-'}}</td>
                                 <td class="largeTD">{{data.local_start_time|date:'MM-dd-yyyy hh:mm a'}}</td>
                                 <td class="largeTD">{{data.local_end_time|date:'MM-dd-yyyy hh:mm a'}}</td>
-                                <td class="largeTD">{{data.local_actual_start_time|date:'MM-dd-yyyy hh:mm a'}}</td>
-                                <td class="largeTD">{{data.local_actual_end_time|date:'MM-dd-yyyy hh:mm a'}}</td>
+                                <td class="largeTD">{{data.local_started_at|date:'MM-dd-yyyy hh:mm a'}}</td>
+                                <td class="largeTD">{{data.local_ended_at|date:'MM-dd-yyyy hh:mm a'}}</td>
                                 <td class="normalTD">{{data.additional_comment||'-'}}</td>
                                 <!--<td class="normalTD">{{data.overtime_minutes||'-'}}</td>-->
                                 <td class="normalTD" ng-if="data.rating>=0">{{data.rating||'-'}}</td>

@@ -17,8 +17,8 @@
                             <tr>
                                 <th class="smallTD">S No.</th>
                                 <th class="normalTD">Booking ID</th>
-                                <th class="normalTD">Time Booked</th>
-                                <th class="normalTD">Time Accepted</th>
+                                <th class="normalTD">Local Booking Time</th>
+                                <th class="normalTD">Local Accepting Time</th>
                                 <th class="normalTD">User Name</th>
                                 <th class="normalTD">User Mobile</th>
                                 <th class="normalTD">User Email</th>
@@ -30,11 +30,11 @@
                                 <th class="normalTD">Artist Email</th>
                                 <th class="largeTD">Start Time</th>
                                 <th class="largeTD">End Time</th>
-                                <th class="largeTD">Actual Start Time</th>
-                                <th class="largeTD">Actual End Time</th>
-                                <th class="largeTD">Additional Comments</th>
+                                <!--<th class="largeTD">Actual Start Time</th>-->
+                                <!--<th class="largeTD">Actual End Time</th>-->
+                                <!--<th class="largeTD">Additional Comments</th>-->
                                 <!--<th class="largeTD">Overtime Minutes</th>-->
-                                <th class="largeTD">Rating</th>
+                                <!--<th class="largeTD">Rating</th>-->
                                 <!--<th class="largeTD">Rated At</th>-->
                                 <th class="normalTD">Actions</th>
                             </tr>
@@ -56,12 +56,12 @@
                                 <td class="normalTD">{{data.artist_email||'-'}}</td>
                                 <td class="largeTD">{{data.local_start_time|date:'MM-dd-yyyy hh:mm a'}}</td>
                                 <td class="largeTD">{{data.local_end_time|date:'MM-dd-yyyy hh:mm a'}}</td>
-                                <td class="largeTD">{{data.local_actual_start_time|date:'MM-dd-yyyy hh:mm a'}}</td>
-                                <td class="largeTD">{{data.local_actual_end_time|date:'MM-dd-yyyy hh:mm a'}}</td>
-                                <td class="normalTD">{{data.additional_comment||'-'}}</td>
+                                <!--<td class="largeTD">{{data.local_actual_start_time|date:'MM-dd-yyyy hh:mm a'}}</td>-->
+                                <!--<td class="largeTD">{{data.local_actual_end_time|date:'MM-dd-yyyy hh:mm a'}}</td>-->
+                                <!--<td class="normalTD">{{data.additional_comment||'-'}}</td>-->
                                 <!--<td class="normalTD">{{data.overtime_minutes||'-'}}</td>-->
-                                <td class="normalTD" ng-if="data.rating>=0">{{data.rating||'-'}}</td>
-                                <td class="normalTD" ng-if="data.rating<0">Not Rated Yet</td>
+                                <!--<td class="normalTD" ng-if="data.rating>=0">{{data.rating||'-'}}</td>-->
+                                <!--<td class="normalTD" ng-if="data.rating<0">Not Rated Yet</td>-->
                                 <!--<td class="normalTD">{{data.local_rated_at|date:'MM-dd-yyyy hh:mm a'}}</td>-->
                                 <td class="normalTD">
                                     <a class="btn btn-sm btn-actions" title="Edit" ng-click="upcoming.addEditProspectFn(0,data)">
