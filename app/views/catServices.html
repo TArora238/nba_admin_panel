@@ -109,7 +109,7 @@
                             <input type="file" style="visibility: hidden;" class="upload fileUpload" name="profilePic" onchange="angular.element(this).scope().fileUpload(this.files)" id="fileInput"
                                    data-button-text="Single" uploader="uploader" accept="image/*" />
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" ng-if="catServ.services.length>0">
                             <label>Service Order</label>
                             <div class="btn-group mb-sm" uib-dropdown="dropdown">
                                 <button class="btn dropdown-toggle btn-primary" type="button" uib-dropdown-toggle="">{{catServ.serv.order}}

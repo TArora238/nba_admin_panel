@@ -499,7 +499,7 @@
                 $.post(api.url + "verify_artist",{
                     access_token: localStorage.getItem('adminToken'),
                     artist_id: vm.artist.artist_id,
-                    serving_areas:vm.areas||'2'
+                    serving_areas:vm.areas||'1'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1073,7 +1073,7 @@
 
                 $.post(api.url + "categories_list",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||1
+                    area_id: localStorage.getItem('area_id')||'1'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1157,10 +1157,11 @@
                     toaster.pop("error", "Choose a category image", "");
                     return false;
                 }
-                if(vm.cat.order=='Order ID'){
+                if(vm.categories.length>0 && vm.cat.order=='Order ID'){
                     toaster.pop("error", "Choose a category order", "");
                     return false;
                 }
+
                 var modeUrl = '';
                 if (mode == 'Add') modeUrl = 'add_category';
                 else modeUrl = 'edit_category';
@@ -1171,8 +1172,11 @@
                 //     if(i<vm.selected.length-1)selected_area+=','
                 // }
                 vm.cat.order_id = vm.cat.order;
+                if(vm.categories.length==0){
+                    vm.cat.order_id = 1;
+                }
                 form.append("access_token", localStorage.getItem('adminToken'));
-                form.append("area_id", selected_area||'2');
+                form.append("area_id", selected_area||'1');
                 form.append("category_name", vm.cat.category_name);
                 form.append("category_description", vm.cat.category_description);
                 form.append("order_id", vm.cat.order_id);
@@ -1264,14 +1268,28 @@
             $scope.mCtrl.checkDoctorToken();
 
             $scope.mCtrl.artistLists();
-            vm.ngDialogPop = function(template, className) {
-                ngDialog.openConfirm({
-                    template: template,
-                    className: 'ngdialog-theme-default ' + className,
-                    scope: $scope
-                }).then(function(value) {}, function(reason) {});
 
-            };
+            vm.ngDialogPop = function(template, className, f) {
+                if (f) {
+                    ngDialog.openConfirm({
+                        template: template,
+                        className: 'ngdialog-theme-default ' + className,
+                        scope: $scope,
+                        closeByEscape: false,
+                        closeByDocument: false,
+                        showClose: false,
+                    }).then(function(value) {}, function(reason) {});
+                } else {
+                    ngDialog.openConfirm({
+                        template: template,
+                        className: 'ngdialog-theme-default ' + className,
+                        scope: $scope,
+                        closeByEscape: false,
+                        closeByDocument: false
+                    }).then(function(value) {}, function(reason) {});
+                }
+
+            }
             vm.dtOptions = {
                 "scrollX": true
             };
@@ -1328,7 +1346,7 @@
                     }
                 }
                 vm.mode = mode;
-                vm.ngDialogPop("addEditServModal",'biggerPop orderPop');
+                vm.ngDialogPop("addEditServModal",'biggerPop orderPop',1);
             };
             vm.uploadFile = function() {
                 vm.manualEnter = 0;
@@ -1378,10 +1396,12 @@
                     toaster.pop("error", "Enter the service commission", "");
                     return false;
                 }
-                if(vm.serv.order=='Order ID'){
+                if(vm.services.length>0 && vm.serv.order=='Order ID'){
                     toaster.pop("error", "Choose a category order", "");
                     return false;
                 }
+
+
                 var modeUrl = '';
                 if (mode == 'Add') modeUrl = 'add_service';
                 else modeUrl = 'edit_service';
@@ -1392,6 +1412,10 @@
                     if(i<vm.selected.length-1)skills+=','
                 }
                 vm.serv.order_id = vm.serv.order;
+                if(vm.services.length==0){
+                    console.log("Asfdbf");
+                    vm.serv.order_id = 1;
+                }
                 form.append("access_token", localStorage.getItem('adminToken'));
                 form.append("category_id", localStorage.getItem("cat_id"));
                 form.append("service_name", vm.serv.service_name);

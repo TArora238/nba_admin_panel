@@ -92,9 +92,9 @@
                             <input type="file" style="visibility: hidden;" class="upload fileUpload" name="profilePic" onchange="angular.element(this).scope().fileUpload(this.files)" id="fileInput"
                                    data-button-text="Single" uploader="uploader" accept="image/*" />
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" ng-if="category.categories.length>0">
                             <label>Category Order</label>
-                            <div class="btn-group mb-sm" uib-dropdown="dropdown">
+                            <div class="btn-group mb-sm" uib-dropdown="dropdown" >
                                 <button class="btn dropdown-toggle btn-primary" type="button" uib-dropdown-toggle="">{{category.cat.order}}
                                     <span class="caret"></span>
                                 </button>
