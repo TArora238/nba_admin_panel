@@ -34,7 +34,7 @@
                                 <td class="smallTD">{{$index+1}}</td>
                                 <td class="normalTD" >
                                     <!-- {{data.patient_first_name}}&nbsp;{{data.patient_last_name}} -->
-                                    <a style="color:#000000" >{{data.user_name||'N/A'}}</a>
+                                    <a style="color:#000000" ng-click="cust.viewDetails(data.user_id)">{{data.user_name||'N/A'}}</a>
                                 </td>
                                 <td class="normalTD">
                                     <img ng-src="{{data.user_image}}" ng-if="data.user_image" class="w-100 img--circle"/>

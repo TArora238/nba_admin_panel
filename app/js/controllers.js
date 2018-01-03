@@ -231,10 +231,127 @@
                 }
             });
 
+        };
+        vm.viewDetails = function (id) {
+          localStorage.setItem("customer_id",id);
+          $state.go("app.profile");
         }
     }
   }
 })();
+
+
+
+
+/**=========================================================
+ * Module: Customer Profile
+ =========================================================*/
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.customers')
+        .controller('CustomerProfileController', CustomerProfileController);
+
+    CustomerProfileController.$inject = ['$http', '$state', '$rootScope', 'toaster', '$scope', 'cfpLoadingBar', 'api', '$timeout', 'ngDialog'];
+
+    function CustomerProfileController($http, $state, $rootScope, toaster, $scope, cfpLoadingBar, api, $timeout, ngDialog) {
+        var vm = this;
+
+        activate();
+
+        ////////////////
+
+        function activate() {
+            $scope.mCtrl.checkToken();
+            $scope.mCtrl.checkDoctorToken();
+            vm.ngDialogPop = function(template, className) {
+                ngDialog.openConfirm({
+                    template: template,
+                    className: 'ngdialog-theme-default ' + className,
+                    scope: $scope,
+                    closeByEscape: false,
+                    closeByDocument: false
+                }).then(function(value) {}, function(reason) {});
+
+            };
+            vm.id = localStorage.getItem("customer_id");
+            $.post(api.url + 'user_detail', {
+                access_token: localStorage.getItem('adminToken'),
+                user_id: vm.id
+            }).success(function (data, status) {
+                if (typeof data === 'string')
+                    var data = JSON.parse(data);
+                console.log(data);
+                vm.profile = {};
+                $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                if (data.is_error == 0) {
+                    vm.profile = data[0];
+                    console.log(vm.profile);
+                    vm.profile.mobile = vm.profile.user_mobile.split("-");
+                    vm.profile.countryCode = vm.profile.mobile[0];
+                    vm.profile.user_mobile = vm.profile.mobile[1];
+                    if(!vm.profile.user_image||vm.profile.user_image==null)vm.profile.profilePic = 'app/img/SVG/avatar.svg';
+                    else vm.profile.profilePic = vm.profile.user_image;
+                }
+            });
+            vm.uploadFile = function() {
+                vm.manualEnter = 0;
+                $('.fileUpload').trigger('click');
+            };
+            $scope.fileUpload = function(files) {
+                if (files.length > 0) {
+                    console.log(files);
+                    vm.profile.file = $scope.mCtrl.processfile(files[0]);
+                    vm.profile.fileName = files[0].name;
+                    $timeout(function () {
+                        console.log(vm.profile.file);
+                        if(!vm.profile.file){
+                            vm.profile.file = $scope.mCtrl.file;
+                            console.log(vm.profile.file);
+                        }
+                    }, 1000);
+                }
+                else {
+                    toaster.pop('error', 'Please choose a file', '');
+
+                }
+            };
+            vm.saveProfileData = function (f) {
+                if (vm.profile.user_name.trim().length == 0) {
+                    toaster.pop('warning', 'Enter a valid name', '');
+                    return false;
+                }
+                if (!vm.profile.user_mobile) {
+                    toaster.pop('warning', 'Enter a valid mobile', '');
+                    return false;
+                } else var mobile = vm.profile.user_mobile.replace(/[^0-9]/g, "");
+                if (mobile.length < 9) {
+                    toaster.pop('warning', 'Enter a valid mobile', '');
+                    return false;
+                }
+                // var mobile='';
+                if (!mobile) {
+                    toaster.pop('warning', 'Enter a valid mobile', '');
+                    return false;
+                } else {
+                    mobile = vm.profile.user_mobile.replace(/[^0-9]/g, "");
+                    if (mobile.length < 9) {
+                        toaster.pop('warning', 'Enter a valid mobile', '');
+                        return false;
+                    }
+                }
+                if (!vm.profile.user_email || vm.profile.user_email.trim().length == 0) {
+                    toaster.pop('warning', 'Enter a valid email', '');
+                    return false;
+                }
+            }
+
+        }
+    }
+})();
+
 
 /**=========================================================
  * Module: Verified Artists List
@@ -1415,6 +1532,9 @@
 
                 }
             };
+            vm.orderSelect = function (o) {
+                vm.serv.order=o;
+            };
             vm.addEditServiceFn = function (mode) {
                 if (!vm.serv.service_name) {
                     toaster.pop("error", "Enter the service name", "");
@@ -1426,7 +1546,7 @@
                 }
 
                 if (mode == 'Add'&&!vm.serv.file) {
-                    toaster.pop("error", "Choose a category image", "");
+                    toaster.pop("error", "Choose a service image", "");
                     return false;
                 }
                 if (!vm.serv.service_price) {
@@ -1442,7 +1562,7 @@
                     return false;
                 }
                 if(vm.services.length>0 && vm.serv.order=='Order ID'){
-                    toaster.pop("error", "Choose a category order", "");
+                    toaster.pop("error", "Choose a service order", "");
                     return false;
                 }
 

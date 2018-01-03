@@ -222,6 +222,11 @@
               templateUrl:  helper.basepath('promo.html'),
               resolve: helper.resolveFor('datatables')
             })
+          .state('app.profile', {
+              url: '/profile',
+              templateUrl:  helper.basepath('customerProfile.html'),
+              resolve: helper.resolveFor('ngImgCrop')
+            })
 
     }
 })();

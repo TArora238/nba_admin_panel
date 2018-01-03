@@ -1,0 +1,106 @@
+<div class="row p-b-30" ng-controller="CustomerProfileController as profile">
+    <div class="animated fadeIn">
+        <div class="row p-15">
+            <h3 class="col-lg-4 col-md-4 col-xs-12 col-sm-4 p-0 m-0">Customer Profile</h3>
+            <button type="button" class="btn btnDefault pull-right m-r-15" ui-sref="app.customers"
+                    style="text-transform:capitalize">Back</button>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-sm-4 col-lg-4 col-xs-12">
+                <div class="panel panel-default">
+                    <div class="panel-body text-center">
+                        <div class="pv-lg">
+                            <a  style="margin-top:0px;margin-right:0px;font-size:0;opacity: 1">
+                                <img style="width: 240px" id="proPic" ng-src="{{profile.profile.profilePic!='' ? profile.profile.profilePic : 'app/img/SVG/avatar.svg'}}" class="img-circle">
+                            </a>
+                            <input type="file" style="visibility: hidden;" class="upload fileUpload" name="profilePic" onchange="angular.element(this).scope().fileUpload(this.files)" id="fileInput"
+                                   data-button-text="Single" uploader="uploader" accept="image/*" />
+                        </div>
+                        <div class="text-center"><a class="btn btnDefault" ng-click="profile.uploadFile()">Upload Profile Picture</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-8 profileEditDiv">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="h4 text-left">Personal Information</div>
+                        <div class="row pv-lg">
+                            <div class="col-lg-2"></div>
+                            <div class="col-lg-8">
+                                <form enctype="multipart/form-data" name="profile.profileData" ng-submit="profile.profileData.$submitted&&profile.saveProfileData()">
+                                    <div class="form-group">
+                                        <label>Name</label>
+                                        <input name="profile.userName" maxlength=25 type="text" ng-model="profile.profile.user_name" ng-change="profile.profileEditFn()" class="form-control" required/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Phone Number</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">{{profile.profile.countryCode}}</span>
+                                            <input type="text" maxlength=15 minlength=9 onkeypress="return isNumberKey(event)" masked="" data-inputmask="'mask': '(999) 999-9999'"  ng-change="profile.profileEditFn()"
+                                                   ng-model="profile.profile.user_mobile" class="form-control" required name="profile.userPhone" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        <input name="profile.userEmail" readonly type="email" ng-model="profile.profile.user_email" ng-change="profile.profileEditFn()" class="form-control" required/>
+                                    </div>
+                                    <!--<div class="m-b-15">-->
+                                        <!--<label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 p-0">Date Of Birth : </label>-->
+                                        <!--<div class="col-lg-12 col-xs-12 p-0">-->
+
+                                            <!--<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 p-r-0 p-l-0">-->
+                                                <!--<select ng-model="profile.profile.dob.month" class="form-control" ng-class="{'invalidDate':profile.invalidDate}" ng-change="profile.check_date(profile.profile.dob);profile.profileEditFn()" style="height:35px;">-->
+                                                    <!--<option value="">Month</option>-->
+                                                    <!--<option ng-value="month" ng-repeat="month in months" ng-selected="$index == profile.DOBMonth">{{month.month_name}}</option>-->
+                                                <!--</select>-->
+                                            <!--</div>-->
+                                            <!--<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 p-r-0">-->
+                                                <!--<select ng-model="profile.profile.dob.day" class="form-control" ng-class="{'invalidDate':profile.invalidDate}" ng-change="profile.check_date(profile.profile.dob);profile.profileEditFn()" style="height:35px;">-->
+                                                    <!--<option value="">Date</option>-->
+                                                    <!--<option ng-value="day" ng-repeat="day in days"  ng-selected="$index == profile.DOBDay">{{day}}</option>-->
+                                                <!--</select>-->
+                                            <!--</div>-->
+                                            <!--<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 p-r-0">-->
+                                                <!--<select ng-model="profile.profile.dob.year" class="form-control" ng-class="{'invalidDate':profile.invalidDate}" ng-change="profile.check_date(profile.profile.dob);profile.profileEditFn()" style="height:35px;">-->
+                                                    <!--<option value="">Year</option>-->
+                                                    <!--<option ng-value="year" ng-repeat="year in birthYears" ng-selected="year == profile.DOBMonth">{{year}}</option>-->
+                                                <!--</select>-->
+                                            <!--</div>-->
+
+                                        <!--</div>-->
+                                    <!--</div>-->
+
+                                    <div class="text-center">
+                                        <button ng-disabled="!profile.profileEdit||profile.invalidDate" type="submit" class="btnDefault m-t-20" style="clear:both">Update</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <script type="text/ng-template" ng-show="visible" id="imageCropPopUp">
+        <div class="ngdialog-message logoutpopo">
+
+            <div class="ngdialog-header">
+                <p>Crop Profile Picture</p>
+            </div>
+            <div class="ngdialog-body">
+                <div class="p-30" style="text-align: center;">
+                    <div class="cropArea">
+                        <img-crop image="profile.myImage" result-image="profile.myCroppedImage"></img-crop>
+                    </div>
+                    <div>Cropped Image:</div>
+                    <div><img ng-src="{{profile.myCroppedImage}}" /></div>
+                    <button class="btn btn-primary" style="width:30%;margin-top: 35px;" ng-click="profile.saveCroppedPic()">Save</button>
+                </div>
+            </div>
+        </div>
+    </script>
+</div>
