@@ -1762,11 +1762,11 @@
                     toaster.pop("error", "Enter the additional service description", "");
                     return false;
                 }
-                if (vm.addServ.as_price=='') {
+                if (vm.addServ.as_price<0) {
                     toaster.pop("error", "Enter the additional service price", "");
                     return false;
                 }
-                if (vm.addServ.as_time=='') {
+                if (vm.addServ.as_time<0) {
                     toaster.pop("error", "Enter the additional service time", "");
                     return false;
                 }
