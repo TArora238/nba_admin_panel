@@ -538,7 +538,7 @@
 
 
       vm.processfile = function(file) {
-        console.log(file);
+        // console.log(file);
         if (!(/image/i).test(file.type)) {
           alert("File " + file.name + " is not an image.");
           return false;
@@ -589,6 +589,9 @@
         ctx.drawImage(img, 0, 0, width, height);
         return canvas.toDataURL("image/jpeg", 0.7);
       };
+
+
+
       vm.clear = function () {
             vm.dt = null;
         };

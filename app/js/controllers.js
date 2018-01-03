@@ -303,22 +303,48 @@
             $scope.fileUpload = function(files) {
                 if (files.length > 0) {
                     console.log(files);
-                    vm.profile.file = $scope.mCtrl.processfile(files[0]);
+                    vm.fileToBeCropped = '';
+                    vm.myCroppedImage = '';
+                    vm.myImage = '';
+                    var reader = new FileReader(); // instance of the FileReader
+                    reader.readAsDataURL(files[0]); // read the local file
                     vm.profile.fileName = files[0].name;
-                    $timeout(function () {
-                        console.log(vm.profile.file);
-                        if(!vm.profile.file){
-                            vm.profile.file = $scope.mCtrl.file;
-                            console.log(vm.profile.file);
-                        }
-                    }, 1000);
+                    reader.onloadend = function () {
+                        var f = this.result;
+                        $timeout(function () {
+                            vm.myImage = f;
+                            vm.profileEdit = true;
+                            vm.ngDialogPop("imageCropPopUp", "bigPop");
+                        });
+                    };
                 }
                 else {
                     toaster.pop('error', 'Please choose a file', '');
 
                 }
             };
+            vm.saveCroppedPic = function () {
+                ngDialog.close();
+                var blob = $scope.mCtrl.dataURItoBlob(vm.myCroppedImage);
+                console.log(blob);
+                vm.file = blob;
+                console.log(vm.file);
+                vm.profile.file = vm.file;
+                $timeout(function () {
+                    console.log(vm.profile.file);
+                    if(!vm.profile.file){
+                        vm.profile.file = vm.file;
+                    }
+                    console.log(vm.profile.file);
+                    vm.saveProfileData(vm.profile.file);
+                }, 1000);
+            };
+            vm.profileEdit = false;
+            vm.profileEditFn = function () {
+                vm.profileEdit = true;
+            };
             vm.saveProfileData = function (f) {
+                console.log(f);
                 if (vm.profile.user_name.trim().length == 0) {
                     toaster.pop('warning', 'Enter a valid name', '');
                     return false;
@@ -346,6 +372,34 @@
                     toaster.pop('warning', 'Enter a valid email', '');
                     return false;
                 }
+                var form = new FormData();
+                cfpLoadingBar.start();
+                form.append('access_token', localStorage.getItem("adminToken"));
+                form.append('user_email', vm.profile.user_email);
+                form.append('user_name', vm.profile.user_name);
+                form.append('user_id', vm.id);
+                form.append('user_mobile', vm.profile.countryCode+'-' + vm.profile.user_mobile.replace(/[^0-9]/g, ""));
+                if(vm.profile.file)form.append("user_image", vm.profile.file);
+                $http({
+                    url: api.url + 'edit_user',
+                    method: 'POST',
+                    data: form,
+                    transformRequest: false,
+                    headers: {
+                        'Content-Type': undefined
+                    }
+                })
+                    .then(function (data, status) {
+                        if (typeof data === 'string')
+                            var data = JSON.parse(data);
+                        $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                        console.log(data);
+                        var data = data.data;
+                        cfpLoadingBar.complete();
+                        if (data.is_error == 0) {
+                            $state.reload();
+                        }
+                    });
             }
 
         }

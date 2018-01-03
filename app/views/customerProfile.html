@@ -44,7 +44,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Email</label>
-                                        <input name="profile.userEmail" readonly type="email" ng-model="profile.profile.user_email" ng-change="profile.profileEditFn()" class="form-control" required/>
+                                        <input name="profile.userEmail" type="email" ng-model="profile.profile.user_email" ng-pattern="emailPattern" ng-change="profile.profileEditFn()" class="form-control" required/>
                                     </div>
                                     <!--<div class="m-b-15">-->
                                         <!--<label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 p-0">Date Of Birth : </label>-->
@@ -73,7 +73,7 @@
                                     <!--</div>-->
 
                                     <div class="text-center">
-                                        <button ng-disabled="!profile.profileEdit||profile.invalidDate" type="submit" class="btnDefault m-t-20" style="clear:both">Update</button>
+                                        <button ng-disabled="!profile.profileEdit" type="submit" class="btnDefault m-t-20" style="clear:both">Update</button>
                                     </div>
                                 </form>
                             </div>
