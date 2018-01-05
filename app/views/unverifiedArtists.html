@@ -6,6 +6,8 @@
             <div class="pull-right col-lg-4 col-md-4 col-xs-6 col-sm-4 greenDiv" style="max-width:230px;width:auto;padding:12.5px">
                 <h4><span>Unverified Artists : </span>&nbsp;{{unArtist.totalItems||0}}</h4>
             </div>
+            <button type="button" class="btn btnDefault pull-right m-r-15" ng-click="unArtist.addArtistPop()"
+                    style="text-transform:capitalize">Add Artist</button>
         </div>
         <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
             <div class="col-md-12 col-lg-12 text-center m-t-30" ng-if="unArtist.artists.length==0">
@@ -27,13 +29,14 @@
                                 <!--<th class="normalTD">Service Areas</th>-->
                                 <th class="normalTD">About</th>
                                 <th class="normalTD">Skills</th>
+                                <th class="normalTD">Bank Status</th>
                                 <th class="normalTD">Actions</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr ng-repeat="data in unArtist.artists">
                                 <td class="smallTD">{{$index+1}}</td>
-                                <td class="normalTD">{{data.artist_name}}</td>
+                                <td class="normalTD" style="color: #ee7670">{{data.artist_name}}</td>
                                 <td class="normalTD">{{data.date_registered|date:'MM-dd-yyyy'}}</td>
                                 <td class="largeTD">{{data.artist_email}}</td>
                                 <td class="largeTD">{{data.artist_mobile|phoneNumber}}</td>
@@ -44,11 +47,17 @@
                                 <!--<td class="normalTD">{{data.serving_areas}}</td>-->
                                 <td class="normalTD">{{data.artist_about}}</td>
                                 <td class="normalTD">{{data.skills}}</td>
+                                <td class="normalTD">
+                                    <a class="btn btn-sm btn-actions" title="Add Bank" ng-if="!data.bank_added" ng-click="unArtist.addBank(data)">
+                                        Add
+                                    </a>
+                                    <p ng-if="data.bank_added">Added</p>
+                                </td>
                                 <td class="smallTD">
                                     <!--<a class="btn btn-sm btn-actions" title="Edit" ng-click="addEditProspectFn(0,data)">-->
                                         <!--<img src='img/SVG/edit.svg'>-->
                                     <!--</a>-->
-                                    <a class="btn btn-sm btn-actions" title="Block" ng-if="!data.verified_by_admin" ng-click="unArtist.verifyArtist(data)">
+                                    <a class="btn btn-sm btn-actions" title="Verify" ng-if="!data.verified_by_admin" ng-click="unArtist.verifyArtist(data)">
                                         Verify
                                     </a>
                                     <!--<a class="btn btn-sm btn-actions" title="Block" ng-if="data.is_blocked" ng-click="blockConfirm(data.artist_id,1)">-->
@@ -91,6 +100,93 @@
 
                 </form>
 
+            </div>
+        </div>
+    </script>
+    <script type="text/ng-template" id="add_artist_modal">
+        <div class="ngdialog-message logoutpopo">
+
+            <div class="ngdialog-header">
+                <p>Add Artist</p>
+            </div>
+            <div class="ngdialog-body">
+                <form enctype="multipart/form-data" name="unArtist.profileData" ng-submit="unArtist.profileData.$submitted&&unArtist.addArtistFn()">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input name="unArtist.userName" maxlength=25 type="text" ng-model="unArtist.profile.artist_name"  class="form-control" required/>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <div class="input-group">
+                            <span class="input-group-addon">{{unArtist.profile.countryCode}}</span>
+                            <input type="text" maxlength=15 minlength=9 onkeypress="return isNumberKey(event)" masked="" data-inputmask="'mask': '(999) 999-9999'"  
+                                   ng-model="unArtist.profile.artist_mobile" class="form-control" required name="unArtist.userPhone" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input name="unArtist.userEmail" type="email" ng-model="unArtist.profile.artist_email" ng-pattern="emailPattern"  class="form-control" required/>
+                    </div>
+                    <div class="form-group">
+                        <label>Profile Picture</label>
+                        <div class="clearfix"></div>
+                        <a  style="margin-top:0px;margin-right:0px;font-size:0;opacity: 1">
+                            <img style="width: 200px" id="proPic" ng-src="{{unArtist.myCroppedImage}}" class="img-circle">
+                        </a>
+                        <input type="file" style="visibility: hidden;" class="upload fileUpload" name="profilePic" onchange="angular.element(this).scope().fileUpload(this.files)" id="fileInput"
+                               data-button-text="Single" uploader="uploader" accept="image/*" />
+                        <div class="clearfix"></div>
+                        <label>{{unArtist.profile.fileName}}</label>
+                        <a class="btn btnDefault" ng-click="unArtist.uploadFile()">Upload Profile Picture</a>
+                    </div>
+                    <div class="form-group">
+                        <label>Experience (Years)</label>
+                        <select ng-model="unArtist.profile.experience_type" class="form-control" ng-change="unArtist.experienceSelect(unArtist.profile.experience_type);" style="height:40px;">
+                            <option value="">Select your experience</option>
+                            <option ng-value="experience_type.experience_id" ng-repeat="experience_type in mCtrl.experience_types" ng-selected="{{$index==0}}">{{experience_type.experience}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-12 col-xs-12 p-0">Skills</label>
+                        <div class="checkbox c-checkbox col-lg-6 col-xs-12" ng-repeat="skill in mCtrl.skills" >
+                            <label class="needsclick">
+                                <input class="needsclick" type="checkbox" name="checkbox" ng-click="unArtist.toggleMultiple(skill.skill_id);"  ng-model="checkbox" ng-checked="unArtist.exists(skill.skill_id)" />
+                                <span class="fa fa-check"></span>{{skill.skill}}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="form-group">
+                        <label>About the artist</label>
+                        <textarea name="unArtist.userEmail" ng-model="unArtist.profile.artist_about"  class="form-control form-textarea" required></textarea>
+                    </div>
+                    <hr class="popHR">
+                    <button type="button" ng-click="closeThisDialog('button')"
+                            class="btn btn-default pull-left btn-cancel">Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary pull-right btn-pop" style="text-transform:capitalize">Add
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </script>
+    <script type="text/ng-template" ng-show="visible" id="imageCropPopUp">
+        <div class="ngdialog-message logoutpopo">
+
+            <div class="ngdialog-header">
+                <p>Crop Profile Picture</p>
+            </div>
+            <div class="ngdialog-body">
+                <div class="p-30" style="text-align: center;">
+                    <div class="cropArea">
+                        <img-crop image="unArtist.myImage" result-image="unArtist.myCroppedImage"></img-crop>
+                    </div>
+                    <div>Cropped Image:</div>
+                    <div><img ng-src="{{unArtist.myCroppedImage}}" /></div>
+                    <button class="btn btn-primary" style="width:30%;margin-top: 35px;" ng-click="unArtist.saveCroppedPic();closeThisDialog('button')">Save</button>
+                </div>
             </div>
         </div>
     </script>

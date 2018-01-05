@@ -50,7 +50,7 @@
             api.url = data.port + '/';
             // console.log(api.url);
 
-            // Stripe.setPublishableKey(data.stripe_pk);
+            Stripe.setPublishableKey(data.stripe_key);
             $timeout(function() {
               $rootScope.messageList = data.popup;
 

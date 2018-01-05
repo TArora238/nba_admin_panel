@@ -1,0 +1,102 @@
+<div class="row p-b-30" ng-controller="ArtistProfileController as artPro">
+    <div class="animated fadeIn">
+        <div class="row p-15">
+            <h3 class="col-lg-4 col-md-4 col-xs-12 col-sm-4 p-0 m-0">Artist Profile</h3>
+            <button type="button" class="btn btnDefault pull-right m-r-15" ui-sref="app.verifiedArtists"
+                    style="text-transform:capitalize">Back</button>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-sm-4 col-lg-4 col-xs-12">
+                <div class="panel panel-default">
+                    <div class="panel-body text-center">
+                        <div class="pv-lg">
+                            <a  style="margin-top:0px;margin-right:0px;font-size:0;opacity: 1">
+                                <img style="width: 240px" id="proPic" ng-src="{{artPro.profile.profilePic!='' ? artPro.profile.profilePic : 'app/img/SVG/avatar.svg'}}" class="img-circle">
+                            </a>
+                            <input type="file" style="visibility: hidden;" class="upload fileUpload" name="profilePic" onchange="angular.element(this).scope().fileUpload(this.files)" id="fileInput"
+                                   data-button-text="Single" uploader="uploader" accept="image/*" />
+                        </div>
+                        <div class="text-center"><a class="btn btnDefault" ng-click="artPro.uploadFile()">Upload Profile Picture</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-8 profileEditDiv">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="h4 text-left">Personal Information</div>
+                        <div class="row pv-lg">
+                            <div class="col-lg-2"></div>
+                            <div class="col-lg-8">
+                                <form enctype="multipart/form-data" name="artPro.profileData" ng-submit="artPro.profileData.$submitted&&artPro.saveProfileData()">
+                                    <div class="form-group">
+                                        <label>Name</label>
+                                        <input name="artPro.userName" maxlength=25 type="text" ng-model="artPro.profile.artist_name" ng-change="artPro.profileEditFn()" class="form-control" required/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Phone Number</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">{{artPro.profile.countryCode}}</span>
+                                            <input type="text" maxlength=15 minlength=9 onkeypress="return isNumberKey(event)" masked="" data-inputmask="'mask': '(999) 999-9999'"  ng-change="artPro.profileEditFn()"
+                                                   ng-model="artPro.profile.artist_mobile" class="form-control" required name="artPro.userPhone" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        <input name="artPro.userEmail" type="email" ng-model="artPro.profile.artist_email" ng-pattern="emailPattern" ng-change="artPro.profileEditFn()" class="form-control" required/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Experience (Years)</label>
+                                        <select ng-model="artPro.profile.experience_type" class="form-control" ng-change="artPro.experienceSelect(artPro.profile.experience_type);artPro.profileEditFn()" style="height:40px;">
+                                            <option value="">Select your experience</option>
+                                            <option ng-value="experience_type.experience_id" ng-repeat="experience_type in mCtrl.experience_types" ng-selected="{{$index==0}}">{{experience_type.experience}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-12 col-xs-12 p-0">Skills</label>
+                                        <div class="checkbox c-checkbox col-lg-6 col-xs-12" ng-repeat="skill in mCtrl.skills" >
+                                            <label class="needsclick">
+                                                <input class="needsclick" type="checkbox" name="checkbox" ng-click="artPro.toggleMultiple(skill.skill_id);artPro.profileEditFn()"  ng-model="checkbox" ng-checked="artPro.exists(skill.skill_id)" />
+                                                <span class="fa fa-check"></span>{{skill.skill}}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group">
+                                        <label>About the artist</label>
+                                        <textarea name="artPro.userEmail" ng-model="artPro.profile.artist_about" ng-change="artPro.profileEditFn()" class="form-control form-textarea" required></textarea>
+                                    </div>
+
+
+                                    <div class="text-center">
+                                        <button ng-disabled="!artPro.profileEdit" type="submit" class="btnDefault m-t-20" style="clear:both">Update</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/ng-template" ng-show="visible" id="imageCropPopUp">
+        <div class="ngdialog-message logoutpopo">
+
+            <div class="ngdialog-header">
+                <p>Crop Profile Picture</p>
+            </div>
+            <div class="ngdialog-body">
+                <div class="p-30" style="text-align: center;">
+                    <div class="cropArea">
+                        <img-crop image="artPro.myImage" result-image="artPro.myCroppedImage"></img-crop>
+                    </div>
+                    <div>Cropped Image:</div>
+                    <div><img ng-src="{{artPro.myCroppedImage}}" /></div>
+                    <button class="btn btn-primary" style="width:30%;margin-top: 35px;" ng-click="artPro.saveCroppedPic()">Save</button>
+                </div>
+            </div>
+        </div>
+    </script>
+</div>

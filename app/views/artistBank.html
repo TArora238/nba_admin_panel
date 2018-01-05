@@ -1,0 +1,121 @@
+<div class="row col-md-12 col-xs-12 col-sm-12 col-lg-12" data-ng-controller="ArtistBankController as account">
+
+    <div class="row">
+        <div class="row p-15">
+            <h3 class="col-lg-4 col-md-4 col-xs-12 col-sm-4 p-0 m-0">Add Artist's Bank Information</h3>
+        </div>
+        <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12 panel panel-default">
+            <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12 p-t-20">
+                <form name="account.accountForm" ng-submit="account.accountForm.$submitted&&account.createToken()">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 m-t-10">
+                        <label>First Name</label>
+                        <input type="text"  minlength="2"  maxlength=25 style="text-transform:capitalize" ng-model="account.artist.artist_first_name" class="form-control" required/>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12  m-t-10">
+                        <label>Last Name</label>
+                        <input type="text"  minlength="2"  maxlength=25 style="text-transform:capitalize" ng-model="account.artist.artist_last_name" class="form-control" required/>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12  m-t-10">
+                        <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 p-0">Date Of Birth : </label>
+                        <div class="col-lg-12 col-xs-12 p-0">
+
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 p-r-0 p-l-0">
+                                <select ng-model="account.artist.dob.month" class="form-control" ng-class="{'invalidDate':account.invalidDate}" ng-change="account.check_date(account.artist.dob)" style="height:40px;">
+                                    <option value="">Month</option>
+                                    <option ng-value="month" ng-repeat="month in months">{{month.month_name}}</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 p-r-0">
+                                <select ng-model="account.artist.dob.day" class="form-control" ng-class="{'invalidDate':account.invalidDate}" ng-change="account.check_date(account.artist.dob)" style="height:40px;">
+                                    <option value="">Date</option>
+                                    <option ng-value="day" ng-repeat="day in days" >{{day}}</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 p-r-0">
+                                <select ng-model="account.artist.dob.year" class="form-control" ng-class="{'invalidDate':account.invalidDate}" ng-change="account.check_date(account.artist.dob)" style="height:40px;">
+                                    <option value="">Year</option>
+                                    <option ng-value="year" ng-repeat="year in birthYears">{{year}}</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12  m-t-10">
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <label>Address</label>
+                            <input type="text" ng-model="account.address.line1" class="form-control" required/>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12  m-t-10">
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <label>City</label>
+                            <input type="text" ng-model="account.address.city" class="form-control" required/>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12  m-t-10">
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <label>Postal Code</label>
+                            <input type="text"  ng-model="account.address.postal_code" class="form-control" required/>
+                        </div>
+                    </div>
+
+                    <!--<div class="clearfix"></div>-->
+                    <!--<label style="font-family: Lato;font-size: 16px;font-weight: bold;color: #505050;" class="col-lg-6 col-md-6 col-sm-6 col-xs-8">Select your default address</label>-->
+
+                    <!--<div class="clearfix m-b-20"></div>-->
+                    <!--<div class="col-lg-12 col-xs-12 col-sm-12 col-md-12">-->
+                        <!--<div ng-repeat="location in account.locations track by $index" ng-click="account.selectBankAddress(location,$index)" ng-init="$last?account.locationIndeces():null"-->
+                             <!--class="locationDiv m-b-10 col-lg-12 col-md-12 col-sm-12 col-xs-12" style="cursor:pointer">-->
+                            <!--<div class="locationHeader p-t-10 p-b-10 w-100" style="display:table;border:none">-->
+                                <!--<p class="m-0 col-lg-10 col-md-10 col-sm-10 col-xs-10 p-0" style="display:flex;align-items:center">-->
+                                    <!--<i class="fa fa-building fa-2x"></i>&nbsp;&nbsp;{{location.practice_location_address}}, {{location.city}}</p>-->
+                                <!--<a ng-click="account.editAddress()" class="text-right pull-right col-lg-1 col-xs-1"><i class="fa fa-pencil"></i></a>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<button type="button" style="font-size: 13px;font-weight: bold;color: #505050;text-align:left" ng-click="account.addAddressPop()" class="whiteBtn p-l-15 p-r-15 p-t-10 p-b-10 m-l-15 m-b-20" >Add Address</button>-->
+
+                    <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 m-t-10">
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12 p-l-0">
+                            <label>Sort Number</label>
+                            <input type="password" maxlength=6 autocomplete="new-password" onkeypress="return isNumberKey(event)" ng-model="account.artist.routing_number" class="form-control" required/>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
+                            <label>Confirm Sort Number</label>
+                            <input type="text" name="confirmRou" maxlength=6  ng-pattern="account.artist.routing_number" onkeypress="return isNumberKey(event)" ng-model="account.artist.confirm_routing_number" class="form-control" required/>
+                        </div>
+                        <span ng-show="account.accountForm.confirmRou.$error.pattern"
+                              class="alert errorSpan" style="margin-left: 7px;top: 55px;margin-top: 0;padding-right: 15px;">Routing Numbers don't match</span>
+                    </div>
+                    <div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 m-t-10">
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12 p-l-0">
+                            <label>Account Number</label>
+                            <input type="password" maxlength=8 autocomplete="new-password" onkeypress="return isNumberKey(event)" ng-model="account.artist.account_number" class="form-control" required/>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
+                            <label>Confirm Account Number</label>
+                            <input type="text" name="confirmAcc" maxlength=8  ng-pattern="account.artist.account_number" onkeypress="return isNumberKey(event)" ng-model="account.artist.confirm_account_number" class="form-control" required/>
+                        </div>
+                        <span ng-show="accountForm.confirmAcc.$error.pattern"
+                              class="alert errorSpan" style="margin-left: 7px;top: 55px;margin-top: 0;padding-right: 15px;">Account Numbers don't match</span>
+                        <div class="clearfix"></div>
+                    </div>
+                    <!--<div class="checkbox col-md-12 col-lg-12 col-sm-12 col-xs-12 m-t-20" >-->
+                        <!--<label style="color:#505050">-->
+                            <!--<input type="checkbox" ng-model="account.artist.terms" ng-click="account.checkTerms()">-->
+                            <!--<i class="input-helper"></i>-->
+                            <!--By providing this information I agree to all <a style="color:#1eacdb" target="_blank" ui-sref="doctorTerms">Terms & Conditions</a>.-->
+                        <!--</label>-->
+                    <!--</div>-->
+                    <!--||!account.artist.terms-->
+                    <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12 m-t-30 m-b-30">
+                        <button type="submit" ng-disabled="account.invalidDate||mCtrl.hitInProgress||account.accountForm.confirmRou.$error.pattern||account.accountForm.confirmAcc.$error.pattern" class="pull-left btn btn-block btn-primary mt-lg btnDefault" style="max-width:150px">
+                            Add
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

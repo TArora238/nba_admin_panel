@@ -152,10 +152,20 @@
               templateUrl:  helper.basepath('verifiedArtists.html'),
               resolve: helper.resolveFor('datatables')
             })
+          .state('app.artistProfile', {
+              url: '/artistProfile',
+              templateUrl:  helper.basepath('artistProfile.html'),
+              resolve: helper.resolveFor('ngImgCrop')
+            })
           .state('app.unverifiedArtists', {
               url: '/unverifiedArtists',
               templateUrl:  helper.basepath('unverifiedArtists.html'),
-              resolve: helper.resolveFor('datatables')
+              resolve: helper.resolveFor('datatables','ngImgCrop')
+            })
+          .state('app.artistBank', {
+              url: '/artistBank',
+              templateUrl:  helper.basepath('artistBank.html'),
+              resolve: helper.resolveFor('ui.select')
             })
           .state('app.areas', {
               url: '/areas',

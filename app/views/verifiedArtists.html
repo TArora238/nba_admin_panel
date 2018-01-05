@@ -27,13 +27,16 @@
                                 <!--<th class="normalTD">Service Areas</th>-->
                                 <th class="normalTD">About</th>
                                 <th class="normalTD">Skills</th>
+                                <th class="normalTD">Bank Status</th>
                                 <th class="normalTD">Actions</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr ng-repeat="data in artist.artists">
                                 <td class="smallTD">{{$index+1}}</td>
-                                <td class="normalTD">{{data.artist_name}}</td>
+                                <td class="normalTD">
+                                    <a style="color:#ee7670" ng-click="artist.viewDetails(data.artist_id)">{{data.artist_name}}</a>
+                                </td>
                                 <td class="normalTD">{{data.date_registered|date:'MM-dd-yyyy'}}</td>
                                 <td class="largeTD">{{data.artist_email}}</td>
                                 <td class="largeTD">{{data.artist_mobile|phoneNumber}}</td>
@@ -44,6 +47,12 @@
                                 <!--<td class="normalTD">{{data.serving_areas}}</td>-->
                                 <td class="normalTD">{{data.artist_about}}</td>
                                 <td class="normalTD">{{data.skills}}</td>
+                                <td class="normalTD">
+                                    <a class="btn btn-sm btn-actions" title="Add Bank" ng-if="!data.bank_added" ng-click="artist.addBank(data)">
+                                        Add
+                                    </a>
+                                    <p ng-if="data.bank_added">Added</p>
+                                </td>
                                 <td class="smallTD">
                                     <!--<a class="btn btn-sm btn-actions" title="Edit" ng-click="addEditProspectFn(0,data)">-->
                                         <!--<img src='img/SVG/edit.svg'>-->

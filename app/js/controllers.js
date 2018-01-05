@@ -474,8 +474,14 @@
                         $scope.mCtrl.flagPopUps(data.flag, data.is_error);
                         $timeout(function () {
                             vm.artists = data.all_artists;
+                            for(var i=0;i<vm.artists.length;i++){
+                                if(vm.artists[i].stripe_account_id==null){
+                                    vm.artists[i].bank_added=0;
+                                }
+                                else vm.artists[i].bank_added=1;
+                            }
                             vm.totalItems = data.all_artists.length;
-                            console.log(vm.customers)
+                            console.log(vm.artists)
                         })
                     });
             };
@@ -514,10 +520,230 @@
                     }
                 });
 
+            };
+            vm.viewDetails = function (id) {
+                localStorage.setItem("artist_id",id);
+                $state.go("app.artistProfile");
+            };
+            vm.addBank = function (a) {
+                localStorage.setItem("artist_id",a.artist_id);
+                localStorage.setItem("artist_verified",1);
+                $state.go("app.artistBank");
             }
         }
     }
 })();
+
+
+
+/**=========================================================
+ * Module: Customer Profile
+ =========================================================*/
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.artists')
+        .controller('ArtistProfileController', ArtistProfileController);
+
+    ArtistProfileController.$inject = ['$http', '$state', '$rootScope', 'toaster', '$scope', 'cfpLoadingBar', 'api', '$timeout', 'ngDialog'];
+
+    function ArtistProfileController($http, $state, $rootScope, toaster, $scope, cfpLoadingBar, api, $timeout, ngDialog) {
+        var vm = this;
+
+        activate();
+
+        ////////////////
+
+        function activate() {
+            $scope.mCtrl.checkToken();
+            $scope.mCtrl.checkDoctorToken();
+            vm.ngDialogPop = function(template, className) {
+                ngDialog.openConfirm({
+                    template: template,
+                    className: 'ngdialog-theme-default ' + className,
+                    scope: $scope,
+                    closeByEscape: false,
+                    closeByDocument: false
+                }).then(function(value) {}, function(reason) {});
+
+            };
+            vm.id = localStorage.getItem("artist_id");
+            $.post(api.url + 'artist_detail', {
+                access_token: localStorage.getItem('adminToken'),
+                artist_id: vm.id
+            }).success(function (data, status) {
+                if (typeof data === 'string')
+                    var data = JSON.parse(data);
+                console.log(data);
+                vm.profile = {};
+                $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                if (data.is_error == 0) {
+                    vm.profile = data.artist_profile;
+                    console.log(vm.profile);
+                    vm.profile.mobile = vm.profile.artist_mobile.split("-");
+                    vm.profile.countryCode = vm.profile.mobile[0];
+                    vm.profile.artist_mobile = vm.profile.mobile[1];
+                    vm.profile.experience_type = vm.profile.artist_experience;
+                    console.log(vm.profile.artist_experience);
+
+                    vm.selected = vm.profile.artist_skills.split(",");
+                    // console.log(vm.selected);
+                    for(var i=0;i<vm.selected.length;i++){
+                        vm.selected[i] = parseInt(vm.selected[i]);
+                    }
+                    if(!vm.profile.artist_image||vm.profile.artist_image==null)vm.profile.profilePic = 'app/img/SVG/avatar.svg';
+                    else vm.profile.profilePic = vm.profile.artist_image;
+                }
+            });
+            vm.selected = [];
+            vm.toggleMultiple = function (item) {
+                var idx = vm.selected.indexOf(item);
+                if (idx > -1) {
+                    vm.selected.splice(idx, 1);
+                } else {
+                    vm.selected.push(item);
+                }
+                // console.log(vm.selected);
+            };
+            vm.exists = function (item) {
+                // console.log(item);
+                // console.log(vm.selected.indexOf(parseInt(item)) > -1);
+                return vm.selected.indexOf(parseInt(item)) > -1;
+            };
+            vm.experienceSelect = function(sT) {
+                vm.profile.artist_experience = sT;
+            };
+            vm.uploadFile = function() {
+                vm.manualEnter = 0;
+                $('.fileUpload').trigger('click');
+            };
+
+            $scope.fileUpload = function(files) {
+                if (files.length > 0) {
+                    console.log(files);
+                    vm.fileToBeCropped = '';
+                    vm.myCroppedImage = '';
+                    vm.myImage = '';
+                    var reader = new FileReader(); // instance of the FileReader
+                    reader.readAsDataURL(files[0]); // read the local file
+                    vm.profile.fileName = files[0].name;
+                    reader.onloadend = function () {
+                        var f = this.result;
+                        $timeout(function () {
+                            vm.myImage = f;
+                            vm.profileEdit = true;
+                            vm.ngDialogPop("imageCropPopUp", "bigPop");
+                        });
+                    };
+                }
+                else {
+                    toaster.pop('error', 'Please choose a file', '');
+
+                }
+            };
+            vm.saveCroppedPic = function () {
+                ngDialog.close();
+                var blob = $scope.mCtrl.dataURItoBlob(vm.myCroppedImage);
+                console.log(blob);
+                vm.file = blob;
+                console.log(vm.file);
+                vm.profile.file = vm.file;
+                $timeout(function () {
+                    console.log(vm.profile.file);
+                    if(!vm.profile.file){
+                        vm.profile.file = vm.file;
+                    }
+                    console.log(vm.profile.file);
+                    vm.saveProfileData(vm.profile.file);
+                }, 1000);
+            };
+            vm.profileEdit = false;
+            vm.profileEditFn = function () {
+                vm.profileEdit = true;
+            };
+            vm.saveProfileData = function (f) {
+                console.log(f);
+                if (vm.profile.artist_name.trim().length == 0) {
+                    toaster.pop('warning', 'Enter a valid name', '');
+                    return false;
+                }
+                if (!vm.profile.artist_mobile) {
+                    toaster.pop('warning', 'Enter a valid mobile', '');
+                    return false;
+                } else var mobile = vm.profile.artist_mobile.replace(/[^0-9]/g, "");
+                if (mobile.length < 9) {
+                    toaster.pop('warning', 'Enter a valid mobile', '');
+                    return false;
+                }
+                // var mobile='';
+                if (!mobile) {
+                    toaster.pop('warning', 'Enter a valid mobile', '');
+                    return false;
+                } else {
+                    mobile = vm.profile.artist_mobile.replace(/[^0-9]/g, "");
+                    if (mobile.length < 9) {
+                        toaster.pop('warning', 'Enter a valid mobile', '');
+                        return false;
+                    }
+                }
+                if (!vm.profile.artist_email || vm.profile.artist_email.trim().length == 0) {
+                    toaster.pop('warning', 'Enter a valid email', '');
+                    return false;
+                }
+                if (!vm.profile.artist_experience) {
+                    toaster.pop('warning', 'Enter a valid experience', '');
+                    return false;
+                }
+                if (vm.selected.length==0) {
+                    toaster.pop('warning', 'Select at least one skill', '');
+                    return false;
+                }
+                var form = new FormData();
+                cfpLoadingBar.start();
+                vm.profile.artistSkills = '';
+                for(var i=0;i<vm.selected.length;i++){
+                    vm.profile.artistSkills+=vm.selected[i].toString();
+                    if(i<vm.selected.length-1)vm.profile.artistSkills+=',';
+                }
+                console.log(vm.profile.artistSkills);
+                form.append('access_token', localStorage.getItem("adminToken"));
+                form.append('artist_email', vm.profile.artist_email);
+                form.append('artist_name', vm.profile.artist_name);
+                form.append('artist_experience', vm.profile.artist_experience);
+                form.append('artist_about', vm.profile.artist_about);
+                form.append('serving_areas', vm.profile.serving_areas);
+                form.append('artist_skills', vm.profile.artistSkills);
+                form.append('artist_id', vm.id);
+                form.append('artist_mobile', vm.profile.countryCode+'-' + vm.profile.artist_mobile.replace(/[^0-9]/g, ""));
+                if(vm.profile.file)form.append("artist_image", vm.profile.file);
+                $http({
+                    url: api.url + 'edit_artist',
+                    method: 'POST',
+                    data: form,
+                    transformRequest: false,
+                    headers: {
+                        'Content-Type': undefined
+                    }
+                })
+                    .then(function (data, status) {
+                        if (typeof data === 'string')
+                            var data = JSON.parse(data);
+                        $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                        console.log(data);
+                        var data = data.data;
+                        cfpLoadingBar.complete();
+                        if (data.is_error == 0) {
+                            $state.reload();
+                        }
+                    });
+            }
+
+        }
+    }
+})();
+
 
 
 
@@ -597,6 +823,12 @@
                                     $scope.mCtrl.flagPopUps(data.flag, data.is_error);
                                     $timeout(function () {
                                         vm.artists = data.all_artists;
+                                        for(var i=0;i<vm.artist.length;i++){
+                                            if(vm.artists[i].stripe_account_id==null){
+                                                vm.artists[i].bank_added=0;
+                                            }
+                                            else vm.artists[i].bank_added=1;
+                                        }
                                         for(var i=0;i<vm.artists.length;i++){
                                           vm.artists[i].skills = '';
                                           vm.artistSkills = vm.artists[i].artist_skills.split(",");
@@ -653,6 +885,12 @@
                 console.log(vm.selectedArea);
                 console.log(vm.areaCheck);
             };
+
+            vm.addBank = function (a) {
+                localStorage.setItem("artist_id",a.artist_id);
+                localStorage.setItem("artist_verified",0);
+                $state.go("app.artistBank");
+            };
             vm.verifyArtist = function (data) {
                 vm.artist=data;
             //     vm.ngDialogPop('verify_artist_modal','bigPop');
@@ -684,12 +922,344 @@
                             }
                         })
                     });
+            };
+            vm.addArtistPop = function () {
+                vm.ngDialogPop("add_artist_modal","bigPop");
+                vm.profile = {};
+                if(localStorage.getItem('area_id')==1)
+                vm.profile.countryCode = "+44";
+                else vm.profile.countryCode = "+91";
+            };
+            vm.selected = [];
+            vm.toggleMultiple = function (item) {
+                var idx = vm.selected.indexOf(item);
+                if (idx > -1) {
+                    vm.selected.splice(idx, 1);
+                } else {
+                    vm.selected.push(item);
+                }
+                // console.log(vm.selected);
+            };
+            vm.exists = function (item) {
+                // console.log(item);
+                // console.log(vm.selected.indexOf(parseInt(item)) > -1);
+                return vm.selected.indexOf(parseInt(item)) > -1;
+            };
+            vm.experienceSelect = function(sT) {
+                vm.profile.artist_experience = sT;
+            };
+            vm.uploadFile = function() {
+                $('.fileUpload').trigger('click');
+            };
+            $scope.fileUpload = function(files) {
+                if (files.length > 0) {
+                    console.log(files);
+                    vm.fileToBeCropped = '';
+                    vm.myCroppedImage = '';
+                    vm.myImage = '';
+                    var reader = new FileReader(); // instance of the FileReader
+                    reader.readAsDataURL(files[0]); // read the local file
+                    vm.profile.fileName = files[0].name;
+                    reader.onloadend = function () {
+                        var f = this.result;
+                        $timeout(function () {
+                            vm.myImage = f;
+                            vm.ngDialogPop("imageCropPopUp", "bigPop");
+                        });
+                    };
+                }
+                else {
+                    toaster.pop('error', 'Please choose a file', '');
+
+                }
+            };
+            vm.saveCroppedPic = function () {
+                // ngDialog.close("ngdialog4");
+                var blob = $scope.mCtrl.dataURItoBlob(vm.myCroppedImage);
+                console.log(blob);
+                vm.file = blob;
+                console.log(vm.file);
+                vm.profile.file = vm.file;
+                $timeout(function () {
+                    console.log(vm.profile.file);
+                    if(!vm.profile.file){
+                        vm.profile.file = vm.file;
+                    }
+                    console.log(vm.profile.file);
+                }, 1000);
+            };
+            vm.addArtistFn = function () {
+
+                if (vm.profile.artist_name.trim().length == 0) {
+                    toaster.pop('warning', 'Enter a valid name', '');
+                    return false;
+                }
+                if (!vm.profile.artist_mobile) {
+                    toaster.pop('warning', 'Enter a valid mobile', '');
+                    return false;
+                } else var mobile = vm.profile.artist_mobile.replace(/[^0-9]/g, "");
+                if (mobile.length < 9) {
+                    toaster.pop('warning', 'Enter a valid mobile', '');
+                    return false;
+                }
+                // var mobile='';
+                if (!mobile) {
+                    toaster.pop('warning', 'Enter a valid mobile', '');
+                    return false;
+                } else {
+                    mobile = vm.profile.artist_mobile.replace(/[^0-9]/g, "");
+                    if (mobile.length < 9) {
+                        toaster.pop('warning', 'Enter a valid mobile', '');
+                        return false;
+                    }
+                }
+                if (!vm.profile.artist_email || vm.profile.artist_email.trim().length == 0) {
+                    toaster.pop('warning', 'Enter a valid email', '');
+                    return false;
+                }
+                if (!vm.profile.artist_experience) {
+                    toaster.pop('warning', 'Enter a valid experience', '');
+                    return false;
+                }
+                if (vm.selected.length==0) {
+                    toaster.pop('warning', 'Select at least one skill', '');
+                    return false;
+                }
+                if(!vm.profile.file){
+                    toaster.pop('warning', 'Select a profile pic', '');
+                    return false;
+                }
+                var form = new FormData();
+                cfpLoadingBar.start();
+                vm.profile.artistSkills = '';
+                for(var i=0;i<vm.selected.length;i++){
+                    vm.profile.artistSkills+=vm.selected[i].toString();
+                    if(i<vm.selected.length-1)vm.profile.artistSkills+=',';
+                }
+                console.log(vm.profile.artistSkills);
+                form.append('access_token', localStorage.getItem("adminToken"));
+                form.append('artist_email', vm.profile.artist_email);
+                form.append('artist_name', vm.profile.artist_name);
+                form.append('artist_experience', vm.profile.artist_experience);
+                form.append('artist_about', vm.profile.artist_about);
+                // form.append('serving_areas', vm.profile.serving_areas);
+                form.append('artist_skills', vm.profile.artistSkills);
+                form.append('artist_mobile', vm.profile.countryCode+'-' + vm.profile.artist_mobile.replace(/[^0-9]/g, ""));
+                if(vm.profile.file)form.append("artist_image", vm.profile.file);
+                $http({
+                    url: api.url + 'add_artist',
+                    method: 'POST',
+                    data: form,
+                    transformRequest: false,
+                    headers: {
+                        'Content-Type': undefined
+                    }
+                })
+                    .then(function (data, status) {
+                        if (typeof data === 'string')
+                            var data = JSON.parse(data);
+                        $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                        console.log(data);
+                        var data = data.data;
+                        cfpLoadingBar.complete();
+                        if (data.is_error == 0) {
+                            $state.reload();
+                        }
+                    });
             }
         }
     }
 })();
 
 
+/**=========================================================
+ * Module: Unverified Artists List
+ =========================================================*/
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.artists')
+        .controller('ArtistBankController', ArtistBankController);
+
+    ArtistBankController.$inject = ['$http', '$state', '$rootScope', 'toaster', '$scope', 'cfpLoadingBar', 'api', '$timeout', 'ngDialog'];
+
+    function ArtistBankController($http, $state, $rootScope, toaster, $scope, cfpLoadingBar, api, $timeout, ngDialog) {
+        var vm = this;
+
+        activate();
+
+        ////////////////
+
+        function activate() {
+            $scope.mCtrl.checkToken();
+            $scope.mCtrl.checkDoctorToken();
+
+            vm.ngDialogPop = function(template, className) {
+                vm.visible = true;
+                ngDialog.openConfirm({
+                    template: template,
+                    className: 'ngdialog-theme-default ' + className,
+                    scope: $scope,
+                    closeByEscape: false,
+                    closeByDocument: false
+                }).then(function(value) {}, function(reason) {});
+
+            };
+            vm.artist = {
+                address:{}
+            };
+            vm.artist_id = localStorage.getItem("artist_id");
+
+            vm.locations = [];
+            vm.createToken = function() {
+                console.log(vm.address);
+
+                if (vm.invalidDate) {
+                    toaster.pop('warning', 'Enter a valid date of birth', '');
+                    return false;
+                }
+                if (!vm.artist.artist_first_name || vm.artist.artist_first_name.trim().length == 0) {
+                    toaster.pop('warning', 'Enter a valid first name', '');
+                    return false;
+                }
+                if (!vm.artist.artist_last_name || vm.artist.artist_last_name.trim().length == 0) {
+                    toaster.pop('warning', 'Enter a valid last name', '');
+                    return false;
+                }
+
+                if (!vm.artist.routing_number || vm.artist.routing_number.trim().length <6) {
+                    toaster.pop('warning', 'Enter a valid routing number', '');
+                    return false;
+                }
+                if (vm.artist.routing_number != vm.artist.confirm_routing_number) {
+                    toaster.pop('error', "Routing numbers don't match", '');
+                    return false;
+                }
+                if (!vm.artist.account_number || vm.artist.account_number.trim().length <8) {
+                    toaster.pop('warning', 'Enter a valid account number', '');
+                    return false;
+                }
+
+                if (vm.artist.account_number != vm.artist.confirm_account_number) {
+                    toaster.pop('error', "Account numbers don't match", '');
+                    return false;
+                }
+
+                $scope.mCtrl.hitInProgress = true;
+                cfpLoadingBar.start();
+                Stripe.bankAccount.createToken({
+                    country: 'GB',
+                    currency: "GBP",
+                    routing_number: vm.artist.routing_number,
+                    account_number: vm.artist.account_number,
+                    account_holder_name: vm.artist.artist_first_name+" "+vm.artist.artist_last_name,
+                    account_holder_type: "individual"
+                }, stripeResponseHandler);
+
+                function stripeResponseHandler(status, response) {
+                    console.log(response);
+                    if (response.id) {
+
+                        var form = new FormData();
+                        // form.append('access_token', localStorage.getItem('doctorToken'));
+                        // form.append('artist_id', vm.artist_id);
+                        // form.append('artist_first_name', vm.artist.artist_first_name);
+                        // form.append('artist_last_name', vm.artist.artist_last_name);
+                        // form.append('address', JSON.stringify(vm.address));
+                        // form.append('stripe_token', response.id);
+                        // form.append('date_of_birth', moment(vm.artist.dob_date).format('DD-MM-YYYY'));
+                        var d = {
+                            access_token:localStorage.getItem('adminToken'),
+                            artist_id:vm.artist_id,
+                            artist_first_name:vm.artist.artist_first_name,
+                            artist_last_name:vm.artist.artist_last_name,
+                            address:JSON.stringify(vm.address),
+                            stripe_token:response.id,
+                            date_of_birth:moment(vm.artist.dob_date).format('DD-MM-YYYY')
+                        };
+                        $.post(api.url + "add_artist_payment", d)
+                            .success(function(data, status) {
+                                if (typeof data === 'string')
+                                    var data = JSON.parse(data);
+                                else var data = data;
+                                console.log(data);
+                                if (data.is_error == 0) {
+                                    $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                                    if(localStorage.getItem("artist_verified")==1){
+                                        $state.go("app.verifiedArtists");
+                                    }
+                                    else $state.go("app.unverifiedArtists");
+                                } else {
+                                    $scope.mCtrl.hitInProgress = false;
+                                    $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                                }
+
+                            })
+                    } else {
+                        cfpLoadingBar.complete();
+                        $scope.mCtrl.hitInProgress = false;
+                        toaster.pop('error', 'Invalid Account or Routing Number', '');
+                    }
+
+                }
+            };
+            vm.artist.dob = {
+                month: '',
+                day: '',
+                year: ''
+            };
+            vm.invalidDate = true;
+            vm.artist.dob_date = '';
+            console.log(vm.artist.dob);
+            vm.check_date = function(dob) {
+                console.log(dob);
+                if (!dob.day || !dob.month || !dob.year) {
+                    vm.invalidDate = true;
+                    return false;
+                }
+                vm.artist.dob_temp = new Date(dob.year, dob.month.month - 1, dob.day);
+                // console.log(vm.artist.dob_temp.getTime() > $rootScope.today.getTime());
+                // console.log(vm.artist.dob_temp);
+                // console.log($rootScope.today);
+                if (dob.year % 4 != 0 && dob.month.month == 2 && dob.day > 29) {
+                    toaster.pop('error', 'Please enter a valid date', '');
+                    vm.invalidDate = true;
+                    return false;
+                } else if (dob.month.month == 4 || dob.month.month == 6 || dob.month.month == 9 || dob.month.month == 11) {
+                    if (dob.day > 30) {
+                        toaster.pop('error', 'Please enter a valid date', '');
+                        vm.invalidDate = true;
+                        return false;
+                    }
+                    if (vm.artist.dob_temp.getTime() > $rootScope.today.getTime()) {
+                        // console.log("Enter a valid Birthdate");
+                        vm.invalidDate = true;
+                        toaster.pop('error', 'Enter a valid Birthdate', '');
+                        // console.log("3");
+                        return false;
+                    } else {
+                        vm.invalidDate = false;
+                        // console.log("4");
+                        vm.artist.dob_date = new Date(dob.year, dob.month.month - 1, dob.day)
+                    }
+                } else if (vm.artist.dob_temp.getTime() > $rootScope.today.getTime()) {
+                    // console.log("Enter a valid Birthdate");
+                    vm.invalidDate = true;
+                    toaster.pop('error', 'Enter a valid Birthdate', '');
+                    return false;
+                } else {
+                    vm.invalidDate = false;
+                    vm.artist.dob_date = new Date(dob.year, dob.month.month - 1, dob.day)
+                }
+                console.log(vm.invalidDate);
+                console.log(vm.artist.dob_date);
+            }
+
+        }
+    }
+})();
 
 /**=========================================================
  * Module: Areas List
