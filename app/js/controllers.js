@@ -86,7 +86,29 @@
       $scope.mCtrl.checkToken();
       $scope.mCtrl.checkDoctorToken();
       vm.dashboard = {};
-
+        $.post(api.url + "dashboard",{
+            access_token: localStorage.getItem('adminToken'),
+            area_id: localStorage.getItem('area_id')||'1'
+        })
+            .success(function(data, status) {
+                cfpLoadingBar.complete();
+                if (typeof data === 'string') data = JSON.parse(data);
+                console.log(data);
+                $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                $timeout(function () {
+                    vm.dashboard = {
+                        highly_rated_artists : data.highly_rated_artists,
+                        last_5_bookings_made : data.last_5_bookings_made,
+                        most_availed_services : data.most_availed_services,
+                        most_paid_artists : data.most_paid_artists,
+                        number_of_artists : data.number_of_artists,
+                        number_of_users : data.number_of_users,
+                        recent_5_end_bookings : data.recent_5_end_bookings,
+                        upcoming_5_bookings : data.upcoming_5_bookings
+                    };
+                    console.log(vm.dashboard)
+                })
+            });
 
 
     }

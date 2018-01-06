@@ -1,6 +1,10 @@
 [
 
   {
+    "text": "Dashboard",
+    "sref":"app.dashboard"
+  },
+  {
     "text": "Customers",
     "sref":"app.customers"
   },

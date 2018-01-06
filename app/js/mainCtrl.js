@@ -448,10 +448,10 @@
           vm.profilePicThumb = localStorage.getItem('profilePicThumb');
           if (login == 1) {
             vm.serving_areas();
-            $state.go('app.customers');
+            $state.go('app.dashboard');
           } else if (login == 2) {
               vm.serving_areas();
-              $state.go('app.customers');
+              $state.go('app.dashboard');
           }
         });
       };

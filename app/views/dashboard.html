@@ -3,30 +3,30 @@
     <div class="col-lg-12">
 
     </div>
-    <div class="col-lg-4 col-sm-4 col-xs-12 m-b-30 m-t-30 hide">
+    <div class="col-lg-4 col-sm-4 col-xs-12 m-b-30 m-t-30">
        <!-- START widget-->
        <div class="panel widget bg-yellow">
           <div class="row row-table">
              <div class="col-xs-4 text-center bg-yellow-dark pv-lg">
-                <em class="fa fa-usd fa-3x"></em>
+                <em class="icon-people fa-3x"></em>
              </div>
              <div class="col-xs-8 pv-lg">
-                <div class="h2 mt0">{{dash.dashboard.total_financed_amount||0| number : 2}}</div>
-                <div class="text-uppercase">Total Financed Amount</div>
+                <div class="h2 mt0">{{dash.dashboard.number_of_artists||0}}</div>
+                <div class="text-uppercase">Total Verified Artists</div>
              </div>
           </div>
        </div>
     </div>
-   <div class="col-lg-4 col-sm-4 col-xs-12 m-b-30 m-t-30 hide">
+   <div class="col-lg-4 col-sm-4 col-xs-12 m-b-30 m-t-30">
       <!-- START widget-->
       <div class="panel widget bg-primary">
          <div class="row row-table">
             <div class="col-xs-4 text-center bg-primary-dark pv-lg">
-               <em class="fa fa-usd fa-3x"></em>
+               <em class="icon-people fa-3x"></em>
             </div>
             <div class="col-xs-8 pv-lg">
-               <div class="h2 mt0">{{dash.dashboard.total_downpayment||0| number : 2}}</div>
-               <div class="text-uppercase">Total Downpayment</div>
+               <div class="h2 mt0">{{dash.dashboard.number_of_users||0}}</div>
+               <div class="text-uppercase">Total Customers</div>
             </div>
          </div>
       </div>
