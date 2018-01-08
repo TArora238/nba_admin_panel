@@ -73,9 +73,9 @@
     .module('app.dashboard')
     .controller('DashboardController', DashboardController);
 
-  DashboardController.$inject = ['$http', '$state', '$rootScope', 'toaster', '$scope', 'cfpLoadingBar', 'api', '$timeout','Colors','uiCalendarConfig'];
+  DashboardController.$inject = ['$http', '$state', '$rootScope', 'toaster', '$scope', 'cfpLoadingBar', 'api', '$timeout','Colors','uiCalendarConfig','$interval'];
 
-  function DashboardController($http, $state, $rootScope, toaster, $scope, cfpLoadingBar, api, $timeout,Colors,uiCalendarConfig) {
+  function DashboardController($http, $state, $rootScope, toaster, $scope, cfpLoadingBar, api, $timeout,Colors,uiCalendarConfig,$interval) {
     var vm = this;
 
     activate();
@@ -86,29 +86,44 @@
       $scope.mCtrl.checkToken();
       $scope.mCtrl.checkDoctorToken();
       vm.dashboard = {};
-        $.post(api.url + "dashboard",{
-            access_token: localStorage.getItem('adminToken'),
-            area_id: localStorage.getItem('area_id')||'2'
-        })
-            .success(function(data, status) {
-                cfpLoadingBar.complete();
-                if (typeof data === 'string') data = JSON.parse(data);
-                console.log(data);
-                $scope.mCtrl.flagPopUps(data.flag, data.is_error);
-                $timeout(function () {
-                    vm.dashboard = {
-                        highly_rated_artists : data.highly_rated_artists,
-                        last_5_bookings_made : data.last_5_bookings_made,
-                        most_availed_services : data.most_availed_services,
-                        most_paid_artists : data.most_paid_artists,
-                        number_of_artists : data.number_of_artists,
-                        number_of_users : data.number_of_users,
-                        recent_5_end_bookings : data.recent_5_end_bookings,
-                        upcoming_5_bookings : data.upcoming_5_bookings
-                    };
-                    console.log(vm.dashboard)
-                })
-            });
+
+      vm.init = function(){
+          $.post(api.url + "dashboard",{
+              access_token: localStorage.getItem('adminToken'),
+              area_id: localStorage.getItem('area_id')||'2'
+          })
+              .success(function(data, status) {
+                  cfpLoadingBar.complete();
+                  if (typeof data === 'string') data = JSON.parse(data);
+                  console.log(data);
+                  // $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                  $timeout(function () {
+                      vm.dashboard = {
+                          highly_rated_artists : data.highly_rated_artists,
+                          last_5_bookings_made : data.last_5_bookings_made,
+                          most_availed_services : data.most_availed_services,
+                          most_paid_artists : data.most_paid_artists,
+                          number_of_artists : data.number_of_artists,
+                          number_of_users : data.number_of_users,
+                          recent_5_end_bookings : data.recent_5_end_bookings,
+                          upcoming_5_bookings : data.upcoming_5_bookings,
+                          number_of_bookings : data.number_of_bookings,
+                          number_of_unverified_artists : data.number_of_unverified_artists
+                      };
+                      for(var i=0;i<5;i++){
+                          if(vm.dashboard.last_5_bookings_made[i]&&vm.dashboard.last_5_bookings_made[i].local_start_time){
+                              vm.dashboard.last_5_bookings_made[i].local_start_time = $scope.mCtrl.utc_to_local(vm.dashboard.last_5_bookings_made[i].local_start_time,vm.dashboard.last_5_bookings_made[i].offset)}
+                          if(vm.dashboard.recent_5_end_bookings[i]&&vm.dashboard.recent_5_end_bookings[i].local_start_time){
+                              vm.dashboard.recent_5_end_bookings[i].local_start_time = $scope.mCtrl.utc_to_local(vm.dashboard.recent_5_end_bookings[i].local_start_time,vm.dashboard.recent_5_end_bookings[i].offset)}
+                          if(vm.dashboard.upcoming_5_bookings[i]&&vm.dashboard.upcoming_5_bookings[i].local_start_time){
+                              vm.dashboard.upcoming_5_bookings[i].local_start_time = $scope.mCtrl.utc_to_local(vm.dashboard.upcoming_5_bookings[i].local_start_time,vm.dashboard.upcoming_5_bookings[i].offset)}
+                      }
+                      console.log(vm.dashboard)
+                  })
+              });
+      };
+      vm.init();
+      $interval(function () { vm.init(); },20000);
 
 
     }

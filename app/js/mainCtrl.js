@@ -415,7 +415,7 @@
               if (typeof data === 'string')
                 var data = JSON.parse(data);
               console.log(data);
-              vm.flagPopUps(data.flag,data.is_error);
+              // vm.flagPopUps(data.flag,data.is_error);
               if (data.is_error == 0) {
                 vm.setLoginData(data, login);
               }
