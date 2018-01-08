@@ -90,7 +90,7 @@
       vm.init = function(){
           $.post(api.url + "dashboard",{
               access_token: localStorage.getItem('adminToken'),
-              area_id: localStorage.getItem('area_id')||'1'
+              area_id: localStorage.getItem('area_id')||'2'
           })
               .success(function(data, status) {
                   cfpLoadingBar.complete();
@@ -123,8 +123,17 @@
               });
       };
       vm.init();
-      $interval(function () { vm.init(); },20000);
-
+      // $interval(function () { vm.init(); },20000);
+        vm.viewArtistDetails = function (id) {
+            localStorage.setItem("fromDashboard",1);
+            localStorage.setItem("artist_id",id);
+            $state.go("app.artistProfile");
+        };
+        vm.viewCustomerDetails = function (id) {
+            localStorage.setItem("fromDashboard",1);
+            localStorage.setItem("customer_id",id);
+            $state.go("app.profile");
+        };
 
     }
   }
@@ -270,6 +279,7 @@
 
         };
         vm.viewDetails = function (id) {
+          localStorage.setItem("fromDashboard",0);
           localStorage.setItem("customer_id",id);
           $state.go("app.profile");
         }
@@ -324,7 +334,17 @@
                 vm.profile = {};
                 $scope.mCtrl.flagPopUps(data.flag, data.is_error);
                 if (data.is_error == 0) {
-                    vm.profile = data[0];
+                    vm.cards = data.user_cards;
+                    vm.addresses = data.user_address;
+                    vm.last_booking = [];
+                    if(angular.equals(data.last_booking, {})){}
+                    else vm.last_booking.push(data.last_booking);
+                    vm.not_rated = data.not_rated;
+                    vm.past_booking = data.past_booking;
+                    vm.ongoing = data.ongoing;
+                    vm.upcoming = data.upcoming;
+                    vm.in_dispute = data.in_dispute;
+                    vm.profile = data.user_profile;
                     console.log(vm.profile);
                     vm.profile.mobile = vm.profile.user_mobile.split("-");
                     vm.profile.countryCode = vm.profile.mobile[0];
@@ -437,6 +457,12 @@
                             $state.reload();
                         }
                     });
+            }
+            vm.back = function () {
+                if(localStorage.getItem("fromDashboard")==1){
+                    $state.go("app.dashboard");
+                }
+                else $state.go("app.customers");
             }
 
         }
@@ -559,6 +585,8 @@
 
             };
             vm.viewDetails = function (id) {
+
+                localStorage.setItem("fromDashboard",0);
                 localStorage.setItem("artist_id",id);
                 $state.go("app.artistProfile");
             };
@@ -607,6 +635,7 @@
 
             };
             vm.id = localStorage.getItem("artist_id");
+            vm.profile = {};
             $.post(api.url + 'artist_detail', {
                 access_token: localStorage.getItem('adminToken'),
                 artist_id: vm.id
@@ -614,9 +643,20 @@
                 if (typeof data === 'string')
                     var data = JSON.parse(data);
                 console.log(data);
-                vm.profile = {};
+
                 $scope.mCtrl.flagPopUps(data.flag, data.is_error);
                 if (data.is_error == 0) {
+                    vm.last_booking = [];
+
+                    vm.cancelled_booking = data.cancelled_booking;
+                    vm.past_booking = data.past_booking;
+                    vm.finished_booking = data.finished_booking;
+                    vm.started = data.started;
+                    vm.to_be_accepted = data.to_be_accepted;
+                    vm.upcoming = data.upcoming;
+
+                    vm.total_earned_amount = data.total_earned_amount;
+
                     vm.profile = data.artist_profile;
                     console.log(vm.profile);
                     vm.profile.mobile = vm.profile.artist_mobile.split("-");
@@ -775,6 +815,12 @@
                             $state.reload();
                         }
                     });
+            };
+            vm.back = function () {
+                if(localStorage.getItem("fromDashboard")==1){
+                    $state.go("app.dashboard");
+                }
+                else $state.go("app.verifiedArtists");
             }
 
         }
@@ -945,7 +991,7 @@
                 $.post(api.url + "verify_artist",{
                     access_token: localStorage.getItem('adminToken'),
                     artist_id: vm.artist.artist_id,
-                    serving_areas:vm.areas||'1'
+                    serving_areas:vm.areas||'2'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1382,7 +1428,7 @@
 
                 $.post(api.url + "cancelled_bookings",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||'1'
+                    area_id: localStorage.getItem('area_id')||'2'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1446,7 +1492,7 @@
 
                 $.post(api.url + "finished_bookings",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||'1'
+                    area_id: localStorage.getItem('area_id')||'2'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1516,7 +1562,7 @@
 
                 $.post(api.url + "ongoing_bookings",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||'1'
+                    area_id: localStorage.getItem('area_id')||'2'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1604,7 +1650,7 @@
 
                 $.post(api.url + "paid_bookings",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||'1'
+                    area_id: localStorage.getItem('area_id')||'2'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1673,7 +1719,7 @@
 
                 $.post(api.url + "tobeaccepted_bookings",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||'1'
+                    area_id: localStorage.getItem('area_id')||'2'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1801,7 +1847,7 @@
 
                 $.post(api.url + "upcoming_bookings",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||'1'
+                    area_id: localStorage.getItem('area_id')||'2'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1896,7 +1942,7 @@
 
                 $.post(api.url + "categories_list",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||'1'
+                    area_id: localStorage.getItem('area_id')||'2'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1999,7 +2045,7 @@
                     vm.cat.order_id = 1;
                 }
                 form.append("access_token", localStorage.getItem('adminToken'));
-                form.append("area_id", selected_area||'1');
+                form.append("area_id", selected_area||'2');
                 form.append("category_name", vm.cat.category_name);
                 form.append("category_description", vm.cat.category_description);
                 form.append("order_id", vm.cat.order_id);
