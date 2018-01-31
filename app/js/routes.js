@@ -217,6 +217,11 @@
               templateUrl:  helper.basepath('additionalServices.html'),
               resolve: helper.resolveFor('datatables')
             })
+          .state('app.astypes', {
+              url: '/astypes',
+              templateUrl:  helper.basepath('astypes.html'),
+              resolve: helper.resolveFor('datatables')
+            })
           .state('app.skills', {
               url: '/skills',
               templateUrl:  helper.basepath('skills.html'),

@@ -48,6 +48,12 @@
                                     <a class="btn btn-sm btn-actions" title="Deactivate" ng-click="catServ.addEditService('Edit',data)">
                                         Edit
                                     </a>
+                                    <a ng-if="data.is_blocked==0" class="btn btn-sm btn-actions" title="Block" ng-click="catServ.enableDisableCatServ(1,data.service_id)">
+                                        Block
+                                    </a>
+                                    <a ng-if="data.is_blocked==1" class="btn btn-sm btn-actions" title="Unblock" ng-click="catServ.enableDisableCatServ(0,data.service_id)">
+                                        Unblock
+                                    </a>
                                 </td>
                             </tr>
                             </tbody>
@@ -136,6 +142,22 @@
                         </button>
                     </form>
                 </div>
+            </div>
+        </div>
+    </script>
+    <script type="text/ng-template" id="enableDisableConfirmFirst">
+        <div class="ngdialog-message logoutpopo">
+            <div class="ngdialog-header">
+                <p>{{catServ.block}} Confirmation</p>
+            </div>
+            <div class="ngdialog-body">
+                <p>Are you sure you want to <strong>{{catServ.block}}</strong> this service? </p>
+                <button type="button" ng-click="closeThisDialog('button')"
+                        class="btn btn-default pull-left btn-cancel">Cancel
+                </button>
+                <button type="button" ng-click="catServ.enableDisableYes()"
+                        class="btn btn-primary pull-right btn-pop">Confirm
+                </button>
             </div>
         </div>
     </script>

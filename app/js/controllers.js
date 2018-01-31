@@ -90,7 +90,7 @@
       vm.init = function(){
           $.post(api.url + "dashboard",{
               access_token: localStorage.getItem('adminToken'),
-              area_id: localStorage.getItem('area_id')||'1'
+              area_id: localStorage.getItem('area_id')||'2'
           })
               .success(function(data, status) {
                   cfpLoadingBar.complete();
@@ -991,7 +991,7 @@
                 $.post(api.url + "verify_artist",{
                     access_token: localStorage.getItem('adminToken'),
                     artist_id: vm.artist.artist_id,
-                    serving_areas:vm.areas||'1'
+                    serving_areas:vm.areas||'2'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1428,7 +1428,7 @@
 
                 $.post(api.url + "cancelled_bookings",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||'1'
+                    area_id: localStorage.getItem('area_id')||'2'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1492,7 +1492,7 @@
 
                 $.post(api.url + "finished_bookings",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||'1'
+                    area_id: localStorage.getItem('area_id')||'2'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1562,7 +1562,7 @@
 
                 $.post(api.url + "ongoing_bookings",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||'1'
+                    area_id: localStorage.getItem('area_id')||'2'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1650,7 +1650,7 @@
 
                 $.post(api.url + "paid_bookings",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||'1'
+                    area_id: localStorage.getItem('area_id')||'2'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1719,7 +1719,7 @@
 
                 $.post(api.url + "tobeaccepted_bookings",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||'1'
+                    area_id: localStorage.getItem('area_id')||'2'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1847,7 +1847,7 @@
 
                 $.post(api.url + "upcoming_bookings",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||'1'
+                    area_id: localStorage.getItem('area_id')||'2'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1942,7 +1942,7 @@
 
                 $.post(api.url + "categories_list",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||'1'
+                    area_id: localStorage.getItem('area_id')||'2'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -2045,7 +2045,7 @@
                     vm.cat.order_id = 1;
                 }
                 form.append("access_token", localStorage.getItem('adminToken'));
-                form.append("area_id", selected_area||'1');
+                form.append("area_id", selected_area||'2');
                 form.append("category_name", vm.cat.category_name);
                 form.append("category_description", vm.cat.category_description);
                 form.append("order_id", vm.cat.order_id);
@@ -2086,7 +2086,7 @@
                 vm.ngDialogPop("enableDisableConfirmFirst",'smallPop');
             };
             vm.enableDisableYes = function () {
-                $.post(api.url + 'blockUnblockCategory',{
+                $.post(api.url + 'block_unblock_category',{
                     access_token:localStorage.getItem("adminToken"),
                     category_id:vm.block_id,
                     is_blocked:vm.blockMode
@@ -2324,6 +2324,35 @@
 
                         }
                     });
+            };
+            vm.enableDisableCatServ = function(i,id){
+                vm.block_id=id;
+                vm.blockMode=i;
+                if(i==1){
+                    vm.block="Block";
+                }
+                else vm.block="Unblock";
+                vm.ngDialogPop("enableDisableConfirmFirst",'smallPop');
+            };
+            vm.enableDisableYes = function () {
+                $.post(api.url + 'block_unblock_service',{
+                    access_token:localStorage.getItem("adminToken"),
+                    service_id:vm.block_id,
+                    is_blocked:vm.blockMode
+                })
+                    .success(function (data, status) {
+                        if (typeof data === 'string') data = JSON.parse(data);
+                        else var data = data;
+                        console.log(data);
+                        $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                        if (data.is_error == 0) {
+                            ngDialog.close();
+                            $state.reload();
+
+                        } else {
+
+                        }
+                    });
             }
         }
     }
@@ -2466,6 +2495,35 @@
 
                         }
                     });
+            };
+            vm.enableDisableAddServ = function(i,id){
+                vm.block_id=id;
+                vm.blockMode=i;
+                if(i==1){
+                    vm.block="Block";
+                }
+                else vm.block="Unblock";
+                vm.ngDialogPop("enableDisableConfirmFirst",'smallPop');
+            };
+            vm.enableDisableYes = function () {
+                $.post(api.url + 'block_unblock_aservice',{
+                    access_token:localStorage.getItem("adminToken"),
+                    as_id:vm.block_id,
+                    is_blocked:vm.blockMode
+                })
+                    .success(function (data, status) {
+                        if (typeof data === 'string') data = JSON.parse(data);
+                        else var data = data;
+                        console.log(data);
+                        $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                        if (data.is_error == 0) {
+                            ngDialog.close();
+                            $state.reload();
+
+                        } else {
+
+                        }
+                    });
             }
         }
     }
@@ -2474,7 +2532,132 @@
 
 
 /**=========================================================
- * Module: Additional Service List
+ * Module: Additional Service Type List
+ =========================================================*/
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.category')
+        .controller('ASTypesController', ASTypesController);
+
+    ASTypesController.$inject = ['$http', '$state', '$rootScope', 'toaster', '$scope', 'cfpLoadingBar', 'api', '$timeout', 'ngDialog'];
+
+    function ASTypesController($http, $state, $rootScope, toaster, $scope, cfpLoadingBar, api, $timeout, ngDialog) {
+        var vm = this;
+
+        activate();
+
+        ////////////////
+
+        function activate() {
+            $scope.mCtrl.checkToken();
+            $scope.mCtrl.checkDoctorToken();
+
+            vm.ngDialogPop = function(template, className) {
+                ngDialog.openConfirm({
+                    template: template,
+                    className: 'ngdialog-theme-default ' + className,
+                    scope: $scope
+                }).then(function(value) {}, function(reason) {});
+
+            };
+
+            vm.dtOptions = {
+                "scrollX": true
+            };
+            vm.as_types = [];
+            vm.initTable = function() {
+                cfpLoadingBar.start();
+
+                $.post(api.url + "get_as_types",{
+                    access_token : localStorage.getItem("adminToken")
+                })
+                    .success(function(data, status) {
+                        cfpLoadingBar.complete();
+                        if (typeof data === 'string') data = JSON.parse(data);
+                        console.log(data);
+                        $timeout(function () {
+                            vm.as_types = data.as_types;
+                            console.log(vm.as_types)
+                        })
+                    });
+            };
+            // vm.initTable();
+
+            vm.addEditType = function (mode,d) {
+                vm.type = d||{};
+                vm.mode = mode;
+                vm.ngDialogPop("addEditTypeModal",'smallPop');
+            };
+            vm.addEditTypeFn = function (mode) {
+                if (!vm.type.type_name) {
+                    toaster.pop("error", "Enter the a valid skill name", "");
+                    return false;
+                }
+
+                var modeUrl = '';
+                if (mode == 'Add') modeUrl = 'add_as_type';
+                else modeUrl = 'edit_as_type';
+
+                cfpLoadingBar.start();
+                var data ={
+                    access_token : localStorage.getItem("adminToken"),
+                    type_name: vm.type.type_name,
+                    can_select_multiple:vm.type.can_select_multiple?1:0
+                };
+                if(mode=='Edit')data.as_type_id=vm.type.as_type_id;
+                $.post(api.url + modeUrl,data)
+                    .success(function (data, status) {
+                        if (typeof data === 'string') data = JSON.parse(data);
+                        else var data = data;
+                        console.log(data);
+                        $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                        if (data.is_error == 0) {
+                            ngDialog.close();
+                            $state.reload();
+
+                        } else {
+
+                        }
+                    });
+            };
+            vm.enableDisableType = function(i,id){
+                vm.block_id=id;
+                vm.blockMode=i;
+                if(i==0){
+                    vm.block="Block";
+                }
+                else vm.block="Unblock";
+                vm.ngDialogPop("enableDisableConfirmFirst",'smallPop');
+            };
+            vm.enableDisableYes = function () {
+                $.post(api.url + 'enable_disable_as_type',{
+                    access_token:localStorage.getItem("adminToken"),
+                    as_type_id:vm.block_id,
+                    is_active:vm.blockMode
+                })
+                    .success(function (data, status) {
+                        if (typeof data === 'string') data = JSON.parse(data);
+                        else var data = data;
+                        console.log(data);
+                        $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                        if (data.is_error == 0) {
+                            ngDialog.close();
+                            $state.reload();
+
+                        } else {
+
+                        }
+                    });
+            }
+        }
+    }
+})();
+
+/**=========================================================
+ * Module: Skills List
  =========================================================*/
 
 (function() {

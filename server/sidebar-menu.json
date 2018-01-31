@@ -21,12 +21,25 @@
       }]
   },
   {
-    "text": "Skills",
-    "sref":"app.skills"
-  },
-  {
-    "text": "Categories",
-    "sref":"app.categories"
+    "text": "Lists",
+    "submenu":[
+      {
+        "text": "Skills",
+        "sref":"app.skills"
+      },
+      {
+        "text": "Categories",
+        "sref":"app.categories"
+      },
+      {
+        "text": "Promo",
+        "sref":"app.promo"
+      },
+      {
+        "text": "AS Types",
+        "sref":"app.astypes"
+      }
+      ]
   },
   {
     "text": "Bookings",
@@ -55,10 +68,6 @@
         "sref": "app.cancelledBookings"
       }
     ]
-  },
-  {
-    "text": "Promo",
-    "sref":"app.promo"
   },
   {
     "text": "Feedback",
