@@ -18,33 +18,16 @@
                             <thead>
                             <tr>
                                  <th class="smallTD">S.No.</th>
-                                 <th class="normalTD">Name</th>
-                                 <th class="largeTD">Description</th>
-                                 <th class="normalTD">Price</th>
-                                 <th class="normalTD">Time</th>
-                                 <th class="normalTD">Action</th>
-
+                                 <th class="normalTD">Type Name</th>
+                                 <th class="normalTD">Multiple Select</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr ng-repeat="data in astypes.as_types">
                                 <td class="smallTD">{{$index+1}}</td>
-                                <td class="normalTD">{{data.as_name}}</td>
-                                <td class="largeTD">{{data.as_description}}</td>
-                                <td class="normalTD">{{data.as_price}}</td>
-                                <td class="normalTD">{{data.as_time}} mins</td>
-                                <td class="largeTD">
-                                    <a class="btn btn-sm btn-actions" title="Deactivate" ng-click="astypes.addEditastypesice('Edit',data)">
-                                        Edit
-                                    </a>
-                                    <a ng-if="data.is_blocked==0" class="btn btn-sm btn-actions" title="Block" ng-click="astypes.enableDisableType(1,data.as_type_id)">
-                                        Block
-                                    </a>
-                                    <a ng-if="data.is_blocked==1" class="btn btn-sm btn-actions" title="Unblock" ng-click="astypes.enableDisableType(0,data.as_type_id)">
-                                        Unblock
-                                    </a>
-                                </td>
-
+                                <td class="normalTD">{{data.type_name}}</td>
+                                <td class="normalTD" ng-if="data.can_select_multiple==1">Yes</td>
+                                <td class="normalTD" ng-if="data.can_select_multiple==0">No</td>
                             </tr>
                             </tbody>
                         </table>

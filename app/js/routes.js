@@ -202,6 +202,11 @@
               templateUrl:  helper.basepath('upcomingBookings.html'),
               resolve: helper.resolveFor('datatables')
             })
+            .state('app.order', {
+                url: '/order',
+                templateUrl:  helper.basepath('order.html'),
+                resolve: helper.resolveFor('datatables','ui.sortable')
+            })
           .state('app.categories', {
               url: '/categories',
               templateUrl:  helper.basepath('categories.html'),

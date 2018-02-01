@@ -90,7 +90,7 @@
       vm.init = function(){
           $.post(api.url + "dashboard",{
               access_token: localStorage.getItem('adminToken'),
-              area_id: localStorage.getItem('area_id')||'2'
+              area_id: localStorage.getItem('area_id')||'1'
           })
               .success(function(data, status) {
                   cfpLoadingBar.complete();
@@ -991,7 +991,7 @@
                 $.post(api.url + "verify_artist",{
                     access_token: localStorage.getItem('adminToken'),
                     artist_id: vm.artist.artist_id,
-                    serving_areas:vm.areas||'2'
+                    serving_areas:vm.areas||'1'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1428,7 +1428,7 @@
 
                 $.post(api.url + "cancelled_bookings",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||'2'
+                    area_id: localStorage.getItem('area_id')||'1'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1492,7 +1492,7 @@
 
                 $.post(api.url + "finished_bookings",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||'2'
+                    area_id: localStorage.getItem('area_id')||'1'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1562,7 +1562,7 @@
 
                 $.post(api.url + "ongoing_bookings",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||'2'
+                    area_id: localStorage.getItem('area_id')||'1'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1650,7 +1650,7 @@
 
                 $.post(api.url + "paid_bookings",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||'2'
+                    area_id: localStorage.getItem('area_id')||'1'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1719,7 +1719,7 @@
 
                 $.post(api.url + "tobeaccepted_bookings",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||'2'
+                    area_id: localStorage.getItem('area_id')||'1'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1847,7 +1847,7 @@
 
                 $.post(api.url + "upcoming_bookings",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||'2'
+                    area_id: localStorage.getItem('area_id')||'1'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1942,7 +1942,7 @@
 
                 $.post(api.url + "categories_list",{
                     access_token: localStorage.getItem('adminToken'),
-                    area_id: localStorage.getItem('area_id')||'2'
+                    area_id: localStorage.getItem('area_id')||'1'
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -2045,7 +2045,7 @@
                     vm.cat.order_id = 1;
                 }
                 form.append("access_token", localStorage.getItem('adminToken'));
-                form.append("area_id", selected_area||'2');
+                form.append("area_id", selected_area||'1');
                 form.append("category_name", vm.cat.category_name);
                 form.append("category_description", vm.cat.category_description);
                 form.append("order_id", vm.cat.order_id);
@@ -2086,6 +2086,7 @@
                 vm.ngDialogPop("enableDisableConfirmFirst",'smallPop');
             };
             vm.enableDisableYes = function () {
+                cfpLoadingBar.start();
                 $.post(api.url + 'block_unblock_category',{
                     access_token:localStorage.getItem("adminToken"),
                     category_id:vm.block_id,
@@ -2104,6 +2105,11 @@
 
                         }
                     });
+            };
+            vm.setOrder = function () {
+              localStorage.setItem("orderMode","Categories");
+              localStorage.setItem("orderData",JSON.stringify(vm.categories));
+              $state.go("app.order");
             }
 
         }
@@ -2335,6 +2341,7 @@
                 vm.ngDialogPop("enableDisableConfirmFirst",'smallPop');
             };
             vm.enableDisableYes = function () {
+                cfpLoadingBar.start();
                 $.post(api.url + 'block_unblock_service',{
                     access_token:localStorage.getItem("adminToken"),
                     service_id:vm.block_id,
@@ -2353,6 +2360,11 @@
 
                         }
                     });
+            };
+            vm.setOrder = function () {
+                localStorage.setItem("orderMode","Services");
+                localStorage.setItem("orderData",JSON.stringify(vm.services));
+                $state.go("app.order");
             }
         }
     }
@@ -2397,22 +2409,42 @@
             };
             vm.initTable = function() {
                 cfpLoadingBar.start();
-
-                $.post(api.url + "as_list",{
-                    access_token: localStorage.getItem('adminToken'),
-                    service_id: localStorage.getItem('catServ_id')
+                $.post(api.url + "as_type_list",{
+                    access_token : localStorage.getItem("adminToken")
                 })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
                         if (typeof data === 'string') data = JSON.parse(data);
                         console.log(data);
-                        $scope.mCtrl.flagPopUps(data.flag, data.is_error);
                         $timeout(function () {
-                            vm.additionalServices = data.additional_services;
-                            vm.totalItems = vm.additionalServices.length;
-                            console.log(vm.additionalServices);
+                            vm.as_types = data.as_type;
+                            console.log(vm.as_types);
+                            $.post(api.url + "as_list",{
+                                access_token: localStorage.getItem('adminToken'),
+                                service_id: localStorage.getItem('catServ_id')
+                            })
+                                .success(function(data, status) {
+                                    cfpLoadingBar.complete();
+                                    if (typeof data === 'string') data = JSON.parse(data);
+                                    console.log(data);
+                                    $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                                    $timeout(function () {
+                                        vm.additionalServices = data.additional_services;
+                                        vm.totalItems = vm.additionalServices.length;
+                                        for(var j=0;j<vm.additionalServices.length;j++){
+                                            for(var i=0;i<vm.as_types.length;i++){
+                                                if(vm.additionalServices[j].type==vm.as_types[i].type){
+                                                    vm.additionalServices[j].type_name=vm.as_types[i].type_name;
+                                                }
+                                            }
+                                        }
+                                        console.log(vm.additionalServices);
+                                    })
+                                });
                         })
                     });
+
+
             };
             vm.initTable();
             vm.selected = [];
@@ -2428,9 +2460,26 @@
             vm.exists = function (item) {
                 return vm.selected.indexOf(item) > -1;
             };
+            vm.orderSelect = function (o) {
+                vm.addServ.order=o;
+            };
+            vm.typeSelect = function (o) {
+                vm.addServ.type=o.type;
+                vm.addServ.type_name=o.type_name;
+            };
             vm.addEditAddService = function (mode,d) {
                 vm.selected = [];
                 vm.addServ = d||{};
+
+                if(vm.addServ.type){
+                    vm.addServ.type=vm.addServ.type;
+
+                }
+                else {
+                    vm.addServ.type_name='Select Type';
+                }
+                if(vm.addServ.order_id)vm.addServ.order=vm.addServ.order_id;
+                else vm.addServ.order='Order ID';
                 vm.mode = mode;
                 vm.ngDialogPop("addEditAddServModal",'biggerPop orderPop');
             };
@@ -2450,6 +2499,14 @@
                 }
                 if (vm.addServ.as_time<0) {
                     toaster.pop("error", "Enter the additional service time", "");
+                    return false;
+                }
+                if(vm.additionalServices.length>0 && vm.addServ.order=='Order ID'){
+                    toaster.pop("error", "Choose a service order", "");
+                    return false;
+                }
+                if(vm.addServ.type=='' || vm.addServ.type_name=='Select Type'){
+                    toaster.pop("error", "Choose a service type", "");
                     return false;
                 }
                 // if (!vm.addServ.as_commission) {
@@ -2473,7 +2530,8 @@
                   service_id : localStorage.getItem("catServ_id"),
                   as_name:vm.addServ.as_name,
                   as_description:vm.addServ.as_description,
-                  order_id:vm.addServ.order_id||1,
+                  order_id:vm.addServ.order||1,
+                  type:vm.addServ.type,
                   // skills_required:vm.addServ.skills||1,
                   as_price:vm.addServ.as_price,
                   as_time:vm.addServ.as_time
@@ -2506,6 +2564,7 @@
                 vm.ngDialogPop("enableDisableConfirmFirst",'smallPop');
             };
             vm.enableDisableYes = function () {
+                cfpLoadingBar.start();
                 $.post(api.url + 'block_unblock_aservice',{
                     access_token:localStorage.getItem("adminToken"),
                     as_id:vm.block_id,
@@ -2524,6 +2583,11 @@
 
                         }
                     });
+            };
+            vm.setOrder = function () {
+                localStorage.setItem("orderMode","Additional Services");
+                localStorage.setItem("orderData",JSON.stringify(vm.additionalServices));
+                $state.go("app.order");
             }
         }
     }
@@ -2571,7 +2635,7 @@
             vm.initTable = function() {
                 cfpLoadingBar.start();
 
-                $.post(api.url + "get_as_types",{
+                $.post(api.url + "as_type_list",{
                     access_token : localStorage.getItem("adminToken")
                 })
                     .success(function(data, status) {
@@ -2579,12 +2643,12 @@
                         if (typeof data === 'string') data = JSON.parse(data);
                         console.log(data);
                         $timeout(function () {
-                            vm.as_types = data.as_types;
+                            vm.as_types = data.as_type;
                             console.log(vm.as_types)
                         })
                     });
             };
-            // vm.initTable();
+            vm.initTable();
 
             vm.addEditType = function (mode,d) {
                 vm.type = d||{};
@@ -2780,8 +2844,7 @@
 })();
 
 /**=========================================================
- * Module: access-login.js
- * Demo for login api
+ * Module: Feedback Controller
  =========================================================*/
 
 (function() {
@@ -2824,6 +2887,118 @@
                     });
             };
             vm.initTable();
+        }
+    }
+})();
+
+
+
+/**=========================================================
+ * Module: Order Controller
+ =========================================================*/
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.pages')
+        .controller('OrderController', OrderController);
+
+    OrderController.$inject = ['$http', '$state', '$rootScope', 'toaster', '$scope', 'cfpLoadingBar', 'api', '$timeout', 'ngDialog'];
+
+    function OrderController($http, $state, $rootScope, toaster, $scope, cfpLoadingBar, api, $timeout, ngDialog) {
+        var vm = this;
+
+        activate();
+
+        ////////////////
+
+        function activate() {
+            $scope.mCtrl.checkToken();
+            $scope.mCtrl.checkDoctorToken();
+
+            vm.sortableOptions = {
+                placeholder: 'box-placeholder m0'
+            };
+            vm.orderMode = localStorage.getItem("orderMode");
+            vm.orderData = JSON.parse(localStorage.getItem("orderData"));
+            console.log(vm.orderMode);
+            console.log(vm.orderData);
+            vm.cancelSave = function () {
+              if(vm.orderMode=='Categories') $state.go("app.categories");
+              if(vm.orderMode=='Services') $state.go("app.services");
+              if(vm.orderMode=='Additional Services') $state.go("app.additionalServices");
+            };
+            vm.saveOrder = function () {
+                console.log(vm.orderData);
+                // return false;
+                if(vm.orderMode=='Categories'){
+                    cfpLoadingBar.start();
+                    vm.category_ids='';
+                    for(var i=0;i<vm.orderData.length;i++){
+                        vm.category_ids+=vm.orderData[i].category_id;
+                        if(i<vm.orderData.length-1)vm.category_ids+=',';
+                    }
+                    $.post(api.url + "order_categories",{
+                        access_token: localStorage.getItem('adminToken'),
+                        area_id:'1',
+                        category_ids:vm.category_ids
+                    })
+                        .success(function(data, status) {
+                            cfpLoadingBar.complete();
+                            if (typeof data === 'string') data = JSON.parse(data);
+                            console.log(data);
+                            $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                            $timeout(function () {
+                                $state.go("app.categories");
+                            })
+                        });
+                }
+                if(vm.orderMode=='Services'){
+                    cfpLoadingBar.start();
+                    vm.service_ids='';
+                    for(var i=0;i<vm.orderData.length;i++){
+                        vm.service_ids+=vm.orderData[i].service_id;
+                        if(i<vm.orderData.length-1)vm.service_ids+=',';
+                    }
+                    $.post(api.url + "order_services",{
+                        access_token: localStorage.getItem('adminToken'),
+                        category_id:localStorage.getItem('cat_id'),
+                        service_ids:vm.service_ids
+                    })
+                        .success(function(data, status) {
+                            cfpLoadingBar.complete();
+                            if (typeof data === 'string') data = JSON.parse(data);
+                            console.log(data);
+                            $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                            $timeout(function () {
+                                $state.go("app.services");
+                            })
+                        });
+                }
+                if(vm.orderMode=='Additional Services'){
+                    cfpLoadingBar.start();
+                    vm.as_ids='';
+                    for(var i=0;i<vm.orderData.length;i++){
+                        vm.as_ids+=vm.orderData[i].as_id;
+                        if(i<vm.orderData.length-1)vm.as_ids+=',';
+                    }
+                    $.post(api.url + "order_additional_services",{
+                        access_token: localStorage.getItem('adminToken'),
+                        service_id:localStorage.getItem('catServ_id'),
+                        as_ids:vm.as_ids
+                    })
+                        .success(function(data, status) {
+                            cfpLoadingBar.complete();
+                            if (typeof data === 'string') data = JSON.parse(data);
+                            console.log(data);
+                            $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                            $timeout(function () {
+                                $state.go("app.additionalServices");
+                            })
+                        });
+                }
+            };
         }
     }
 })();

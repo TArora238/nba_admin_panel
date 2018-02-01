@@ -3,6 +3,8 @@
         <!--<h3 class="page-header-divpage-header">Sales</h3>-->
         <div class="row p-15">
             <h3 class="col-lg-4 col-md-4 col-xs-12 col-sm-4 p-0 m-0">Additional Services</h3>
+            <button type="button" ng-click="addServ.setOrder()" class="m-l-15 btn btnDefault pull-right"
+                    style="text-transform:capitalize">Set Order</button>
             <button type="button" ng-click="addServ.addEditAddService('Add')" class="btn btnDefault pull-right"
                     style="text-transform:capitalize">Add</button>
             <button type="button" class="btn btnDefault pull-right m-r-15" ui-sref="app.services"
@@ -22,6 +24,7 @@
                                  <th class="smallTD">S.No.</th>
                                  <th class="normalTD">Name</th>
                                  <th class="largeTD">Description</th>
+                                 <th class="largeTD">Additional Service Type</th>
                                  <th class="normalTD">Price</th>
                                  <th class="normalTD">Time</th>
                                  <th class="normalTD">Action</th>
@@ -33,16 +36,17 @@
                                 <td class="smallTD">{{$index+1}}</td>
                                 <td class="normalTD">{{data.as_name}}</td>
                                 <td class="largeTD">{{data.as_description}}</td>
+                                <td class="largeTD">{{data.type_name}}</td>
                                 <td class="normalTD">{{data.as_price}}</td>
                                 <td class="normalTD">{{data.as_time}} mins</td>
                                 <td class="largeTD">
                                     <a class="btn btn-sm btn-actions" title="Deactivate" ng-click="addServ.addEditAddService('Edit',data)">
                                         Edit
                                     </a>
-                                    <a ng-if="data.is_blocked==0" class="btn btn-sm btn-actions" title="Block" ng-click="addServ.enableDisableAddServ(1,data.as_id)">
+                                    <a ng-if="data.is_blocked==0||data.is_blocked=='0'" class="btn btn-sm btn-actions" title="Block" ng-click="addServ.enableDisableAddServ(1,data.as_id)">
                                         Block
                                     </a>
-                                    <a ng-if="data.is_blocked==1" class="btn btn-sm btn-actions" title="Unblock" ng-click="addServ.enableDisableAddServ(0,data.as_id)">
+                                    <a ng-if="data.is_blocked==1||data.is_blocked=='1'" class="btn btn-sm btn-actions" title="Unblock" ng-click="addServ.enableDisableAddServ(0,data.as_id)">
                                         Unblock
                                     </a>
                                 </td>
@@ -83,6 +87,32 @@
                             <label>Additional Service Time (mins)</label>
                             <input type="number" max="999"
                                    ng-model="addServ.addServ.as_time" class="form-control" required/>
+                        </div>
+                        <div class="form-group" ng-if="addServ.additionalServices.length>0">
+                            <label>Additional Service Order</label>
+                            <div class="btn-group mb-sm" uib-dropdown="dropdown">
+                                <button class="btn dropdown-toggle btn-primary" type="button" uib-dropdown-toggle="">{{addServ.addServ.order}}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li ng-repeat="data in addServ.additionalServices"><a ng-click="addServ.orderSelect($index+1)">{{$index+1}}</a>
+                                    </li>
+                                    <li ng-if="addServ.mode=='Add'"><a ng-click="addServ.orderSelect(addServ.additionalServices.length+1)">{{addServ.additionalServices.length+1}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group" >
+                            <label>Additional Service Type</label>
+                            <div class="btn-group mb-sm" uib-dropdown="dropdown">
+                                <button class="btn dropdown-toggle btn-primary" type="button" uib-dropdown-toggle="">{{addServ.addServ.type_name}}
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li ng-repeat="data in addServ.as_types"><a ng-click="addServ.typeSelect(data)">{{data.type_name}}</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                         <hr class="popHR">
 

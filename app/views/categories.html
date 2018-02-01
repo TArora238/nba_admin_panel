@@ -3,8 +3,10 @@
         <!--<h3 class="page-header-divpage-header">Sales</h3>-->
         <div class="row p-15">
             <h3 class="col-lg-4 col-md-4 col-xs-12 col-sm-4 p-0 m-0">Manage Categories</h3>
+            <button type="button" ng-click="category.setOrder()" class="m-l-15 btn btnDefault pull-right"
+                    style="text-transform:capitalize">Set Order</button>
             <button type="button" ng-click="category.addEditCategory('Add')" class="btn btnDefault pull-right"
-                    style="text-transform:capitalize">Add</button>
+            style="text-transform:capitalize">Add</button>
         </div>
         <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
             <div class="col-md-12 col-lg-12 text-center m-t-30" ng-if="category.categories.length==0">

@@ -1,0 +1,26 @@
+<div class="row p-b-30" ng-controller="OrderController as order">
+    <div class="animated fadeIn">
+        <!--<h3 class="page-header-divpage-header">Sales</h3>-->
+        <div class="row p-15">
+            <h3 class="col-lg-4 col-md-4 col-xs-12 col-sm-4 p-15 m-0">Order {{order.orderMode}}</h3>
+        </div>
+        <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
+            <div class="list-group" ui-sortable="sortableOptions" ng-model="order.orderData">
+                <div class="list-group-item" ng-repeat="itm in order.orderData" style="display: flex;cursor: move">
+                    <em class="fa fa-reorder fa-fw text-muted mr-lg"></em>
+                    <p ng-if="order.orderMode == 'Categories'" >{{itm.category_name}}</p>
+                    <p ng-if="order.orderMode == 'Services'" >{{itm.service_name}}</p>
+                    <p ng-if="order.orderMode == 'Additional Services'" >{{itm.as_name}}</p>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-t-20 m-b-20 p-0" >
+                <button ng-click="order.saveOrder()" class="btn btn-primary btn-pop m-r-10">
+                    Save
+                </button>
+                <button ng-click="order.cancelSave()" class="btn btn-default btn-cancel m-l-15">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
