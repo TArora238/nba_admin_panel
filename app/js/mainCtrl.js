@@ -219,20 +219,6 @@
         $state.go('login')
       } else if (localStorage.getItem('profileData')) {
         vm.admin_profile = JSON.parse(localStorage.getItem('profileData'));
-        if (vm.admin_profile.plan_id) {
-
-          if (vm.admin_profile.plan_id.indexOf('2') > -1) {
-            vm.showPFMenu = 1;
-          } else {
-            vm.showPFMenu = 0;
-          }
-
-        }
-        if (vm.admin_profile.is_pdp == 0) {
-          vm.showPDPMenu = 0;
-        } else {
-          vm.showPDPMenu = 1;
-        }
       }
 
       vm.hitInProgress = false;
