@@ -57,7 +57,7 @@
               // $rootScope.$emit('init');
             });
             $rootScope.profile = {};
-            // $rootScope.checkDoctorToken();
+            // $rootScope.checkAdminToken();
           });
 
       } else {
@@ -398,10 +398,11 @@
           if (data.is_error == 0) ngDialog.close();
         });
       };
-      vm.checkDoctorToken = function(login) {
+      vm.checkAdminToken = function(login) {
         console.log(localStorage.getItem('adminToken'));
-        if (!localStorage.getItem('adminToken')) {
-          localStorage.removeItem('adminToken')
+        if (!localStorage.getItem('adminToken')||localStorage.getItem('adminToken')==null||localStorage.getItem('adminToken')=='null') {
+          localStorage.removeItem('adminToken');
+          toaster.pop("error","Your session has expired","");
           $state.go('login');
         } else {
           $.post(api.url + "access_token_login", {

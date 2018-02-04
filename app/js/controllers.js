@@ -23,7 +23,7 @@
       // bind here all data from the form
       if (localStorage.getItem('adminToken')) {
         if ($state.current.name == "login") {
-          // $scope.mCtrl.checkDoctorToken(1);
+          // $scope.mCtrl.checkAdminToken(1);
           // $state.go('app.prospects');
         }
       }
@@ -84,7 +84,7 @@
 
     function activate() {
       $scope.mCtrl.checkToken();
-      $scope.mCtrl.checkDoctorToken();
+      $scope.mCtrl.checkAdminToken();
       vm.dashboard = {};
 
       vm.init = function(){
@@ -162,7 +162,7 @@
 
     function activate() {
       $scope.mCtrl.checkToken();
-      $scope.mCtrl.checkDoctorToken();
+      $scope.mCtrl.checkAdminToken();
       vm.support = {};
 
     }
@@ -192,7 +192,7 @@
 
     function activate() {
       $scope.mCtrl.checkToken();
-      $scope.mCtrl.checkDoctorToken();
+      $scope.mCtrl.checkAdminToken();
 
 
       vm.dtOptions = {
@@ -312,7 +312,7 @@
 
         function activate() {
             $scope.mCtrl.checkToken();
-            $scope.mCtrl.checkDoctorToken();
+            $scope.mCtrl.checkAdminToken();
             vm.ngDialogPop = function(template, className) {
                 ngDialog.openConfirm({
                     template: template,
@@ -492,7 +492,7 @@
 
         function activate() {
             $scope.mCtrl.checkToken();
-            $scope.mCtrl.checkDoctorToken();
+            $scope.mCtrl.checkAdminToken();
 
 
             vm.dtOptions = {
@@ -623,7 +623,7 @@
 
         function activate() {
             $scope.mCtrl.checkToken();
-            $scope.mCtrl.checkDoctorToken();
+            $scope.mCtrl.checkAdminToken();
             vm.ngDialogPop = function(template, className) {
                 ngDialog.openConfirm({
                     template: template,
@@ -852,7 +852,7 @@
 
         function activate() {
             $scope.mCtrl.checkToken();
-            $scope.mCtrl.checkDoctorToken();
+            $scope.mCtrl.checkAdminToken();
 
 
             vm.dtOptions = {
@@ -1177,7 +1177,7 @@
 
         function activate() {
             $scope.mCtrl.checkToken();
-            $scope.mCtrl.checkDoctorToken();
+            $scope.mCtrl.checkAdminToken();
 
             vm.ngDialogPop = function(template, className) {
                 vm.visible = true;
@@ -1366,7 +1366,7 @@
 
         function activate() {
             $scope.mCtrl.checkToken();
-            $scope.mCtrl.checkDoctorToken();
+            $scope.mCtrl.checkAdminToken();
 
 
             vm.dtOptions = {
@@ -1417,7 +1417,7 @@
 
         function activate() {
             $scope.mCtrl.checkToken();
-            $scope.mCtrl.checkDoctorToken();
+            $scope.mCtrl.checkAdminToken();
 
 
             vm.dtOptions = {
@@ -1481,7 +1481,7 @@
 
         function activate() {
             $scope.mCtrl.checkToken();
-            $scope.mCtrl.checkDoctorToken();
+            $scope.mCtrl.checkAdminToken();
 
 
             vm.dtOptions = {
@@ -1544,7 +1544,7 @@
 
         function activate() {
             $scope.mCtrl.checkToken();
-            $scope.mCtrl.checkDoctorToken();
+            $scope.mCtrl.checkAdminToken();
             vm.ngDialogPop = function(template, className) {
                 ngDialog.openConfirm({
                     template: template,
@@ -1639,7 +1639,7 @@
 
         function activate() {
             $scope.mCtrl.checkToken();
-            $scope.mCtrl.checkDoctorToken();
+            $scope.mCtrl.checkAdminToken();
 
 
             vm.dtOptions = {
@@ -1701,7 +1701,7 @@
 
         function activate() {
             $scope.mCtrl.checkToken();
-            $scope.mCtrl.checkDoctorToken();
+            $scope.mCtrl.checkAdminToken();
             vm.ngDialogPop = function(template, className) {
                 ngDialog.openConfirm({
                     template: template,
@@ -1829,7 +1829,7 @@
 
         function activate() {
             $scope.mCtrl.checkToken();
-            $scope.mCtrl.checkDoctorToken();
+            $scope.mCtrl.checkAdminToken();
             vm.ngDialogPop = function(template, className) {
                 ngDialog.openConfirm({
                     template: template,
@@ -1923,7 +1923,7 @@
 
         function activate() {
             $scope.mCtrl.checkToken();
-            $scope.mCtrl.checkDoctorToken();
+            $scope.mCtrl.checkAdminToken();
             $scope.mCtrl.serving_areas();
             vm.ngDialogPop = function(template, className) {
                 ngDialog.openConfirm({
@@ -2140,7 +2140,7 @@
 
         function activate() {
             $scope.mCtrl.checkToken();
-            $scope.mCtrl.checkDoctorToken();
+            $scope.mCtrl.checkAdminToken();
 
             $scope.mCtrl.artistLists();
 
@@ -2393,7 +2393,7 @@
 
         function activate() {
             $scope.mCtrl.checkToken();
-            $scope.mCtrl.checkDoctorToken();
+            $scope.mCtrl.checkAdminToken();
 
             vm.ngDialogPop = function(template, className) {
                 ngDialog.openConfirm({
@@ -2617,7 +2617,7 @@
 
         function activate() {
             $scope.mCtrl.checkToken();
-            $scope.mCtrl.checkDoctorToken();
+            $scope.mCtrl.checkAdminToken();
 
             vm.ngDialogPop = function(template, className) {
                 ngDialog.openConfirm({
@@ -2742,7 +2742,7 @@
 
         function activate() {
             $scope.mCtrl.checkToken();
-            $scope.mCtrl.checkDoctorToken();
+            $scope.mCtrl.checkAdminToken();
 
             vm.ngDialogPop = function(template, className) {
                 ngDialog.openConfirm({
@@ -2865,7 +2865,7 @@
 
         function activate() {
             $scope.mCtrl.checkToken();
-            $scope.mCtrl.checkDoctorToken();
+            $scope.mCtrl.checkAdminToken();
 
             vm.dtOptions = {
                 "scrollX": true
@@ -2915,7 +2915,7 @@
 
         function activate() {
             $scope.mCtrl.checkToken();
-            $scope.mCtrl.checkDoctorToken();
+            $scope.mCtrl.checkAdminToken();
 
             vm.sortableOptions = {
                 placeholder: 'box-placeholder m0'
@@ -3027,7 +3027,7 @@
 
         function activate() {
             $scope.mCtrl.checkToken();
-            $scope.mCtrl.checkDoctorToken();
+            $scope.mCtrl.checkAdminToken();
 
             vm.ngDialogPop = function(template, className) {
                 ngDialog.openConfirm({
