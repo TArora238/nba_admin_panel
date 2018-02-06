@@ -208,8 +208,9 @@
 
       vm.checkToken = function() {
           cfpLoadingBar.complete();
-          if (!localStorage.getItem('adminToken') || localStorage.getItem('adminToken') == null) {
+          if (!localStorage.getItem('adminToken') || localStorage.getItem('adminToken') == null ||localStorage.getItem('adminToken') == 'null') {
               localStorage.removeItem('adminToken');
+              toaster.pop("error","Your session has expired","");
               $state.go('login');
               return false;
           }
