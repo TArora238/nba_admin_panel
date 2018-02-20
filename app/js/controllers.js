@@ -92,7 +92,7 @@
             vm.init = function() {
                 $.post(api.url + "dashboard", {
                         access_token: localStorage.getItem('adminToken'),
-                        area_id: localStorage.getItem('area_id') || '1'
+                        area_id: localStorage.getItem('area_id') || '2'
                     })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -989,7 +989,7 @@
                 $.post(api.url + "verify_artist", {
                         access_token: localStorage.getItem('adminToken'),
                         artist_id: vm.artist.artist_id,
-                        serving_areas: vm.areas || '1'
+                        serving_areas: vm.areas || '2'
                     })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1424,7 +1424,7 @@
 
                 $.post(api.url + "cancelled_bookings", {
                         access_token: localStorage.getItem('adminToken'),
-                        area_id: localStorage.getItem('area_id') || '1'
+                        area_id: localStorage.getItem('area_id') || '2'
                     })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1488,7 +1488,7 @@
 
                 $.post(api.url + "finished_bookings", {
                         access_token: localStorage.getItem('adminToken'),
-                        area_id: localStorage.getItem('area_id') || '1'
+                        area_id: localStorage.getItem('area_id') || '2'
                     })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1558,7 +1558,7 @@
 
                 $.post(api.url + "ongoing_bookings", {
                         access_token: localStorage.getItem('adminToken'),
-                        area_id: localStorage.getItem('area_id') || '1'
+                        area_id: localStorage.getItem('area_id') || '2'
                     })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1646,7 +1646,7 @@
 
                 $.post(api.url + "paid_bookings", {
                         access_token: localStorage.getItem('adminToken'),
-                        area_id: localStorage.getItem('area_id') || '1'
+                        area_id: localStorage.getItem('area_id') || '2'
                     })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1715,7 +1715,7 @@
 
                 $.post(api.url + "tobeaccepted_bookings", {
                         access_token: localStorage.getItem('adminToken'),
-                        area_id: localStorage.getItem('area_id') || '1'
+                        area_id: localStorage.getItem('area_id') || '2'
                     })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1842,7 +1842,7 @@
 
                 $.post(api.url + "upcoming_bookings", {
                         access_token: localStorage.getItem('adminToken'),
-                        area_id: localStorage.getItem('area_id') || '1'
+                        area_id: localStorage.getItem('area_id') || '2'
                     })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1937,7 +1937,7 @@
 
                 $.post(api.url + "categories_list", {
                         access_token: localStorage.getItem('adminToken'),
-                        area_id: localStorage.getItem('area_id') || '1'
+                        area_id: localStorage.getItem('area_id') || '2'
                     })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -2039,7 +2039,7 @@
                     vm.cat.order_id = 1;
                 }
                 form.append("access_token", localStorage.getItem('adminToken'));
-                form.append("area_id", selected_area || '1');
+                form.append("area_id", selected_area || '2');
                 form.append("category_name", vm.cat.category_name);
                 form.append("category_description", vm.cat.category_description);
                 form.append("order_id", vm.cat.order_id);
@@ -2927,7 +2927,7 @@
                     }
                     $.post(api.url + "order_categories", {
                             access_token: localStorage.getItem('adminToken'),
-                            area_id: '1',
+                            area_id: '2',
                             category_ids: vm.category_ids
                         })
                         .success(function(data, status) {
