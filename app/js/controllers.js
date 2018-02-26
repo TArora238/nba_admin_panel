@@ -92,7 +92,7 @@
             vm.init = function() {
                 $.post(api.url + "dashboard", {
                         access_token: localStorage.getItem('adminToken'),
-                        area_id: localStorage.getItem('area_id') || '2'
+                        area_id: localStorage.getItem('area_id') || '1'
                     })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -989,7 +989,7 @@
                 $.post(api.url + "verify_artist", {
                         access_token: localStorage.getItem('adminToken'),
                         artist_id: vm.artist.artist_id,
-                        serving_areas: vm.areas || '2'
+                        serving_areas: vm.areas || '1'
                     })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1424,7 +1424,7 @@
 
                 $.post(api.url + "cancelled_bookings", {
                         access_token: localStorage.getItem('adminToken'),
-                        area_id: localStorage.getItem('area_id') || '2'
+                        area_id: localStorage.getItem('area_id') || '1'
                     })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1488,7 +1488,7 @@
 
                 $.post(api.url + "finished_bookings", {
                         access_token: localStorage.getItem('adminToken'),
-                        area_id: localStorage.getItem('area_id') || '2'
+                        area_id: localStorage.getItem('area_id') || '1'
                     })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1558,7 +1558,7 @@
 
                 $.post(api.url + "ongoing_bookings", {
                         access_token: localStorage.getItem('adminToken'),
-                        area_id: localStorage.getItem('area_id') || '2'
+                        area_id: localStorage.getItem('area_id') || '1'
                     })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1646,7 +1646,7 @@
 
                 $.post(api.url + "paid_bookings", {
                         access_token: localStorage.getItem('adminToken'),
-                        area_id: localStorage.getItem('area_id') || '2'
+                        area_id: localStorage.getItem('area_id') || '1'
                     })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1715,7 +1715,7 @@
 
                 $.post(api.url + "tobeaccepted_bookings", {
                         access_token: localStorage.getItem('adminToken'),
-                        area_id: localStorage.getItem('area_id') || '2'
+                        area_id: localStorage.getItem('area_id') || '1'
                     })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1842,7 +1842,7 @@
 
                 $.post(api.url + "upcoming_bookings", {
                         access_token: localStorage.getItem('adminToken'),
-                        area_id: localStorage.getItem('area_id') || '2'
+                        area_id: localStorage.getItem('area_id') || '1'
                     })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1937,7 +1937,7 @@
 
                 $.post(api.url + "categories_list", {
                         access_token: localStorage.getItem('adminToken'),
-                        area_id: localStorage.getItem('area_id') || '2'
+                        area_id: localStorage.getItem('area_id') || '1'
                     })
                     .success(function(data, status) {
                         cfpLoadingBar.complete();
@@ -1986,19 +1986,38 @@
             $scope.fileUpload = function(files) {
                 if (files.length > 0) {
                     console.log(files);
-                    vm.cat.file = $scope.mCtrl.processfile(files[0]);
+                    vm.fileToBeCropped = '';
+                    vm.myCroppedImage = '';
+                    vm.myImage = '';
+                    var reader = new FileReader(); // instance of the FileReader
+                    reader.readAsDataURL(files[0]); // read the local file
                     vm.cat.fileName = files[0].name;
-                    $timeout(function() {
-                        console.log(vm.cat.file);
-                        if (!vm.cat.file) {
-                            vm.cat.file = $scope.mCtrl.file;
-                            console.log(vm.cat.file);
-                        }
-                    }, 1000);
+                    reader.onloadend = function() {
+                        var f = this.result;
+                        $timeout(function() {
+                            vm.myImage = f;
+                            vm.ngDialogPop("imageCropPopUp", "bigPop");
+                        });
+                    };
                 } else {
                     toaster.pop('error', 'Please choose a file', '');
 
                 }
+            };
+            vm.saveCroppedPic = function() {
+                // ngDialog.close();
+                var blob = $scope.mCtrl.dataURItoBlob(vm.myCroppedImage);
+                console.log(blob);
+                vm.file = blob;
+                console.log(vm.file);
+                vm.cat.file = vm.file;
+                $timeout(function() {
+                    console.log(vm.cat.file);
+                    if (!vm.cat.file) {
+                        vm.cat.file = vm.file;
+                    }
+                    console.log(vm.cat.file);
+                }, 1000);
             };
             vm.orderSelect = function(o) {
                 vm.cat.order = o;
@@ -2039,7 +2058,7 @@
                     vm.cat.order_id = 1;
                 }
                 form.append("access_token", localStorage.getItem('adminToken'));
-                form.append("area_id", selected_area || '2');
+                form.append("area_id", selected_area || '1');
                 form.append("category_name", vm.cat.category_name);
                 form.append("category_description", vm.cat.category_description);
                 form.append("order_id", vm.cat.order_id);
@@ -2222,19 +2241,38 @@
             $scope.fileUpload = function(files) {
                 if (files.length > 0) {
                     console.log(files);
-                    vm.serv.file = $scope.mCtrl.processfile(files[0]);
+                    vm.fileToBeCropped = '';
+                    vm.myCroppedImage = '';
+                    vm.myImage = '';
+                    var reader = new FileReader(); // instance of the FileReader
+                    reader.readAsDataURL(files[0]); // read the local file
                     vm.serv.fileName = files[0].name;
-                    $timeout(function() {
-                        console.log(vm.serv.file);
-                        if (!vm.serv.file) {
-                            vm.serv.file = $scope.mCtrl.file;
-                            console.log(vm.serv.file);
-                        }
-                    }, 1000);
+                    reader.onloadend = function() {
+                        var f = this.result;
+                        $timeout(function() {
+                            vm.myImage = f;
+                            vm.ngDialogPop("imageCropPopUp", "bigPop");
+                        });
+                    };
                 } else {
                     toaster.pop('error', 'Please choose a file', '');
 
                 }
+            };
+            vm.saveCroppedPic = function() {
+                // ngDialog.close();
+                var blob = $scope.mCtrl.dataURItoBlob(vm.myCroppedImage);
+                console.log(blob);
+                vm.file = blob;
+                console.log(vm.file);
+                vm.serv.file = vm.file;
+                $timeout(function() {
+                    console.log(vm.serv.file);
+                    if (!vm.serv.file) {
+                        vm.serv.file = vm.file;
+                    }
+                    console.log(vm.serv.file);
+                }, 1000);
             };
             vm.orderSelect = function(o) {
                 vm.serv.order = o;
@@ -2927,7 +2965,7 @@
                     }
                     $.post(api.url + "order_categories", {
                             access_token: localStorage.getItem('adminToken'),
-                            area_id: '2',
+                            area_id: '1',
                             category_ids: vm.category_ids
                         })
                         .success(function(data, status) {

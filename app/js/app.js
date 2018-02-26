@@ -655,10 +655,8 @@
             function(event, toState, toParams, fromState, fromParams) {
                 // display new view from top
                 // console.log(toState.name);
-
                 $window.scrollTo(0, 0);
                 document.body.scrollTop = document.documentElement.scrollTop = 0;
-
                 $timeout.cancel($rootScope.thBar);
                 cfpLoadingBar.complete();
                 // Save the route title
@@ -866,8 +864,14 @@
                 { name: 'angularFileUpload', files: ['vendor/angular-file-upload/dist/angular-file-upload.js'] },
                 {
                     name: 'ngImgCrop',
-                    files: ['vendor/ng-img-crop/compile/unminified/ng-img-crop.js',
+                    files: ['vendor/ng-img-crop/compile/unminified/ext/ng-img-crop.js',
                         'vendor/ng-img-crop/compile/unminified/ng-img-crop.css'
+                    ]
+                },
+                {
+                    name: 'uiCropper',
+                    files: ['vendor/uiCropper/ui-cropper.js',
+                        'vendor/uiCropper/ui-cropper.css'
                     ]
                 },
                 {
