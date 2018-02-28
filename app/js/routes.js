@@ -239,6 +239,11 @@
                 templateUrl: helper.basepath('feedback.html'),
                 resolve: helper.resolveFor('datatables')
             })
+            .state('app.blogs', {
+                url: '/blogs',
+                templateUrl: helper.basepath('blogs.html'),
+                resolve: helper.resolveFor('datatables')
+            })
             .state('app.promo', {
                 url: '/promo',
                 templateUrl: helper.basepath('promo.html'),

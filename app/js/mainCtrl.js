@@ -623,6 +623,19 @@
                 startingDay: 1
             };
 
+            vm.utc_to_local = function(a) {
+                if (a == null) return '';
+                vm.local = '';
+                var t = a.split('T');
+                if (t[1] == '') {
+                    return a;
+                }
+                if (a.indexOf('T') < 0) return a;
+                var aD = t[0].split('-');
+                vm.local = '' + aD[1] + '-' + aD[2] + '-' + aD[0];
+                return vm.local;
+            };
+
 
         }
     }

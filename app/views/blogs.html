@@ -1,0 +1,112 @@
+<div class="row p-b-30" ng-controller="BlogController as blog">
+    <div class="animated fadeIn">
+        <!--<h3 class="page-header-divpage-header">Sales</h3>-->
+        <div class="row p-15">
+            <h3 class="col-lg-4 col-md-4 col-xs-12 col-sm-4 p-0 m-0">Website Blogs</h3>
+            <button type="button" ng-click="blog.addEditBlog('Add')" class="btn btnDefault pull-right">Add</button>
+        </div>
+        <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
+            <div class="col-md-12 col-lg-12 text-center m-t-30" ng-if="blog.blogList.length==0">
+                <img src="app/img/SVG/empty/patients.svg" />
+                <h4 style="color:#8592a5">No Blog added yet</h4>
+            </div>
+            <div class="panel panel-default row p-15" ng-if="blog.blogList.length>0">
+                <div class="tableDiv">
+                    <div class="table-responsive">
+                        <table id="dtCuisines" datatable="ng" dt-options="mCtrl.dtOptions" class="table table-striped table-hover table-vmiddle" style="table-layout:fixed;">
+                            <thead>
+                                <tr>
+                                    <th class="smallTD">S.No.</th>
+                                    <th class="normalTD">Title</th>
+                                    <th class="normalTD">Author</th>
+                                    <th class="normalTD">Short Description</th>
+                                    <th class="normalTD">Thumbnail</th>
+                                    <th class="normalTD">Creation Date</th>
+                                    <th class="normalTD">Last Modified</th>
+                                    <th class="normalTD">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="data in blog.blogList">
+                                    <td class="smallTD">{{$index+1}}</td>
+                                    <td class="normalTD">{{data.title}}</td>
+                                    <td class="normalTD">{{data.author}}</td>
+                                    <td class="normalTD">{{data.short_desc}}</td>
+                                    <td class="normalTD">
+                                        <img ng-src="{{data.thumb_pic}}" class="w-100 img--circle" />
+                                        <label ng-if="!data.thumb_pic">Not Uploaded Yet</label>
+                                    </td>
+                                    <td class="normalTD">{{data.date_created}}</td>
+                                    <td class="normalTD">{{data.last_modified}}</td>
+                                    <td class="normalTD">
+                                        <a class="btn btn-sm btn-actions" title="Edit" ng-click="blog.addEditBlog('Edit',data)">
+                                        Edit
+                                    </a>
+                                        <a class="btn btn-sm btn-actions" title="Block" ng-click="blog.deleteBlog(1,data.blog_id)">
+                                        Delete
+                                    </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/ng-template" id="addEditBlogModal">
+        <div class="ngdialog-message logoutpopo m-0">
+
+            <div class="ngdialog-header">
+                <p>{{blog.mode}} Blog</p>
+            </div>
+            <div class="ngdialog-body" style="padding: 0!important;">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <form name="blog.addBlogForm" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 p-15" ng-submit="blog.addBlogForm.$submitted&&blog.addEditBlogFn(blog.mode)">
+                        <div class="form-group">
+                            <label>Blog Title</label>
+                            <input type="text" maxlength=100 ng-model="blog.blog.title" class="form-control" required/>
+                        </div>
+                        <div class="form-group">
+                            <label>Short Description</label>
+                            <input type="text" ng-model="blog.blog.short_desc" class="form-control" required/>
+                        </div>
+                        <div class="form-group">
+                            <label>Author</label>
+                            <input type="text" maxlength=100 ng-model="blog.blog.author" class="form-control" required/>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-12 p-0">Thumbnail Image</label>
+                            <a class="btn whiteBtn" ng-click="blog.uploadFile()">Upload File</a>
+                            <div class="clearfix"></div>
+                            {{blog.blog.fileName}}
+                            <input type="file" style="visibility: hidden;" class="upload fileUpload" name="profilePic" onchange="angular.element(this).scope().fileUpload(this.files)" id="fileInput" data-button-text="Single" uploader="uploader" accept="image/*" />
+                        </div>
+                        <hr class="popHR">
+
+                        <button type="button" class="btn pull-left btn-cancel m-r-15" ng-click="closeThisDialog('button')">Cancel
+                        </button>
+                        <button type="submit" class="m-l-15 btn btnDefault pull-right btn-pop" ng-if="blog.mode=='Add'">Add
+                        </button>
+                        <button type="submit" class="m-l-15 btn btnDefault pull-right btn-pop" ng-if="blog.mode=='Edit'">Save
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </script>
+    <script type="text/ng-template" id="deleteConfirmFirst">
+        <div class="ngdialog-message logoutpopo">
+            <div class="ngdialog-header">
+                <p>Delete Confirmation</p>
+            </div>
+            <div class="ngdialog-body">
+                <p>Are you sure you want to <strong>delete</strong> this blog? </p>
+                <button type="button" ng-click="closeThisDialog('button')" class="btn btn-default pull-left btn-cancel">Cancel
+                </button>
+                <button type="button" ng-click="blog.deleteBlogFn()" class="btn btn-primary pull-right btn-pop">Confirm
+                </button>
+            </div>
+        </div>
+    </script>
+</div>

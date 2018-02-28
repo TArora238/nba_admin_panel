@@ -1,76 +1,78 @@
 [
 
-  {
-    "text": "Dashboard",
-    "sref":"app.dashboard"
-  },
-  {
-    "text": "Customers",
-    "sref":"app.customers"
-  },
-  {
-    "text": "Artists",
-    "submenu":[
-      {
-        "text": "Verified",
-        "sref": "app.verifiedArtists"
-      },
-      {
-        "text": "Unverified",
-        "sref": "app.unverifiedArtists"
-      }]
-  },
-  {
-    "text": "Lists",
-    "submenu":[
-      {
-        "text": "Skills",
-        "sref":"app.skills"
-      },
-      {
-        "text": "Categories",
-        "sref":"app.categories"
-      },
-      {
-        "text": "Promo",
-        "sref":"app.promo"
-      },
-      {
-        "text": "AS Types",
-        "sref":"app.astypes"
-      }
-      ]
-  },
-  {
-    "text": "Bookings",
-    "submenu":[
-      {
-      "text": "To Be Accepted",
-      "sref": "app.tbaBookings"
-      },
-      {
-        "text": "Upcoming",
-        "sref": "app.upcomingBookings"
-      },
-      {
-        "text": "Ongoing",
-        "sref": "app.ongoingBookings"
-      },
-      {
-        "text": "Finished",
-        "sref": "app.finishedBookings"
-      },
-      {
-        "text": "Paid",
-        "sref": "app.paidBookings"
-      },      {
-        "text": "Cancelled",
-        "sref": "app.cancelledBookings"
-      }
-    ]
-  },
-  {
-    "text": "Feedback",
-    "sref":"app.feedback"
-  }
+    {
+        "text": "Dashboard",
+        "sref": "app.dashboard"
+    },
+    {
+        "text": "Customers",
+        "sref": "app.customers"
+    },
+    {
+        "text": "Artists",
+        "submenu": [{
+                "text": "Verified",
+                "sref": "app.verifiedArtists"
+            },
+            {
+                "text": "Unverified",
+                "sref": "app.unverifiedArtists"
+            }
+        ]
+    },
+    {
+        "text": "Lists",
+        "submenu": [{
+                "text": "Skills",
+                "sref": "app.skills"
+            },
+            {
+                "text": "Categories",
+                "sref": "app.categories"
+            },
+            {
+                "text": "Promo",
+                "sref": "app.promo"
+            },
+            {
+                "text": "AS Types",
+                "sref": "app.astypes"
+            }
+        ]
+    },
+    {
+        "text": "Bookings",
+        "submenu": [{
+                "text": "To Be Accepted",
+                "sref": "app.tbaBookings"
+            },
+            {
+                "text": "Upcoming",
+                "sref": "app.upcomingBookings"
+            },
+            {
+                "text": "Ongoing",
+                "sref": "app.ongoingBookings"
+            },
+            {
+                "text": "Finished",
+                "sref": "app.finishedBookings"
+            },
+            {
+                "text": "Paid",
+                "sref": "app.paidBookings"
+            }, {
+                "text": "Cancelled",
+                "sref": "app.cancelledBookings"
+            }
+        ]
+    },
+    {
+        "text": "Feedback",
+        "sref": "app.feedback"
+    },
+    {
+        "text": "Blogs",
+        "sref": "app.blogs"
+    }
 ]

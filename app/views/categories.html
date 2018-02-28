@@ -140,7 +140,7 @@
                 <div class="p-30" style="text-align: center;">
                     <div class="cropArea">
                         <!-- <img-crop area-type="rectangle" aspect-ratio="1.93" image="category.myImage" result-image="category.myCroppedImage"></img-crop> -->
-                        <ui-cropper image="category.myImage" area-type="rectangle" aspect-ratio="1.93" result-image="category.myCroppedImage" result-image-size='{w: 386,h: 200}' init-max-area="true"></ui-cropper>
+                        <ui-cropper image="category.myImage" result-image-quality="1" area-type="rectangle" aspect-ratio="1.93" result-image="category.myCroppedImage" result-image-size='{w: 386,h: 200}' init-max-area="true"></ui-cropper>
                     </div>
                     <div>Cropped Image:</div>
                     <div><img ng-src="{{category.myCroppedImage}}" /></div>

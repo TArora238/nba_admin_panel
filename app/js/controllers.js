@@ -2916,6 +2916,180 @@
 })();
 
 
+/**=========================================================
+ * Module: Feedback Controller
+ =========================================================*/
+
+(function() {
+    'use strict';
+
+    angular
+        .module('app.pages')
+        .controller('BlogController', BlogController);
+
+    BlogController.$inject = ['$http', '$state', '$rootScope', 'toaster', '$scope', 'cfpLoadingBar', 'api', '$timeout', 'ngDialog'];
+
+    function BlogController($http, $state, $rootScope, toaster, $scope, cfpLoadingBar, api, $timeout, ngDialog) {
+        var vm = this;
+
+        activate();
+
+        ////////////////
+
+        function activate() {
+            $scope.mCtrl.checkToken();
+            $scope.mCtrl.checkAdminToken();
+            vm.ngDialogPop = function(template, className) {
+                ngDialog.openConfirm({
+                    template: template,
+                    className: 'ngdialog-theme-default ' + className,
+                    scope: $scope
+                }).then(function(value) {}, function(reason) {});
+            };
+            vm.dtOptions = {
+                "scrollX": true
+            };
+            vm.initTable = function() {
+                cfpLoadingBar.start();
+
+                $.post(api.url + "get_blog", {
+                        access_token: localStorage.getItem('adminToken')
+                    })
+                    .success(function(data, status) {
+                        cfpLoadingBar.complete();
+                        if (typeof data === 'string') data = JSON.parse(data);
+                        console.log(data);
+                        if (data.is_error == 1) $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                        $timeout(function() {
+                            vm.blogList = data.blogs;
+                            for (var i = 0; i < vm.blogList.length; i++) {
+                                vm.blogList[i].date_created = $scope.mCtrl.utc_to_local(vm.blogList[i].date_created);
+                                vm.blogList[i].last_modified = $scope.mCtrl.utc_to_local(vm.blogList[i].last_modified);
+                            }
+                        })
+                    });
+            };
+            vm.initTable();
+            vm.deleteBlog = function(i, id) {
+                vm.blog_id = id;
+                vm.ngDialogPop("deleteConfirmFirst", 'smallPop');
+            };
+            vm.deleteBlogFn = function() {
+                cfpLoadingBar.start();
+                $.post(api.url + 'delete_blog', {
+                        access_token: localStorage.getItem("adminToken"),
+                        blog_id: vm.blog_id
+                    })
+                    .success(function(data, status) {
+                        if (typeof data === 'string') data = JSON.parse(data);
+                        else var data = data;
+                        console.log(data);
+                        $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                        if (data.is_error == 0) {
+                            ngDialog.close();
+                            $state.reload();
+                        } else {}
+                    });
+            }
+            vm.addEditBlog = function(mode, d) {
+                vm.blog = d || {};
+                vm.mode = mode;
+                vm.ngDialogPop("addEditBlogModal", 'bigPop');
+            };
+            vm.addEditBlogFn = function(mode) {
+                vm.blog.content = '<div>Hi</div>';
+                if (!vm.blog.title) {
+                    toaster.pop('warning', 'Enter a valid title', '');
+                    return false;
+                }
+                if (!vm.blog.author) {
+                    toaster.pop('warning', 'Enter a valid author', '');
+                    return false;
+                }
+                if (!vm.blog.short_desc) {
+                    toaster.pop('warning', 'Enter a valid short description', '');
+                    return false;
+                }
+                if (!vm.blog.content) {
+                    toaster.pop('warning', 'Enter a valid content', '');
+                    return false;
+                }
+                if (mode == 'Add') {
+                    if (!vm.blog.file) {
+                        toaster.pop('warning', 'Choose a thumbnail', '');
+                        return false;
+                    }
+                }
+                var modeUrl = '';
+                if (mode == 'Add') modeUrl = 'add_blog';
+                else {
+                    modeUrl = 'edit_blog';
+                }
+                var form = new FormData();
+                cfpLoadingBar.start();
+                form.append('access_token', localStorage.getItem("adminToken"));
+                form.append('title', vm.blog.title);
+                form.append('author', vm.blog.author);
+                form.append('content', vm.blog.content);
+                form.append('short_desc', vm.blog.short_desc);
+                if (vm.blog.file) form.append("thumb_pic", vm.blog.file);
+                if (modeUrl == 'edit_blog') {
+                    form.append('blog_id', vm.blog.blog_id);
+                }
+                $http({
+                        url: api.url + modeUrl,
+                        method: 'POST',
+                        data: form,
+                        transformRequest: false,
+                        headers: {
+                            'Content-Type': undefined
+                        }
+                    })
+                    .then(function(data, status) {
+                        if (typeof data === 'string')
+                            var data = JSON.parse(data);
+                        $scope.mCtrl.flagPopUps(data.flag, data.is_error);
+                        console.log(data);
+                        var data = data.data;
+                        cfpLoadingBar.complete();
+                        if (data.is_error == 0) {
+                            ngDialog.close();
+                            $state.reload();
+                        }
+                    });
+            }
+            vm.uploadFile = function() {
+                $('.fileUpload').trigger('click');
+            };
+            $scope.fileUpload = function(files) {
+                if (files.length > 0) {
+                    console.log(files);
+                    vm.fileToBeCropped = '';
+                    vm.myCroppedImage = '';
+                    vm.myImage = '';
+                    // var reader = new FileReader(); // instance of the FileReader
+                    // reader.readAsDataURL(files[0]); // read the local file
+                    $timeout(function() {
+                        vm.blog.fileName = files[0].name;
+                        vm.blog.file = files[0];
+                    });
+                    // reader.onloadend = function() {
+                    //     var f = this.result;
+                    //     $timeout(function() {
+                    //         vm.myImage = f;
+                    //         vm.profileEdit = true;
+
+                    //     });
+                    // };
+                } else {
+                    toaster.pop('error', 'Please choose a file', '');
+                }
+            };
+        }
+    }
+})();
+
+
 
 /**=========================================================
  * Module: Order Controller
