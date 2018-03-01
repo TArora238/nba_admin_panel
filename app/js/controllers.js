@@ -2241,12 +2241,30 @@
             $scope.fileUpload = function(files) {
                 if (files.length > 0) {
                     console.log(files);
+                    $timeout(function() {
+                        vm.serv.fileName = files[0].name;
+                        vm.serv.file = files[0];
+                    });
+
+
+                } else {
+                    toaster.pop('error', 'Please choose a file', '');
+
+                }
+            };
+            vm.uploadFileThumb = function() {
+                vm.manualEnter = 0;
+                $('.fileUploadThumb').trigger('click');
+            };
+            $scope.thumbFileUpload = function(files) {
+                if (files.length > 0) {
+                    console.log(files);
                     vm.fileToBeCropped = '';
                     vm.myCroppedImage = '';
                     vm.myImage = '';
                     var reader = new FileReader(); // instance of the FileReader
                     reader.readAsDataURL(files[0]); // read the local file
-                    vm.serv.fileName = files[0].name;
+                    vm.serv.thumbFileName = files[0].name;
                     reader.onloadend = function() {
                         var f = this.result;
                         $timeout(function() {
@@ -2265,13 +2283,13 @@
                 console.log(blob);
                 vm.file = blob;
                 console.log(vm.file);
-                vm.serv.file = vm.file;
+                vm.serv.fileThumb = vm.file;
                 $timeout(function() {
-                    console.log(vm.serv.file);
-                    if (!vm.serv.file) {
-                        vm.serv.file = vm.file;
+                    console.log(vm.serv.fileThumb);
+                    if (!vm.serv.fileThumb) {
+                        vm.serv.fileThumb = vm.file;
                     }
-                    console.log(vm.serv.file);
+                    console.log(vm.serv.fileThumb);
                 }, 1000);
             };
             vm.orderSelect = function(o) {
@@ -2289,6 +2307,10 @@
 
                 if (mode == 'Add' && !vm.serv.file) {
                     toaster.pop("error", "Choose a service image", "");
+                    return false;
+                }
+                if (mode == 'Add' && !vm.serv.fileThumb) {
+                    toaster.pop("error", "Choose a service thumb image", "");
                     return false;
                 }
                 if (!vm.serv.service_price) {
@@ -2332,9 +2354,13 @@
                 form.append("service_price", vm.serv.service_price);
                 form.append("service_time", vm.serv.service_time);
                 form.append("service_commission", vm.serv.service_commission);
-                if (mode == 'Add') form.append("service_image", vm.serv.file);
+                if (mode == 'Add') {
+                    form.append("service_image", vm.serv.file);
+                    form.append("thumb_pic", vm.serv.fileThumb);
+                }
                 if (mode == 'Edit') {
                     if (vm.serv.file) form.append("service_image", vm.serv.file);
+                    if (vm.serv.fileThumb) form.append("thumb_pic", vm.serv.fileThumb);
                     form.append("service_id", vm.serv.service_id);
                 }
                 cfpLoadingBar.start();

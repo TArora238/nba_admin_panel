@@ -22,6 +22,7 @@
                                     <th class="normalTD">Service Name</th>
                                     <th class="largeTD">Service Description</th>
                                     <th class="normalTD">Service Image</th>
+                                    <th class="normalTD">Thumbnail Image</th>
                                     <th class="normalTD">Service Price</th>
                                     <th class="normalTD">Service Time</th>
                                     <th class="normalTD">Skills Required</th>
@@ -36,6 +37,10 @@
                                     <td class="normalTD">
                                         <img ng-if="data.service_image" ng-src="{{data.service_image}}" class="w-100 img--circle" />
                                         <label ng-if="!data.service_image">Not Uploaded Yet</label>
+                                    </td>
+                                    <td class="normalTD">
+                                        <img ng-if="data.thumb_pic" ng-src="{{data.thumb_pic}}" class="w-100 img--circle" />
+                                        <label ng-if="!data.thumb_pic">Not Uploaded Yet</label>
                                     </td>
                                     <td class="normalTD">{{data.service_price}}</td>
                                     <td class="normalTD">{{data.service_time}} mins</td>
@@ -102,12 +107,20 @@
                         </div>
                         <div class="clearfix"></div>
                         <div class="form-group">
+                            <label class="col-lg-12 p-0">Thumbnail Image</label>
+                            <a class="btn whiteBtn" ng-click="catServ.uploadFileThumb()">Upload File</a>
+                            <div class="clearfix"></div>
+                            {{catServ.serv.thumbFileName}}
+                            <input type="file" style="visibility: hidden;" class="upload fileUploadThumb" name="profilePic" onchange="angular.element(this).scope().thumbFileUpload(this.files)" id="fileInput" data-button-text="Single" uploader="uploader" accept="image/*" />
+                        </div>
+                        <div class="form-group">
                             <label class="col-lg-12 p-0">Service Image</label>
                             <a class="btn whiteBtn" ng-click="catServ.uploadFile()">Upload File</a>
                             <div class="clearfix"></div>
                             {{catServ.serv.fileName}}
                             <input type="file" style="visibility: hidden;" class="upload fileUpload" name="profilePic" onchange="angular.element(this).scope().fileUpload(this.files)" id="fileInput" data-button-text="Single" uploader="uploader" accept="image/*" />
                         </div>
+
                         <div class="form-group" ng-if="catServ.services.length>0">
                             <label>Service Order</label>
                             <div class="btn-group mb-sm" uib-dropdown="dropdown">
