@@ -2259,19 +2259,23 @@
             $scope.thumbFileUpload = function(files) {
                 if (files.length > 0) {
                     console.log(files);
-                    vm.fileToBeCropped = '';
-                    vm.myCroppedImage = '';
-                    vm.myImage = '';
-                    var reader = new FileReader(); // instance of the FileReader
-                    reader.readAsDataURL(files[0]); // read the local file
-                    vm.serv.thumbFileName = files[0].name;
-                    reader.onloadend = function() {
-                        var f = this.result;
-                        $timeout(function() {
-                            vm.myImage = f;
-                            vm.ngDialogPop("imageCropPopUp", "bigPop");
-                        });
-                    };
+                    // vm.fileToBeCropped = '';
+                    // vm.myCroppedImage = '';
+                    // vm.myImage = '';
+                    // var reader = new FileReader(); // instance of the FileReader
+                    // reader.readAsDataURL(files[0]); // read the local file
+                    // vm.serv.thumbFileName = files[0].name;
+                    // reader.onloadend = function() {
+                    //     var f = this.result;
+                    //     $timeout(function() {
+                    //         vm.myImage = f;
+                    //         vm.ngDialogPop("imageCropPopUp", "bigPop");
+                    //     });
+                    // };
+                    $timeout(function() {
+                        vm.serv.thumbFileName = files[0].name;
+                        vm.serv.fileThumb = files[0];
+                    });
                 } else {
                     toaster.pop('error', 'Please choose a file', '');
 
