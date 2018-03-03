@@ -179,7 +179,7 @@
                 }).then(function(value) {}, function(reason) {});
 
             };
-            vm.utc_to_local = function(a, b) {
+            vm.utc_to_local_time = function(a, b) {
                 if (a == null) return '';
                 vm.local = '';
                 vm.local = new Date(a);

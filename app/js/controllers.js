@@ -114,13 +114,13 @@
                             };
                             for (var i = 0; i < 5; i++) {
                                 if (vm.dashboard.last_5_bookings_made[i] && vm.dashboard.last_5_bookings_made[i].local_start_time) {
-                                    vm.dashboard.last_5_bookings_made[i].local_start_time = $scope.mCtrl.utc_to_local(vm.dashboard.last_5_bookings_made[i].local_start_time, vm.dashboard.last_5_bookings_made[i].offset)
+                                    vm.dashboard.last_5_bookings_made[i].local_start_time = $scope.mCtrl.utc_to_local_time(vm.dashboard.last_5_bookings_made[i].local_start_time, vm.dashboard.last_5_bookings_made[i].offset)
                                 }
                                 if (vm.dashboard.recent_5_end_bookings[i] && vm.dashboard.recent_5_end_bookings[i].local_start_time) {
-                                    vm.dashboard.recent_5_end_bookings[i].local_start_time = $scope.mCtrl.utc_to_local(vm.dashboard.recent_5_end_bookings[i].local_start_time, vm.dashboard.recent_5_end_bookings[i].offset)
+                                    vm.dashboard.recent_5_end_bookings[i].local_start_time = $scope.mCtrl.utc_to_local_time(vm.dashboard.recent_5_end_bookings[i].local_start_time, vm.dashboard.recent_5_end_bookings[i].offset)
                                 }
                                 if (vm.dashboard.upcoming_5_bookings[i] && vm.dashboard.upcoming_5_bookings[i].local_start_time) {
-                                    vm.dashboard.upcoming_5_bookings[i].local_start_time = $scope.mCtrl.utc_to_local(vm.dashboard.upcoming_5_bookings[i].local_start_time, vm.dashboard.upcoming_5_bookings[i].offset)
+                                    vm.dashboard.upcoming_5_bookings[i].local_start_time = $scope.mCtrl.utc_to_local_time(vm.dashboard.upcoming_5_bookings[i].local_start_time, vm.dashboard.upcoming_5_bookings[i].offset)
                                 }
                             }
                             console.log(vm.dashboard)
@@ -1434,13 +1434,13 @@
                         $timeout(function() {
                             vm.cancelledList = data.all_bookings;
                             for (var i = 0; i < vm.cancelledList.length; i++) {
-                                vm.cancelledList[i].local_start_time = $scope.mCtrl.utc_to_local(vm.cancelledList[i].local_start_time, vm.cancelledList[i].offset);
-                                vm.cancelledList[i].local_date_booked = $scope.mCtrl.utc_to_local(vm.cancelledList[i].local_date_booked, vm.cancelledList[i].offset);
-                                vm.cancelledList[i].local_end_time = $scope.mCtrl.utc_to_local(vm.cancelledList[i].local_end_time, vm.cancelledList[i].offset);
-                                vm.cancelledList[i].local_accepted_at = $scope.mCtrl.utc_to_local(vm.cancelledList[i].local_accepted_at, vm.cancelledList[i].offset);
-                                vm.cancelledList[i].local_started_at = $scope.mCtrl.utc_to_local(vm.cancelledList[i].local_started_at, vm.cancelledList[i].offset);
-                                vm.cancelledList[i].local_ended_at = $scope.mCtrl.utc_to_local(vm.cancelledList[i].local_ended_at, vm.cancelledList[i].offset);
-                                vm.cancelledList[i].local_rated_at = $scope.mCtrl.utc_to_local(vm.cancelledList[i].local_rated_at, vm.cancelledList[i].offset);
+                                vm.cancelledList[i].local_start_time = $scope.mCtrl.utc_to_local_time(vm.cancelledList[i].local_start_time, vm.cancelledList[i].offset);
+                                vm.cancelledList[i].local_date_booked = $scope.mCtrl.utc_to_local_time(vm.cancelledList[i].local_date_booked, vm.cancelledList[i].offset);
+                                vm.cancelledList[i].local_end_time = $scope.mCtrl.utc_to_local_time(vm.cancelledList[i].local_end_time, vm.cancelledList[i].offset);
+                                vm.cancelledList[i].local_accepted_at = $scope.mCtrl.utc_to_local_time(vm.cancelledList[i].local_accepted_at, vm.cancelledList[i].offset);
+                                vm.cancelledList[i].local_started_at = $scope.mCtrl.utc_to_local_time(vm.cancelledList[i].local_started_at, vm.cancelledList[i].offset);
+                                vm.cancelledList[i].local_ended_at = $scope.mCtrl.utc_to_local_time(vm.cancelledList[i].local_ended_at, vm.cancelledList[i].offset);
+                                vm.cancelledList[i].local_rated_at = $scope.mCtrl.utc_to_local_time(vm.cancelledList[i].local_rated_at, vm.cancelledList[i].offset);
                             }
                             vm.totalItems = data.all_bookings.length;
                             console.log(vm.cancelledList)
@@ -1498,13 +1498,13 @@
                         $timeout(function() {
                             vm.finishedList = data.all_bookings;
                             for (var i = 0; i < vm.finishedList.length; i++) {
-                                vm.finishedList[i].local_start_time = $scope.mCtrl.utc_to_local(vm.finishedList[i].local_start_time, vm.finishedList[i].offset);
-                                vm.finishedList[i].local_date_booked = $scope.mCtrl.utc_to_local(vm.finishedList[i].local_date_booked, vm.finishedList[i].offset);
-                                vm.finishedList[i].local_end_time = $scope.mCtrl.utc_to_local(vm.finishedList[i].local_end_time, vm.finishedList[i].offset);
-                                vm.finishedList[i].local_accepted_at = $scope.mCtrl.utc_to_local(vm.finishedList[i].local_accepted_at, vm.finishedList[i].offset);
-                                vm.finishedList[i].local_started_at = $scope.mCtrl.utc_to_local(vm.finishedList[i].local_started_at, vm.finishedList[i].offset);
-                                vm.finishedList[i].local_ended_at = $scope.mCtrl.utc_to_local(vm.finishedList[i].local_ended_at, vm.finishedList[i].offset);
-                                vm.finishedList[i].local_rated_at = $scope.mCtrl.utc_to_local(vm.finishedList[i].local_rated_at, vm.finishedList[i].offset);
+                                vm.finishedList[i].local_start_time = $scope.mCtrl.utc_to_local_time(vm.finishedList[i].local_start_time, vm.finishedList[i].offset);
+                                vm.finishedList[i].local_date_booked = $scope.mCtrl.utc_to_local_time(vm.finishedList[i].local_date_booked, vm.finishedList[i].offset);
+                                vm.finishedList[i].local_end_time = $scope.mCtrl.utc_to_local_time(vm.finishedList[i].local_end_time, vm.finishedList[i].offset);
+                                vm.finishedList[i].local_accepted_at = $scope.mCtrl.utc_to_local_time(vm.finishedList[i].local_accepted_at, vm.finishedList[i].offset);
+                                vm.finishedList[i].local_started_at = $scope.mCtrl.utc_to_local_time(vm.finishedList[i].local_started_at, vm.finishedList[i].offset);
+                                vm.finishedList[i].local_ended_at = $scope.mCtrl.utc_to_local_time(vm.finishedList[i].local_ended_at, vm.finishedList[i].offset);
+                                vm.finishedList[i].local_rated_at = $scope.mCtrl.utc_to_local_time(vm.finishedList[i].local_rated_at, vm.finishedList[i].offset);
                             }
                             vm.totalItems = data.all_bookings.length;
                             console.log(vm.finishedList)
@@ -1568,11 +1568,11 @@
                         $timeout(function() {
                             vm.ongoingList = data.all_bookings;
                             for (var i = 0; i < vm.ongoingList.length; i++) {
-                                vm.ongoingList[i].local_start_time = $scope.mCtrl.utc_to_local(vm.ongoingList[i].local_start_time, vm.ongoingList[i].offset);
-                                vm.ongoingList[i].local_date_booked = $scope.mCtrl.utc_to_local(vm.ongoingList[i].local_date_booked, vm.ongoingList[i].offset);
-                                vm.ongoingList[i].local_end_time = $scope.mCtrl.utc_to_local(vm.ongoingList[i].local_end_time, vm.ongoingList[i].offset);
-                                vm.ongoingList[i].local_accepted_at = $scope.mCtrl.utc_to_local(vm.ongoingList[i].local_accepted_at, vm.ongoingList[i].offset);
-                                vm.ongoingList[i].local_started_at = $scope.mCtrl.utc_to_local(vm.ongoingList[i].local_started_at, vm.ongoingList[i].offset);
+                                vm.ongoingList[i].local_start_time = $scope.mCtrl.utc_to_local_time(vm.ongoingList[i].local_start_time, vm.ongoingList[i].offset);
+                                vm.ongoingList[i].local_date_booked = $scope.mCtrl.utc_to_local_time(vm.ongoingList[i].local_date_booked, vm.ongoingList[i].offset);
+                                vm.ongoingList[i].local_end_time = $scope.mCtrl.utc_to_local_time(vm.ongoingList[i].local_end_time, vm.ongoingList[i].offset);
+                                vm.ongoingList[i].local_accepted_at = $scope.mCtrl.utc_to_local_time(vm.ongoingList[i].local_accepted_at, vm.ongoingList[i].offset);
+                                vm.ongoingList[i].local_started_at = $scope.mCtrl.utc_to_local_time(vm.ongoingList[i].local_started_at, vm.ongoingList[i].offset);
                             }
                             vm.totalItems = data.all_bookings.length;
                             console.log(vm.ongoingList)
@@ -1656,12 +1656,12 @@
                         $timeout(function() {
                             vm.paidList = data.all_bookings;
                             for (var i = 0; i < vm.paidList.length; i++) {
-                                vm.paidList[i].local_start_time = $scope.mCtrl.utc_to_local(vm.paidList[i].local_start_time, vm.paidList[i].offset);
-                                vm.paidList[i].local_date_booked = $scope.mCtrl.utc_to_local(vm.paidList[i].local_date_booked, vm.paidList[i].offset);
-                                vm.paidList[i].local_end_time = $scope.mCtrl.utc_to_local(vm.paidList[i].local_end_time, vm.paidList[i].offset);
-                                vm.paidList[i].local_accepted_at = $scope.mCtrl.utc_to_local(vm.paidList[i].local_accepted_at, vm.paidList[i].offset);
-                                vm.paidList[i].local_started_at = $scope.mCtrl.utc_to_local(vm.paidList[i].local_started_at, vm.paidList[i].offset);
-                                vm.paidList[i].local_ended_at = $scope.mCtrl.utc_to_local(vm.paidList[i].local_ended_at, vm.paidList[i].offset);
+                                vm.paidList[i].local_start_time = $scope.mCtrl.utc_to_local_time(vm.paidList[i].local_start_time, vm.paidList[i].offset);
+                                vm.paidList[i].local_date_booked = $scope.mCtrl.utc_to_local_time(vm.paidList[i].local_date_booked, vm.paidList[i].offset);
+                                vm.paidList[i].local_end_time = $scope.mCtrl.utc_to_local_time(vm.paidList[i].local_end_time, vm.paidList[i].offset);
+                                vm.paidList[i].local_accepted_at = $scope.mCtrl.utc_to_local_time(vm.paidList[i].local_accepted_at, vm.paidList[i].offset);
+                                vm.paidList[i].local_started_at = $scope.mCtrl.utc_to_local_time(vm.paidList[i].local_started_at, vm.paidList[i].offset);
+                                vm.paidList[i].local_ended_at = $scope.mCtrl.utc_to_local_time(vm.paidList[i].local_ended_at, vm.paidList[i].offset);
                             }
                             vm.totalItems = data.all_bookings.length;
                             console.log(vm.paidList)
@@ -1725,9 +1725,9 @@
                         $timeout(function() {
                             vm.tobeAcceptedList = data.all_bookings;
                             for (var i = 0; i < vm.tobeAcceptedList.length; i++) {
-                                vm.tobeAcceptedList[i].local_start_time = $scope.mCtrl.utc_to_local(vm.tobeAcceptedList[i].local_start_time, vm.tobeAcceptedList[i].offset);
-                                vm.tobeAcceptedList[i].local_date_booked = $scope.mCtrl.utc_to_local(vm.tobeAcceptedList[i].local_date_booked, vm.tobeAcceptedList[i].offset);
-                                vm.tobeAcceptedList[i].local_end_time = $scope.mCtrl.utc_to_local(vm.tobeAcceptedList[i].local_end_time, vm.tobeAcceptedList[i].offset);
+                                vm.tobeAcceptedList[i].local_start_time = $scope.mCtrl.utc_to_local_time(vm.tobeAcceptedList[i].local_start_time, vm.tobeAcceptedList[i].offset);
+                                vm.tobeAcceptedList[i].local_date_booked = $scope.mCtrl.utc_to_local_time(vm.tobeAcceptedList[i].local_date_booked, vm.tobeAcceptedList[i].offset);
+                                vm.tobeAcceptedList[i].local_end_time = $scope.mCtrl.utc_to_local_time(vm.tobeAcceptedList[i].local_end_time, vm.tobeAcceptedList[i].offset);
                             }
                             vm.totalItems = data.all_bookings.length;
                             console.log(vm.tobeAcceptedList)
@@ -1852,10 +1852,10 @@
                         $timeout(function() {
                             vm.upcomingList = data.all_bookings;
                             for (var i = 0; i < vm.upcomingList.length; i++) {
-                                vm.upcomingList[i].local_start_time = $scope.mCtrl.utc_to_local(vm.upcomingList[i].local_start_time, vm.upcomingList[i].offset);
-                                vm.upcomingList[i].local_date_booked = $scope.mCtrl.utc_to_local(vm.upcomingList[i].local_date_booked, vm.upcomingList[i].offset);
-                                vm.upcomingList[i].local_end_time = $scope.mCtrl.utc_to_local(vm.upcomingList[i].local_end_time, vm.upcomingList[i].offset);
-                                vm.upcomingList[i].local_accepted_at = $scope.mCtrl.utc_to_local(vm.upcomingList[i].local_accepted_at, vm.upcomingList[i].offset);
+                                vm.upcomingList[i].local_start_time = $scope.mCtrl.utc_to_local_time(vm.upcomingList[i].local_start_time, vm.upcomingList[i].offset);
+                                vm.upcomingList[i].local_date_booked = $scope.mCtrl.utc_to_local_time(vm.upcomingList[i].local_date_booked, vm.upcomingList[i].offset);
+                                vm.upcomingList[i].local_end_time = $scope.mCtrl.utc_to_local_time(vm.upcomingList[i].local_end_time, vm.upcomingList[i].offset);
+                                vm.upcomingList[i].local_accepted_at = $scope.mCtrl.utc_to_local_time(vm.upcomingList[i].local_accepted_at, vm.upcomingList[i].offset);
                             }
                             vm.totalItems = data.all_bookings.length;
                             console.log(vm.upcomingList)
