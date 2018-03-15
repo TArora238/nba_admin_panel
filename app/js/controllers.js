@@ -2570,8 +2570,9 @@
                 //     toaster.pop("error", "Enter the additional service commission", "");
                 //     return false;
                 // }
-
-
+                if (vm.additionalServices.length == 0 && vm.addServ.order == 'Order ID') {
+                    vm.addServ.order = 1;
+                }
                 var modeUrl = '';
                 if (mode == 'Add') modeUrl = 'add_additional_service';
                 else modeUrl = 'edit_additional_service';
