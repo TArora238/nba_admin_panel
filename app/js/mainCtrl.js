@@ -32,6 +32,7 @@
         //   localStorage.removeItem('adminToken');
         //   $state.go('login');
         // }
+        localStorage.setItem('area_id', '2');
         $('input').attr('autocomplete', 'new-password');
         $rootScope.get_settings = function() {
 

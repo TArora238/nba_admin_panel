@@ -1007,7 +1007,7 @@
             vm.addArtistPop = function() {
                 vm.ngDialogPop("add_artist_modal", "bigPop");
                 vm.profile = {};
-                if (localStorage.getItem('area_id') == 1)
+                if (localStorage.getItem('area_id') == '2')
                     vm.profile.countryCode = "+44";
                 else vm.profile.countryCode = "+91";
             };
@@ -3358,7 +3358,7 @@
                     promo_value: vm.promo.promo_value,
                     promo_type: vm.promo.promo_type,
                     start_date: moment(vm.promo.start_date).format("YYYY-MM-DD HH:MM:SS"),
-                    area_id: 1
+                    area_id: '2'
 
 
 
