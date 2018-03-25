@@ -23,7 +23,7 @@
             // bind here all data from the form
             if (localStorage.getItem('adminToken')) {
                 if ($state.current.name == "login") {
-                    // $scope.mCtrl.checkAdminToken(1);
+                    $scope.mCtrl.checkAdminToken(1);
                     // $state.go('app.prospects');
                 }
             }
