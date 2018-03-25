@@ -905,7 +905,7 @@
                                     if (data.is_error == 1) $scope.mCtrl.flagPopUps(data.flag, data.is_error);
                                     $timeout(function() {
                                         vm.artists = data.all_artists;
-                                        for (var i = 0; i < vm.artist.length; i++) {
+                                        for (var i = 0; i < vm.artists.length; i++) {
                                             if (vm.artists[i].stripe_account_id == null) {
                                                 vm.artists[i].bank_added = 0;
                                             } else vm.artists[i].bank_added = 1;
