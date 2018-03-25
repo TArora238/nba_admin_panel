@@ -99,10 +99,9 @@
     angular
         .module('adminPanel').constant("api", {
             // Live
-            // "url": "https://apilive.nowbeauty.com:3003/"
-            // Dev
-            // "url": "http://34.213.160.134:3003/"
-            "url": "http://34.217.130.40:3003/"
+            "url": "http://api.nowbeautyapp.com:4003/"
+                // Dev
+                // "url": "http://34.217.130.40:3003/"
         })
         .filter('underscoreless', function() {
             return function(input) {
