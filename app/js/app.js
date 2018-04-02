@@ -99,7 +99,7 @@
     angular
         .module('adminPanel').constant("api", {
             // Live
-            "url": "http://api.nowbeautyapp.com:4003/"
+            "url": "https://api.nowbeautyapp.com:4003/"
                 // Dev
                 // "url": "http://34.217.130.40:3003/"
         })
