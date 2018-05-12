@@ -181,10 +181,30 @@
 
             };
             vm.utc_to_local_time = function(a, b) {
+                // if (a == null) return '';
+                // vm.local = '';
+                // vm.local = new Date(a);
+                // vm.local = new Date(vm.local.getTime() - parseInt(b) * 60 * 1000);
+                // return vm.local;
                 if (a == null) return '';
                 vm.local = '';
-                vm.local = new Date(a);
-                vm.local = new Date(vm.local.getTime() - parseInt(b) * 60 * 1000);
+                var t = a.split('T');
+                if (t[1] == '') {
+                    return a;
+                }
+                if (a.indexOf('T') < 0) return a;
+                var aD = t[0].split('-');
+                var bD = t[1].split(':');
+                // vm.local = '' + aD[1] + '-' + aD[2] + '-' + aD[0];
+                vm.local = new Date();
+                vm.local.setDate(parseInt(aD[2]));
+                vm.local.setMonth(parseInt(aD[1]) - 1);
+                vm.local.setYear(parseInt(aD[0]));
+                vm.local.setHours(parseInt(bD[0]));
+                vm.local.setMinutes(parseInt(bD[1]));
+                vm.local.setSeconds(parseInt(bD[2]));
+
+
                 return vm.local;
             };
             vm.loginRedirect = function() {
