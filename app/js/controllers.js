@@ -1257,7 +1257,7 @@
                             artist_last_name: vm.artist.artist_last_name,
                             address: JSON.stringify(vm.address),
                             stripe_token: response.id,
-                            date_of_birth: moment(vm.artist.dob_date).format('DD-MM-YYYY')
+                            date_of_birth: moment(vm.artist.dob_date).format('YYYY-MM-DD')
                         };
                         $.post(api.url + "add_artist_payment", d)
                             .success(function(data, status) {
