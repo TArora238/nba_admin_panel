@@ -25,7 +25,8 @@
                                     <th class="normalTD">User Address</th>
                                     <th class="normalTD">User City</th>
                                     <th class="normalTD">Area</th>
-                                    <th class="normalTD">Artist Name..</th>
+                                    <th class="normalTD">Service (Additional Service)</th>
+                                    <th class="normalTD">Artist Name</th>
                                     <th class="normalTD">Artist Mobile</th>
                                     <th class="normalTD">Artist Email</th>
                                     <th class="largeTD">Start Time</th>
@@ -51,6 +52,8 @@
                                     <td class="normalTD">({{data.address_title}}):&nbsp;{{data.apt_address}}&nbsp;{{data.street_route}}&nbsp;{{dat.city}}{{data.state}}&nbsp;&nbsp;{{data.post_code}}</td>
                                     <td class="normalTD">{{data.city}}</td>
                                     <td class="normalTD">{{data.area_name}}</td>
+                                    <td class="normalTD">{{data.service_name}}
+                                        <br>({{data.additional_services}})</td>
                                     <td class="normalTD">{{data.artist_name||'-'}}</td>
                                     <td class="normalTD">{{data.artist_mobile||'-'|phoneNumber}}</td>
                                     <td class="normalTD">{{data.artist_email||'-'}}</td>
